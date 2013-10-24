@@ -184,6 +184,11 @@
 			<name>Codehaus Maven 2 Repository</name>
 			<url>https://nexus.codehaus.org/content/repositories/releases</url>
 		</repository>
+		<repository>
+			<id>mvnrepository</id>
+			<name>MVN Repository</name>
+			<url>http://mvnrepository.com/</url>
+		</repository>
 	</repositories>
 
 	<pluginRepositories>
