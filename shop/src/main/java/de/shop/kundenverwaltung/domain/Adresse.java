@@ -46,6 +46,14 @@ public class Adresse {
 	public void setHausnummer(Integer _hausnummer) {
 		this.hausnummer = _hausnummer;
 	}
+	
+	public Kunde getKunde() {
+		return kunde;
+	}
+	public void setKunde(Kunde _kunde) {
+		this.kunde = _kunde;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -94,12 +102,7 @@ public class Adresse {
 			return false;
 		return true;
 	}
-	public Kunde getKunde() {
-		return kunde;
-	}
-	public void setKunde(Kunde _kunde) {
-		this.kunde = _kunde;
-	}
+
 	@Override
 	public String toString() {
 		return "Adresse [id=" + id + ", ort=" + ort + ", plz=" + plz
