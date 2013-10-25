@@ -13,6 +13,7 @@ public class Kunde {
 	
 	private Long id;
 	private String nachname;
+	private String vorname;
 	private Adresse adresse;
 	private String email;
 	
@@ -33,6 +34,12 @@ public class Kunde {
 	public void setNachname(String _nachname) {
 		this.nachname = _nachname;
 	}
+	public String getVorname() {
+		return vorname;
+	}
+	public void setVorname(String vorname) {
+		this.vorname = vorname;
+	}
 	public Adresse getAdresse() {
 		return adresse;
 	}
@@ -47,9 +54,8 @@ public class Kunde {
 	}
 	@Override
 	public String toString() {
-		return "Kunde [id=" + id + ", nachname=" + nachname + ", email="
+		return "Kunde [id=" + id + ", nachname=" + nachname + "vorname=" + vorname + ", email="
 				+ email + ", bestellungURI=" + bestellungURI + "]";
 	}
-	
 	
 }
