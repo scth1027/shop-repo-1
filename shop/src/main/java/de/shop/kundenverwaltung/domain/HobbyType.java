@@ -1,5 +1,10 @@
 package de.shop.kundenverwaltung.domain;
 
-public class HobbyType {
+public enum HobbyType {
+	FUSSBALL,
+	SCHWIMMEN,
+	REITEN,
+	HANDBALL,
+	LESEN;
 
 }

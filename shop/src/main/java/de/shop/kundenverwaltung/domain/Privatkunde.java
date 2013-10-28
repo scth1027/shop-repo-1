@@ -4,5 +4,20 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class Privatkunde {
+	
+	private HobbyType hobby;
+
+	public HobbyType getHobby() {
+		return hobby;
+	}
+
+	public void setHobby(HobbyType hobby) {
+		this.hobby = hobby;
+	}
+
+	@Override
+	public String toString() {
+		return "Privatkunde [hobby=" + hobby + "]";
+	}
 
 }
