@@ -13,7 +13,7 @@ import javax.ws.rs.ext.Provider;
 
 import org.jboss.logging.Logger;
 
-@Provider
+//@Provider
 public class JaxRsLogFilter implements ContainerRequestFilter, ContainerResponseFilter {
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass());
 	
