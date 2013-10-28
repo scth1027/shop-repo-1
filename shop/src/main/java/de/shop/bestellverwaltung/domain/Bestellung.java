@@ -10,14 +10,22 @@ import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.kundenverwaltung.domain.Adresse;
 import de.shop.kundenverwaltung.domain.Kunde;
 
+
 @XmlRootElement
 public class Bestellung {
 	
 	private long id;
 	private Kunde kunde;
 	private Adresse lieferadresse;
-	//private enum bestellstatus;
-	//TODO wieso fehler?
+	
+//	private enum bestellstatus{
+//		angenommen, 
+//		versendet, 
+//		storniert, 
+//		bezahlt
+//
+//	};
+//	TODO wieso fehler?
 	
 	@XmlTransient
 	private List<Artikel> _artikel;
@@ -46,6 +54,22 @@ public class Bestellung {
 
 	public void setLieferadresse(Adresse lieferadresse) {
 		this.lieferadresse = lieferadresse;
+	}
+
+	public URI getArtikelURI() {
+		return artikelURI;
+	}
+
+	public void setArtikelURI(URI artikelURI) {
+		this.artikelURI = artikelURI;
+	}
+
+	public List<Artikel> get_artikel() {
+		return _artikel;
+	}
+
+	public void set_artikel(List<Artikel> _artikel) {
+		this._artikel = _artikel;
 	}
 
 	@Override
