@@ -17,15 +17,8 @@ public class Bestellung {
 	private long id;
 	private Kunde kunde;
 	private Adresse lieferadresse;
-	
-//	private enum bestellstatus{
-//		angenommen, 
-//		versendet, 
-//		storniert, 
-//		bezahlt
-//
-//	};
-//	TODO wieso fehler?
+	private enum bestellstatus{angenommen, versendet, storniert, bezahlt};
+	private bestellstatus bestellstatus;
 	
 	@XmlTransient
 	private List<Artikel> _artikel;
@@ -71,12 +64,20 @@ public class Bestellung {
 	public void set_artikel(List<Artikel> _artikel) {
 		this._artikel = _artikel;
 	}
+		
+	public bestellstatus getBestellstatus() {
+		return bestellstatus;
+	}
+
+	public void setBestellstatus(bestellstatus bestellstatus) {
+		this.bestellstatus = bestellstatus;
+	}
 
 	@Override
 	public String toString() {
 		return "Bestellung [id=" + id + ", kunde=" + kunde + ", lieferadresse="
-				+ lieferadresse + ", _artikel=" + _artikel + ", artikelURI="
-				+ artikelURI + "]";
+				+ lieferadresse + ", bestellstatus=" + bestellstatus
+				+ ", _artikel=" + _artikel + ", artikelURI=" + artikelURI + "]";
 	}
 	
 	
