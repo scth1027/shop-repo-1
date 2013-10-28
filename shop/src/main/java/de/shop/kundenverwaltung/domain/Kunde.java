@@ -1,6 +1,5 @@
 package de.shop.kundenverwaltung.domain;
 
-import java.io.Serializable;
 import java.net.URI;
 import java.util.List;
 
@@ -32,9 +31,9 @@ public class Kunde {
 	private String email;
 	
 	@XmlTransient
-	private List<Bestellung> _bestellungen;
+	private List<Bestellung> bestellungen;
 	
-	private URI bestellungURI;
+	private URI bestellungenURI;
 	
 	public Long getId() {
 		return id;
@@ -66,10 +65,23 @@ public class Kunde {
 	public void setEmail(String _email) {
 		this.email = _email;
 	}
+	
 	@Override
 	public String toString() {
 		return "Kunde [id=" + id + ", nachname=" + nachname + "vorname=" + vorname + ", email="
-				+ email + ", bestellungURI=" + bestellungURI + "]";
+				+ email + ", bestellungURI=" + bestellungenURI + "]";
+	}
+	public URI getBestellungenURI() {
+		return bestellungenURI;
+	}
+	public void setBestellungenURI(URI bestellungenURI) {
+		this.bestellungenURI = bestellungenURI;
+	}
+	public List<Bestellung> getBestellungen() {
+		return bestellungen;
+	}
+	public void setBestellungen(List<Bestellung> _bestellungen) {
+		this.bestellungen = _bestellungen;
 	}
 	
 }

@@ -100,7 +100,7 @@ public final class Mock {
 		
 		return bestellung;
 	}
-
+*/
 	public static Kunde createKunde(Kunde kunde) {
 		// Neue IDs fuer Kunde und zugehoerige Adresse
 		// Ein neuer Kunde hat auch keine Bestellungen
@@ -122,6 +122,6 @@ public final class Mock {
 	public static void deleteKunde(Long kundeId) {
 		System.out.println("Kunde mit ID=" + kundeId + " geloescht");
 	}
-*/
+
 	private Mock() { /**/ }
 }
