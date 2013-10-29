@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.kundenverwaltung.domain.Adresse;
 import de.shop.kundenverwaltung.domain.Kunde;
+import de.shop.bestellverwaltung.domain.Bestellstatus;
 
 
 @XmlRootElement
@@ -17,8 +18,8 @@ public class Bestellung {
 	private long id;
 	private Kunde kunde;
 	private Adresse lieferadresse;
-	private enum bestellstatus{angenommen, versendet, storniert, bezahlt};
-	private bestellstatus bestellstatus;
+	//private enum bestellstatus{angenommen, versendet, storniert, bezahlt};
+	private Bestellstatus bestellstatus;
 	
 	@XmlTransient
 	private List<Artikel> _artikel;
@@ -65,11 +66,11 @@ public class Bestellung {
 		this._artikel = _artikel;
 	}
 		
-	public bestellstatus getBestellstatus() {
+	public Bestellstatus getBestellstatus() {
 		return bestellstatus;
 	}
 
-	public void setBestellstatus(bestellstatus bestellstatus) {
+	public void setBestellstatus(Bestellstatus bestellstatus) {
 		this.bestellstatus = bestellstatus;
 	}
 
@@ -79,6 +80,7 @@ public class Bestellung {
 				+ lieferadresse + ", bestellstatus=" + bestellstatus
 				+ ", _artikel=" + _artikel + ", artikelURI=" + artikelURI + "]";
 	}
+
 	
 	
 	

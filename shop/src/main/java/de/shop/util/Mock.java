@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import de.shop.bestellverwaltung.domain.Bestellung;
+import de.shop.bestellverwaltung.domain.Bestellstatus;
 import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.domain.Adresse;
 import de.shop.kundenverwaltung.domain.Firmenkunde;
@@ -71,7 +72,7 @@ public final class Mock {
 		return kunden;
 	}
 	
-/*
+
 	public static List<Bestellung> findBestellungenByKunde(Kunde kunde) {
 		// Beziehungsgeflecht zwischen Kunde und Bestellungen aufbauen
 		final int anzahl = kunde.getId().intValue() % MAX_BESTELLUNGEN + 1;  // 1, 2, 3 oder 4 Bestellungen
@@ -95,12 +96,14 @@ public final class Mock {
 
 		final Bestellung bestellung = new Bestellung();
 		bestellung.setId(id);
-		bestellung.setAusgeliefert(false);
+		//bestellung.setBestellstatus("bestellung" + id);
+		//TODO setBestellstatus in Mock überarbeiten
 		bestellung.setKunde(kunde);
+		
 		
 		return bestellung;
 	}
-*/
+
 	public static Kunde createKunde(Kunde kunde) {
 		// Neue IDs fuer Kunde und zugehoerige Adresse
 		// Ein neuer Kunde hat auch keine Bestellungen
