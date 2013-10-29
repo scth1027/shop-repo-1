@@ -5,6 +5,7 @@ public final class Constants {
 
 	// Header-Links
 	public static final String SELF_LINK = "self";
+	public static final String LIST_LINK = "list";
 	public static final String ADD_LINK = "add";
 	public static final String UPDATE_LINK = "update";
 	public static final String REMOVE_LINK = "remove";
