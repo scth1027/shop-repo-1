@@ -14,6 +14,14 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
 
 import de.shop.bestellverwaltung.domain.Bestellung;
 
+/*
+ * Abstrakte Kunden Klasse
+ * enthält id, nachname, vorname, adresse(Adresse), email, List von Bestellungen und zugehörige URI
+ * ist Serializiable
+ * verweist auf die zwei Unterklassen, notwendig für Rest und JSON
+ * List von Bestellunen wird nicht über den RestService bereitgestellt dafuer gibt es eine URI --> bestellungenURI
+ * ---Sadrick---
+ */
 @XmlRootElement
 @XmlSeeAlso({ Firmenkunde.class, Privatkunde.class })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")

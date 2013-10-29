@@ -5,7 +5,13 @@ import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-
+/*
+ * Klasse Adresse
+ * enthaelt id, ort, plz, strasse, hausnummer
+ * ist Serializable
+ * alle 3 Object Methoden überschrieben
+ * ---Sadrick---
+ */
 @XmlRootElement
 public class Adresse implements Serializable {
 

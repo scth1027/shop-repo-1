@@ -1,7 +1,13 @@
 package de.shop.kundenverwaltung.domain;
 
 import javax.xml.bind.annotation.XmlRootElement;
-
+/*
+ * Klasse Firmenkunde
+ * erbt von der abstrakten Kunden Klasse
+ * erhält zusätzlich das Attribut firmenname
+ * ist Serializable
+ * ---Sadrick---
+ */
 @XmlRootElement
 public class Firmenkunde extends Kunde {
 	

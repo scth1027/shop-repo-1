@@ -37,7 +37,11 @@ import de.shop.util.Mock;
 import de.shop.util.rest.UriHelper;
 import de.shop.util.rest.NotFoundException;
 
-
+/*
+ * KundenResource Klasse
+ * enthaelt die RestServices fuer die Kundenverwaltung/Domain
+ * Zugriff auf den Mock später Anwendungslogik
+ */
 @Path("/kunden")
 @Produces({ APPLICATION_JSON, APPLICATION_XML + ";qs=0.75", TEXT_XML + ";qs=0.5" })
 @Consumes
@@ -86,6 +90,7 @@ public class KundenResource {
 	// BestellungURI erzeugen
 	private URI getUriBestellungen(Kunde kunde, UriInfo uriInfo) {
 		return URI.create("http://localhost:8080/shop/rest/");
+		// TODO: URI für Bestellungen wird später erstellt sobald BestellungenResource bereit steht
 		//return uriHelper.getUri(KundenResource.class, "findBestellungenByKundeId", kunde.getId(), uriInfo);
 	}		
 	
