@@ -34,6 +34,13 @@ public class Artikel {
 	public void setPreis(Double preis) {
 		this.preis = preis;
 	}
+	
+	public Artikel() {
+		super();
+		this.id = null;
+		this.bezeichnung = null;
+		this.preis = null;
+	}
 
 	public Artikel(Long id, String bezeichnung, Double preis) {
 		super();

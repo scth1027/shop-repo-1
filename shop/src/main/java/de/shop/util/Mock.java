@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.bestellverwaltung.domain.Bestellstatus;
 import de.shop.kundenverwaltung.domain.Kunde;
@@ -19,8 +20,10 @@ import de.shop.kundenverwaltung.domain.Privatkunde;
 public final class Mock {
 	private static final int MAX_ID = 99;
 	private static final int MAX_KUNDEN = 8;
+	private static final int MAX_ARTIKEL = 10;
 	private static final int MAX_BESTELLUNGEN = 4;
-
+	
+	//Kundenteil
 	public static Kunde findKundeById(Long id) {
 		if (id > MAX_ID) {
 			return null;
@@ -124,6 +127,48 @@ public final class Mock {
 
 	public static void deleteKunde(Long kundeId) {
 		System.out.println("Kunde mit ID=" + kundeId + " geloescht");
+	}
+	
+
+	//Artikelteil
+	//TODO:Um weitere Methoden erweitern
+	public static Artikel findArtikelById(Long id){
+		if (id > MAX_ID){
+			return null;
+		}
+		
+		Artikel artikel = new Artikel();
+		artikel.setId(id);
+		artikel.setBezeichnung("Bezeichnung" + id);
+		artikel.setPreis(0.00 + id);
+		
+		return artikel;
+	}
+
+	public static List<Artikel> findAllArtikel(){
+		final int anzahl = MAX_ARTIKEL;
+		final List<Artikel> artikel_liste = new ArrayList<>(anzahl);
+		for(int i = 1; i <= anzahl; i++) {
+			final Artikel artikel = findArtikelById(Long.valueOf(i));
+			artikel_liste.add(artikel);
+		}
+		return null;
+	}
+
+	public static Artikel createArtikel(Artikel artikel) {
+		//Nur neue ID zugewiesen
+		artikel.setId((long)artikel.getBezeichnung().length());
+		
+		System.out.println("Neuer Artikel: " + artikel);
+		return artikel;
+	}
+
+	public static void updateArtikel(Artikel artikel) {
+		System.out.println("Aktualisierter Artikel: " + artikel);
+	}
+
+	public static void deleteArtikel(Long id) {
+		System.out.println("Artikel mit ID=" + id + " geloescht");
 	}
 
 	private Mock() { /**/ }
