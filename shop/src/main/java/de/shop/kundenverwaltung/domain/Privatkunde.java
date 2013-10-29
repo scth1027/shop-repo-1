@@ -3,8 +3,9 @@ package de.shop.kundenverwaltung.domain;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class Privatkunde {
-	
+public class Privatkunde extends Kunde {
+
+	private static final long serialVersionUID = 870262362508397649L;
 	private HobbyType hobby;
 
 	public HobbyType getHobby() {
@@ -17,7 +18,7 @@ public class Privatkunde {
 
 	@Override
 	public String toString() {
-		return "Privatkunde [hobby=" + hobby + "]";
+		return "Privatkunde[" + super.toString() + "] hobby=" + hobby;
 	}
 
 }

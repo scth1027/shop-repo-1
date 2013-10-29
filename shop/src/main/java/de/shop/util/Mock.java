@@ -29,8 +29,7 @@ public final class Mock {
 			return null;
 		}
 		
-		//final Kunde kunde = id % 2 == 1 ? new Privatkunde() : new Firmenkunde();
-		Kunde kunde = new Kunde();
+		final Kunde kunde = id % 2 == 1 ? new Privatkunde() : new Firmenkunde();
 		kunde.setId(id);
 		kunde.setNachname("Nachname" + id);
 		kunde.setVorname("Vorname" + id);
@@ -42,15 +41,18 @@ public final class Mock {
 		adresse.setOrt("Testort");
 		adresse.setKunde(kunde);
 		kunde.setAdresse(adresse);
-		/*
+		
 		if (kunde.getClass().equals(Privatkunde.class)) {
 			final Privatkunde privatkunde = (Privatkunde) kunde;
+			/*
 			final Set<HobbyType> hobbies = new HashSet<>();
 			hobbies.add(HobbyType.LESEN);
 			hobbies.add(HobbyType.REISEN);
 			privatkunde.setHobbies(hobbies);
+			*/
+			privatkunde.setHobby(HobbyType.FUSSBALL);
 		}
-		*/
+		
 		return kunde;
 	}
 

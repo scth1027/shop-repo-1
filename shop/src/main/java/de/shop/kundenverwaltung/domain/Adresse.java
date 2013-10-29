@@ -1,16 +1,19 @@
 package de.shop.kundenverwaltung.domain;
 
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 @XmlRootElement
-public class Adresse {
-	
+public class Adresse implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	private Long id;
 	private String ort;
 	private String plz;
-	private String straﬂe;
+	private String strasse;
 	private Integer hausnummer;
 	
 	@XmlTransient
@@ -35,10 +38,10 @@ public class Adresse {
 		this.plz = _plz;
 	}
 	public String getStraﬂe() {
-		return straﬂe;
+		return strasse;
 	}
 	public void setStraﬂe(String _straﬂe) {
-		this.straﬂe = _straﬂe;
+		this.strasse = _straﬂe;
 	}
 	public Integer getHausnummer() {
 		return hausnummer;
@@ -63,7 +66,7 @@ public class Adresse {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((ort == null) ? 0 : ort.hashCode());
 		result = prime * result + ((plz == null) ? 0 : plz.hashCode());
-		result = prime * result + ((straﬂe == null) ? 0 : straﬂe.hashCode());
+		result = prime * result + ((strasse == null) ? 0 : strasse.hashCode());
 		return result;
 	}
 	@Override
@@ -95,10 +98,10 @@ public class Adresse {
 				return false;
 		} else if (!plz.equals(other.plz))
 			return false;
-		if (straﬂe == null) {
-			if (other.straﬂe != null)
+		if (strasse == null) {
+			if (other.strasse != null)
 				return false;
-		} else if (!straﬂe.equals(other.straﬂe))
+		} else if (!strasse.equals(other.strasse))
 			return false;
 		return true;
 	}
@@ -106,7 +109,7 @@ public class Adresse {
 	@Override
 	public String toString() {
 		return "Adresse [id=" + id + ", ort=" + ort + ", plz=" + plz
-				+ ", straﬂe=" + straﬂe + ", hausnummer=" + hausnummer
+				+ ", straﬂe=" + strasse + ", hausnummer=" + hausnummer
 				+ ", kunde=" + kunde + "]";
 	}
 
