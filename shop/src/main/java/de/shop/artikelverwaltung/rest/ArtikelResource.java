@@ -14,7 +14,10 @@ import java.net.URI;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -24,6 +27,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import de.shop.artikelverwaltung.domain.Artikel;
+import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.util.Mock;
 import de.shop.util.rest.NotFoundException;
 import de.shop.util.rest.UriHelper;
@@ -62,8 +66,8 @@ public class ArtikelResource {
 		if(artikel == null) {
 			throw new NotFoundException("Die angegebene ID:" + id + "liefert keinen Artikel");
 		}
-		//return Response.ok(artikel).links(getTransitionalLinks(artikel, uriInfo)).build();
 		System.out.println("Artikel ist nicht null");
+		System.out.println(artikel.getId() + ", " + artikel.getBezeichnung() + ", " + artikel.getPreis());
 		//setStructuralLinks(artikel, uriInfo);
 		//System.out.println("Structural Links gebildet");
 		return Response.ok(artikel)
@@ -100,5 +104,31 @@ public class ArtikelResource {
 	//Artikel URI erzeugen
 	public URI getUriArtikel(Artikel artikel, UriInfo uriInfo) {
 		return uriHelper.getUri(ArtikelResource.class, "findArtikelById", artikel.getId(), uriInfo);
+	}
+	
+	@POST
+	@Consumes({APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
+	@Produces
+	public Response createArtikel(Artikel artikel) {
+		// TODO Anwendungskern statt Mock, Verwendung von Locale
+		artikel = Mock.createArtikel(artikel);
+		return Response.created(getUriArtikel(artikel, uriInfo))
+			           .build();
+	}
+	
+	@PUT
+	@Consumes({APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
+	@Produces
+	public void updateArtikel(Artikel artikel) {
+		// TODO Anwendungskern statt Mock, Verwendung von Locale
+		Mock.updateArtikel(artikel);
+	}
+	
+	@DELETE
+	@Path("{id:[1-9][0-9]*}")
+	@Produces
+	public void deleteArtikel(@PathParam("id") Long artikelId) {
+		// TODO Anwendungskern statt Mock, Verwendung von Locale
+		Mock.deleteArtikel(artikelId);
 	}
 }
