@@ -17,7 +17,7 @@ import de.shop.bestellverwaltung.domain.Bestellung;
 /*
  * Abstrakte Kunden Klasse
  * enthält id, nachname, vorname, adresse(Adresse), email, List von Bestellungen und zugehörige URI
- * ist Serializiable
+ * ist Serializiable aufgrund des Mappings notwendig
  * verweist auf die zwei Unterklassen, notwendig für Rest und JSON
  * List von Bestellunen wird nicht über den RestService bereitgestellt dafuer gibt es eine URI --> bestellungenURI
  * ---Sadrick---
