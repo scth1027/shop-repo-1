@@ -1,10 +1,17 @@
 package de.shop.artikelverwaltung.domain;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.codehaus.jackson.annotate.JsonTypeInfo;
+
 @XmlRootElement
-public class Artikel {
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+public class Artikel implements Serializable {
+	
+	private static final long serialVersionUID = 1430771599450877428L;
 	
 	private Long id;
 	private String bezeichnung;
