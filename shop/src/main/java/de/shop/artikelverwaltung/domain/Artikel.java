@@ -7,6 +7,14 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 
+/*
+ * Artikel Klasse
+ * enthält id, bezeichnung und preis
+ * ist Serializiable
+ * verweist auf die zwei Unterklassen, notwendig für Rest und JSON
+ * List von Bestellunen wird nicht über den RestService bereitgestellt dafuer gibt es eine URI --> bestellungenURI
+ * ---Sadrick---
+ */
 @XmlRootElement
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 public class Artikel implements Serializable {
@@ -15,9 +23,9 @@ public class Artikel implements Serializable {
 	
 	private Long id;
 	private String bezeichnung;
+	//TODO: Besserer Datentyp wählen
 	private Double preis;
 	
-	@XmlTransient
 	public Long getId() {
 		return id;
 	}

@@ -142,7 +142,7 @@ public final class Mock {
 		Artikel artikel = new Artikel();
 		artikel.setId(id);
 		artikel.setBezeichnung("Bezeichnung" + id);
-		artikel.setPreis(0.00 + id);
+		artikel.setPreis(100.0);
 		
 		return artikel;
 	}

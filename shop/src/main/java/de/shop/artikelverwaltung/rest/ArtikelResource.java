@@ -57,7 +57,7 @@ public class ArtikelResource {
 	//Artikel mit ID finden
 	@GET
 	@Path("{" + ARTIKEL_ID_PATH_PARAM + ":[1-9][0-9]*}")
-	public Response findArtikelByID(@PathParam(ARTIKEL_ID_PATH_PARAM) Long id) {
+	public Response findArtikelById(@PathParam(ARTIKEL_ID_PATH_PARAM) Long id) {
 		final Artikel artikel = Mock.findArtikelById(id);
 		if(artikel == null) {
 			throw new NotFoundException("Die angegebene ID:" + id + "liefert keinen Artikel");
