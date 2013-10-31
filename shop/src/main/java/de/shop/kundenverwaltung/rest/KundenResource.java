@@ -214,11 +214,13 @@ public class KundenResource {
 				.rel(UPDATE_LINK)
 				.build();
 		System.out.println("Update gezogen");
+		/*
 		final Link remove = Link.fromUri(uriHelper.getUri(KundenResource.class, "deleteKunde", kunde.getId(), uriInfo))
 				.rel(REMOVE_LINK)
 				.build();
 		System.out.println("Delete gesetzt");
-		return new Link[] { self, add, update, remove };
+		*/
+		return new Link[] { self, add, update };
 	}
 
 	private Link[] setTransitionalLinksKunden(List<? extends Kunde> kunden, UriInfo uriInfo) {
