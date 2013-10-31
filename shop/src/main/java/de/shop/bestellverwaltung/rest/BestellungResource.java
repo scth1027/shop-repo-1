@@ -50,7 +50,7 @@ public class BestellungResource {
 	}
 	@GET
 	@Path("{" + BESTELLUNG_ID_PATH_PARAM + ":[1-9][0-9]*}")
-	public Response findArtikelById(@PathParam(BESTELLUNG_ID_PATH_PARAM) Long id) {
+	public Response findBestellungById(@PathParam(BESTELLUNG_ID_PATH_PARAM) Long id) {
 		final Bestellung bestellung = Mock.findBestellungById(id);
 		if(bestellung == null) {
 			throw new NotFoundException("Die angegebene ID:" + id + "liefert keinen Artikel");
@@ -74,7 +74,7 @@ public class BestellungResource {
 			/*final Link list = Link.fromUri(uriHelper.getUri(BestellungResource.class, "findAllBestellungen", bestellung.getId(), uriInfo))
 								.rel(LIST_LINK)
 								.build();*/
-			
+			/*
 			final Link add = Link.fromUri(uriHelper.getUri(BestellungResource.class, uriInfo))
 	                             .rel(ADD_LINK)
 	                             .build();
@@ -86,8 +86,8 @@ public class BestellungResource {
 			final Link remove = Link.fromUri(uriHelper.getUri(BestellungResource.class, "deleteBestellung", bestellung.getId(), uriInfo))
 	                                .rel(REMOVE_LINK)
 	                                .build();
-			
-			return new Link[] { self/*, list*/, add, update, remove };
+			*/
+			return new Link[] { self};
 		}
 		
 		//Bestellung URI erzeugen
