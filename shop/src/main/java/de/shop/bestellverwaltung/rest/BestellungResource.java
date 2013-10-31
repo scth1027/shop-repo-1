@@ -20,15 +20,12 @@ import javax.ws.rs.core.UriInfo;
 
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.kundenverwaltung.domain.Kunde;
-import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.rest.KundenResource;
 import de.shop.util.Mock;
 import de.shop.util.rest.UriHelper;
 import de.shop.util.rest.NotFoundException;
 
-/**
- * @author <a href="mailto:Juergen.Zimmermann@HS-Karlsruhe.de">J&uuml;rgen Zimmermann</a>
- */
+
 @Path("/bestellungen")
 @Produces({ APPLICATION_JSON, APPLICATION_XML + ";qs=0.75", TEXT_XML + ";qs=0.5" })
 @Consumes
@@ -40,7 +37,7 @@ public class BestellungResource {
 	private UriHelper uriHelper;
 	
 	@Inject
-	private KundenResource KundenResource;
+	private KundenResource kundeResource;
 	
 	@GET
 	@Path("{id:[1-9][0-9]*}")
@@ -65,7 +62,7 @@ public class BestellungResource {
 		// URI fuer Kunde setzen
 		final Kunde kunde = bestellung.getKunde();
 		if (kunde != null) {
-			final URI kundeUri = KundenResource.getKundenURI(bestellung.getKunde(), uriInfo);
+			final URI kundeUri = kundeResource.getUriKunde(bestellung.getKunde(), uriInfo);
 			bestellung.setKundeURI(kundeUri);
 		}
 	}
