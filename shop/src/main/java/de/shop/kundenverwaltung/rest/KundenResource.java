@@ -78,6 +78,9 @@ public class KundenResource {
 				.links(setTransitionalLinks(kunde, uriInfo))
 				.build();
 	}
+	public URI getUriKunde(Kunde kunde, UriInfo uriInfo) {
+		return uriHelper.getUri(KundenResource.class, "findKundeById", kunde.getId(), uriInfo);
+	}
 
 	// Kunden bei Nachname finden
 	@GET
