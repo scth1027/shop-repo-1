@@ -183,6 +183,7 @@ public class KundenResource {
 	// Bestellungslink setzen
 	private void setStructuralLinks(Kunde kunde, UriInfo uriInfo) {
 		// URI fuer Bestellungen setzen
+		System.out.println("Kunde angekommen");
 		final URI uri = getUriBestellungen(kunde, uriInfo);
 		System.out.println("Kein Fehler bei der Erzeugung der URI");
 		kunde.setBestellungenURI(uri);
@@ -213,7 +214,7 @@ public class KundenResource {
 		final Link update = Link.fromUri(uriHelper.getUri(KundenResource.class, uriInfo))
 				.rel(UPDATE_LINK)
 				.build();
-		System.out.println("Update gezogen");
+		System.out.println("Update gesetzt");
 		/*
 		final Link remove = Link.fromUri(uriHelper.getUri(KundenResource.class, "deleteKunde", kunde.getId(), uriInfo))
 				.rel(REMOVE_LINK)

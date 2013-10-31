@@ -118,7 +118,6 @@ public final class Mock {
 		adresse.setId((Long.valueOf(nachname.length())) + 1);
 		adresse.setKunde(kunde);
 		kunde.setBestellungen(null);
-		
 		System.out.println("Neuer Kunde: " + kunde);
 		return kunde;
 	}
