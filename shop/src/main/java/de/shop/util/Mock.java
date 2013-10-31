@@ -13,6 +13,8 @@ import de.shop.kundenverwaltung.domain.Adresse;
 import de.shop.kundenverwaltung.domain.Firmenkunde;
 import de.shop.kundenverwaltung.domain.HobbyType;
 import de.shop.kundenverwaltung.domain.Privatkunde;
+import de.shop.lieferantenverwaltung.domain.Lieferant;
+import de.shop.lieferantenverwaltung.domain.Lieferantenadresse;
 
 /**
  * Emulation des Anwendungskerns
@@ -22,6 +24,7 @@ public final class Mock {
 	private static final int MAX_KUNDEN = 8;
 	private static final int MAX_ARTIKEL = 10;
 	private static final int MAX_BESTELLUNGEN = 4;
+	private static final int MAX_LIEFERANTEN = 8;
 	
 	//Kundenteil
 	public static Kunde findKundeById(Long id) {
@@ -172,6 +175,102 @@ public final class Mock {
 	public static void deleteArtikel(Long id) {
 		System.out.println("Artikel mit ID=" + id + " geloescht");
 	}
+	
+	//Lieferantenteil
+		public static Lieferant findLieferantById(Long id) {
+			if (id > MAX_ID) {
+				return null;
+			}
+			
+			final Lieferant lieferant = new Lieferant();
+			lieferant.setId(id);
+			lieferant.setFirma("Firma" + id);
+			lieferant.setEmail("" + id + "@hska.de");
+			
+			final Lieferantenadresse adresse = new Lieferantenadresse();
+			adresse.setId(id + 1);        // andere ID fuer die Adresse
+			adresse.setPlz("12345");
+			adresse.setOrt("Testort");
+			adresse.setLieferant(lieferant);
+			lieferant.setLieferantenadresse(adresse);
+			
+			return lieferant;
+		}
+
+		public static List<Lieferant> findAllLieferanten() {
+			final int anzahl = MAX_KUNDEN;
+			final List<Lieferant> lieferanten = new ArrayList<>(anzahl);
+			for (int i = 1; i <= anzahl; i++) {
+				final Lieferant lieferant = findLieferantById(Long.valueOf(i));
+				lieferanten.add(lieferant);			
+			}
+			return lieferanten;
+		}
+
+		public static List<Lieferant> findLieferantenByFirma(String firma) {
+			final int anzahl = firma.length();
+			final List<Lieferant> lieferanten = new ArrayList<>(anzahl);
+			for (int i = 1; i <= anzahl; i++) {
+				final Lieferant lieferant = findLieferantById(Long.valueOf(i));
+				lieferant.setFirma(firma);
+				lieferanten.add(lieferant);			
+			}
+			return lieferanten;
+		}
+		
+
+		public static List<Bestellung> findBestellungenByLieferant(Lieferant lieferant) {
+			// Beziehungsgeflecht zwischen Lieferant und Bestellungen aufbauen
+			final int anzahl = lieferant.getId().intValue() % MAX_BESTELLUNGEN + 1;  // 1, 2, 3 oder 4 Bestellungen
+			final List<Bestellung> bestellungen = new ArrayList<>(anzahl);
+			for (int i = 1; i <= anzahl; i++) {
+				final Bestellung bestellung = findBestellungById(Long.valueOf(i));
+				bestellung.setLieferant(lieferant);
+				bestellungen.add(bestellung);			
+			}
+			lieferant.setBestellungen(bestellungen);
+			
+			return bestellungen;
+		}
+
+		/*public static Bestellung findBestellungById(Long id) {
+			if (id > MAX_ID) {
+				return null;
+			}
+
+			final Lieferant lieferant = findLieferantById(id + 1);  // andere ID fuer den Lieferanten
+
+			final Bestellung bestellung = new Bestellung();
+			bestellung.setId(id);
+			//bestellung.setBestellstatus("bestellung" + id);
+			//TODO setBestellstatus in Mock überarbeiten
+			bestellung.setLieferant(lieferant);
+			
+			
+			
+			return bestellung;
+		}*/
+
+		public static Lieferant createLieferant(Lieferant lieferant) {
+			// Neue IDs fuer Lieferant und zugehoerige Adresse
+			// Ein neuer Lieferant hat auch keine Bestellungen
+			final String firma = lieferant.getFirma();
+			lieferant.setId(Long.valueOf(firma.length()));
+			final Lieferantenadresse adresse = lieferant.getLieferantenadresse();
+			adresse.setId((Long.valueOf(firma.length())) + 1);
+			adresse.setLieferant(lieferant);
+			lieferant.setBestellungen(null);
+			System.out.println("Neuer Lieferant: " + lieferant);
+			return lieferant;
+		}
+
+		public static void updateLieferant(Lieferant lieferant) {
+			System.out.println("Aktualisierter Lieferant: " + lieferant);
+		}
+
+		public static void deleteLieferant(Long lieferantId) {
+			System.out.println("Lieferant mit ID=" + lieferantId + " geloescht");
+		}
 
 	private Mock() { /**/ }
 }
