@@ -25,6 +25,16 @@ public class Bestellung {
 	private List<Artikel> _artikel;
 	
 	private URI artikelURI;
+	
+	private URI kundeURI;
+	
+	public URI getKundeURI() {
+		return kundeURI;
+	}
+
+	public void setKundeURI(URI kundeURI) {
+		this.kundeURI = kundeURI;
+	}
 
 	public long getId() {
 		return id;
