@@ -22,7 +22,7 @@ import de.shop.lieferantenverwaltung.domain.Lieferantenadresse;
 public final class Mock {
 	private static final int MAX_ID = 99;
 	private static final int MAX_KUNDEN = 8;
-	private static final int MAX_ARTIKEL = 10;
+	private static final int MAX_ARTIKEL = 3;
 	private static final int MAX_BESTELLUNGEN = 4;
 	private static final int MAX_LIEFERANTEN = 8;
 	
@@ -79,7 +79,6 @@ public final class Mock {
 		}
 		return kunden;
 	}
-	
 
 	public static List<Bestellung> findBestellungenByKunde(Kunde kunde) {
 		// Beziehungsgeflecht zwischen Kunde und Bestellungen aufbauen
@@ -107,8 +106,6 @@ public final class Mock {
 		//bestellung.setBestellstatus("bestellung" + id);
 		//TODO setBestellstatus in Mock überarbeiten
 		bestellung.setKunde(kunde);
-		
-		
 		
 		return bestellung;
 	}
@@ -146,6 +143,11 @@ public final class Mock {
 		artikel.setPreis(0.0 + id);
 		
 		return artikel;
+	}
+	
+	public static Object findArtikelByBezeichnung(String bezeichnung) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	public static List<Artikel> findAllArtikel(){

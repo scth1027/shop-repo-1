@@ -11,6 +11,7 @@ import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 import static javax.ws.rs.core.MediaType.TEXT_XML;
 
 import java.net.URI;
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -21,10 +22,14 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+
+import com.sun.xml.bind.v2.schemagen.xmlschema.List;
 
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.kundenverwaltung.domain.Kunde;
@@ -44,7 +49,7 @@ public class ArtikelResource {
 	public static final String ARTIKEL_ID_PATH_PARAM = "artikelId";
 	public static final String ARTIKEL_BEZEICHNUNG_QUERY_PARAM = "bezeichnung";
 	
-	//TODO Erweitern um POST, PUT, DELETE, findByBezeichnung(GET)
+	//TODO Erweitern findAllArtikel, findArtikelByBezeichnung
 	@Context
 	private UriInfo uriInfo;
 	
@@ -74,6 +79,46 @@ public class ArtikelResource {
                        .links(getTransitionalLinks(artikel, uriInfo))
                        .build();
 	}
+	
+	/*
+	//Artikel mit Bezeichnung finden
+	@GET
+	public Response findArtikelByBezeichnung(@QueryParam(ARTIKEL_BEZEICHNUNG_QUERY_PARAM) String bezeichnung) {
+		List<Artikel> artikel_liste = null;
+		if (bezeichnung != null) {
+			// TODO Anwendungskern statt Mock, Verwendung von Locale
+			artikel_liste = Mock.findArtikelByBezeichnung(bezeichnung);
+			if (artikel_liste.isEmpty()) {
+				throw new NotFoundException("Kein Artikel mit Bezeichnung " + bezeichnung + " gefunden.");
+			}
+		}
+		else {
+			// TODO Anwendungskern statt Mock, Verwendung von Locale
+			artikel_liste = Mock.findAllKunden();
+			if (artikel_liste.isEmpty()) {
+				throw new NotFoundException("Keine Artikel vorhanden.");
+			}
+		}
+
+		return Response.ok(new GenericEntity<List<Artikel>>(artikel_liste){})
+				.links(setTransitionalLinksKunden(artikel_liste, uriInfo))
+				.build();
+	}
+	
+	//Alle Artikel auflisten
+	@GET
+	public Response findAllArtikel() {
+		// TODO Anwendungskern statt Mock, Verwendung von Locale
+		final List<Artikel> artikel_liste = new ArrayList<>(3);
+		//final List<Artikel> artikel_liste = Mock.findAllArtikel();
+		if(artikel_liste == null) {
+			throw new NotFoundException("Es konnte keine Artikel gefunden werden.");
+		}
+		
+		return Response.ok(artikel_liste)
+                       .links(getTransitionalLinks(artikel_liste, uriInfo))
+                       .build();
+	}*/
 	
 	//Artikel erstellen
 	@POST
