@@ -35,7 +35,7 @@ import de.shop.util.rest.UriHelper;
 /*
  * ArtikelResource Klasse
  * enthaelt die RestServices fuer die Artikelverwaltung/Domain
- * Zugriff auf den Mock später Anwendungslogik
+ * Zugriff auf den Mock spaeter Anwendungslogik
  */
 @Path("/artikel")
 @Produces({ APPLICATION_JSON, APPLICATION_XML + ";qs=0.75", TEXT_XML + ";qs=0.5" })
@@ -43,7 +43,8 @@ import de.shop.util.rest.UriHelper;
 public class ArtikelResource {
 	public static final String ARTIKEL_ID_PATH_PARAM = "artikelId";
 	public static final String ARTIKEL_BEZEICHNUNG_QUERY_PARAM = "bezeichnung";
-	//TODO: Erweitern um POST, PUT, DELETE, findByBezeichnung
+	
+	//TODO Erweitern um POST, PUT, DELETE, findByBezeichnung(GET)
 	@Context
 	private UriInfo uriInfo;
 	
@@ -62,20 +63,53 @@ public class ArtikelResource {
 	@GET
 	@Path("{" + ARTIKEL_ID_PATH_PARAM + ":[1-9][0-9]*}")
 	public Response findArtikelById(@PathParam(ARTIKEL_ID_PATH_PARAM) Long id) {
+		// TODO Anwendungskern statt Mock, Verwendung von Locale
 		final Artikel artikel = Mock.findArtikelById(id);
 		if(artikel == null) {
-			throw new NotFoundException("Die angegebene ID:" + id + "liefert keinen Artikel");
+			throw new NotFoundException("Der Artikel mit der ID:" + id + " konnte nicht gefunden werden.");
 		}
-		System.out.println("Artikel ist nicht null");
-		System.out.println(artikel.getId() + ", " + artikel.getBezeichnung() + ", " + artikel.getPreis());
-		//setStructuralLinks(artikel, uriInfo);
-		//System.out.println("Structural Links gebildet");
+		//System.out.println("Artikel ist nicht null");
+		//System.out.println(artikel.getId() + ", " + artikel.getBezeichnung() + ", " + artikel.getPreis());
 		return Response.ok(artikel)
                        .links(getTransitionalLinks(artikel, uriInfo))
                        .build();
 	}
 	
-	//TODO:Hinzufügen des LIST_LINKS
+	//Artikel erstellen
+	@POST
+	@Consumes({APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
+	@Produces
+	public Response createArtikel(Artikel artikel) {
+		// TODO Anwendungskern statt Mock, Verwendung von Locale
+		artikel = Mock.createArtikel(artikel);
+		return Response.created(getUriArtikel(artikel, uriInfo))
+			           .build();
+	}
+	
+	//Artikel aendern
+	@PUT
+	@Consumes({APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
+	@Produces
+	public void updateArtikel(Artikel artikel) {
+		// TODO Anwendungskern statt Mock, Verwendung von Locale
+		Mock.updateArtikel(artikel);
+	}
+	
+	//Artikel loeschen bzw. als nicht mehr aktiv makieren
+	@DELETE
+	@Path("{id:[1-9][0-9]*}")
+	@Produces
+	public void deleteArtikel(@PathParam("id") Long artikelId) {
+		// TODO Anwendungskern statt Mock, Verwendung von Locale
+		Mock.deleteArtikel(artikelId);
+	}
+	
+	//Artikel URI erzeugen
+	public URI getUriArtikel(Artikel artikel, UriInfo uriInfo) {
+		return uriHelper.getUri(ArtikelResource.class, "findArtikelById", artikel.getId(), uriInfo);
+	}
+	
+	//TODO Hinzufügen des LIST_LINKS
 	//Verwaltungs URIs erzeugen
 	public Link[] getTransitionalLinks(Artikel artikel, UriInfo uriInfo) {
 		final Link self = Link.fromUri(getUriArtikel(artikel, uriInfo))
@@ -99,36 +133,5 @@ public class ArtikelResource {
                                 .build();
 		
 		return new Link[] { self/*, list*/, add, update, remove };
-	}
-	
-	//Artikel URI erzeugen
-	public URI getUriArtikel(Artikel artikel, UriInfo uriInfo) {
-		return uriHelper.getUri(ArtikelResource.class, "findArtikelById", artikel.getId(), uriInfo);
-	}
-	
-	@POST
-	@Consumes({APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
-	@Produces
-	public Response createArtikel(Artikel artikel) {
-		// TODO Anwendungskern statt Mock, Verwendung von Locale
-		artikel = Mock.createArtikel(artikel);
-		return Response.created(getUriArtikel(artikel, uriInfo))
-			           .build();
-	}
-	
-	@PUT
-	@Consumes({APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
-	@Produces
-	public void updateArtikel(Artikel artikel) {
-		// TODO Anwendungskern statt Mock, Verwendung von Locale
-		Mock.updateArtikel(artikel);
-	}
-	
-	@DELETE
-	@Path("{id:[1-9][0-9]*}")
-	@Produces
-	public void deleteArtikel(@PathParam("id") Long artikelId) {
-		// TODO Anwendungskern statt Mock, Verwendung von Locale
-		Mock.deleteArtikel(artikelId);
 	}
 }

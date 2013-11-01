@@ -136,7 +136,6 @@ public final class Mock {
 	
 
 	//Artikelteil
-	//TODO:Um weitere Methoden erweitern
 	public static Artikel findArtikelById(Long id){
 		if (id > MAX_ID){
 			return null;
@@ -162,7 +161,8 @@ public final class Mock {
 
 	public static Artikel createArtikel(Artikel artikel) {
 		//Nur neue ID zugewiesen
-		artikel.setId((long)artikel.getBezeichnung().length());
+		final String bezeichnung = artikel.getBezeichnung();
+		artikel.setId(Long.valueOf(bezeichnung.length()));
 		
 		System.out.println("Neuer Artikel: " + artikel);
 		return artikel;
@@ -177,6 +177,7 @@ public final class Mock {
 	}
 	
 	//Lieferantenteil
+	//TODO Lieferantenteil in Mock richtig einrücken
 		public static Lieferant findLieferantById(Long id) {
 			if (id > MAX_ID) {
 				return null;
