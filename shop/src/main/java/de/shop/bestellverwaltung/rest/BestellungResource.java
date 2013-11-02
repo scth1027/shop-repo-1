@@ -6,6 +6,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 import static javax.ws.rs.core.MediaType.TEXT_XML;
 
 import java.net.URI;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -14,6 +15,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -57,6 +59,26 @@ public class BestellungResource {
 		
 		return response;
 	}
+	
+//	@GET
+//	@Path("{id:[1-9][0-9]*}")
+//	public Response findAllBestellungen() {
+//		// TODO Anwendungskern statt Mock, Verwendung von Locale
+//		final List<Bestellung> bestellung = Mock.findAllBestellungen();
+//		if (bestellung == null) {
+//			throw new NotFoundException("Keine Bestellung gefunden.");
+//		}
+//		
+//		setStructuralLinks(bestellung, uriInfo);
+//		
+//		// Link-Header setzen
+//		return Response.ok(new GenericEntity<List<? extends Bestellung>>(bestellung){})
+//				.links(setTransitionalLinksKunden(bestellung, uriInfo))
+//				.build();
+//		
+//		return response;
+//	}
+	
 	
 	public void setStructuralLinks(Bestellung bestellung, UriInfo uriInfo) {
 		// URI fuer Kunde setzen
