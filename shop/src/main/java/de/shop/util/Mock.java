@@ -26,6 +26,7 @@ public final class Mock {
 	private static final int MAX_BESTELLUNGEN = 4;
 	private static final int MAX_LIEFERANTEN = 8;
 	
+	
 	//Kundenteil
 	public static Kunde findKundeById(Long id) {
 		if (id > MAX_ID) {
@@ -103,6 +104,8 @@ public final class Mock {
 
 		final Bestellung bestellung = new Bestellung();
 		bestellung.setId(id);
+		final Lieferant lieferant = new Lieferant();
+		lieferant.setId(id);
 		//bestellung.setBestellstatus("bestellung" + id);
 		//TODO setBestellstatus in Mock überarbeiten
 		bestellung.setKunde(kunde);
@@ -110,6 +113,16 @@ public final class Mock {
 		return bestellung;
 	}
 
+	public static List<Bestellung> findAllBestellungen(){
+		final int anzahl = MAX_BESTELLUNGEN;
+		final List<Bestellung> Bestellung_liste = new ArrayList<>(anzahl);
+		for(int i = 1; i <= anzahl; i++) {
+			final Bestellung bestellung = findBestellungById(Long.valueOf(i));
+			Bestellung_liste.add(bestellung);
+		}
+		return null;
+	}
+	
 	public static Kunde createKunde(Kunde kunde) {
 		// Neue IDs fuer Kunde und zugehoerige Adresse
 		// Ein neuer Kunde hat auch keine Bestellungen
