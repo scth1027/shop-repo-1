@@ -86,9 +86,73 @@ public class Bestellung {
 
 	@Override
 	public String toString() {
-		return "Bestellung [id=" + id + ", kunde=" + kunde + "," + ", bestellstatus=" + bestellstatus
-				+ ", _artikel=" + _artikel + ", artikelURI=" + artikelURI + "]";
+		return "Bestellung [id=" + id + ", kunde=" + kunde + ", lieferant="
+				+ lieferant + ", bestellstatus=" + bestellstatus
+				+ ", _artikel=" + _artikel + ", artikelURI=" + artikelURI
+				+ ", kundeURI=" + kundeURI + "]";
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((_artikel == null) ? 0 : _artikel.hashCode());
+		result = prime * result
+				+ ((artikelURI == null) ? 0 : artikelURI.hashCode());
+		result = prime * result
+				+ ((bestellstatus == null) ? 0 : bestellstatus.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((kunde == null) ? 0 : kunde.hashCode());
+		result = prime * result
+				+ ((kundeURI == null) ? 0 : kundeURI.hashCode());
+		result = prime * result
+				+ ((lieferant == null) ? 0 : lieferant.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Bestellung other = (Bestellung) obj;
+		if (_artikel == null) {
+			if (other._artikel != null)
+				return false;
+		} else if (!_artikel.equals(other._artikel))
+			return false;
+		if (artikelURI == null) {
+			if (other.artikelURI != null)
+				return false;
+		} else if (!artikelURI.equals(other.artikelURI))
+			return false;
+		if (bestellstatus != other.bestellstatus)
+			return false;
+		if (id != other.id)
+			return false;
+		if (kunde == null) {
+			if (other.kunde != null)
+				return false;
+		} else if (!kunde.equals(other.kunde))
+			return false;
+		if (kundeURI == null) {
+			if (other.kundeURI != null)
+				return false;
+		} else if (!kundeURI.equals(other.kundeURI))
+			return false;
+		if (lieferant == null) {
+			if (other.lieferant != null)
+				return false;
+		} else if (!lieferant.equals(other.lieferant))
+			return false;
+		return true;
+	}
+
+	
 
 	
 	
