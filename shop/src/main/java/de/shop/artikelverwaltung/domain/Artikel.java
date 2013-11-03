@@ -3,17 +3,14 @@ package de.shop.artikelverwaltung.domain;
 import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 
 /*
  * Artikel Klasse
  * enthält id, bezeichnung und preis
- * ist Serializiable
- * verweist auf die zwei Unterklassen, notwendig für Rest und JSON
- * List von Bestellunen wird nicht über den RestService bereitgestellt dafuer gibt es eine URI --> bestellungenURI
- * ---Sadrick---
+ * ist Serializiable aufgrund des Mappings notwendig
+ * ---Christian---
  */
 @XmlRootElement
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")

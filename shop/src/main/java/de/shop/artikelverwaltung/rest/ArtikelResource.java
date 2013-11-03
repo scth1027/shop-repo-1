@@ -1,6 +1,8 @@
 package de.shop.artikelverwaltung.rest;
 
 import static de.shop.util.Constants.ADD_LINK;
+import static de.shop.util.Constants.FIRST_LINK;
+import static de.shop.util.Constants.LAST_LINK;
 import static de.shop.util.Constants.REMOVE_LINK;
 import static de.shop.util.Constants.SELF_LINK;
 import static de.shop.util.Constants.LIST_LINK;
@@ -11,7 +13,7 @@ import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 import static javax.ws.rs.core.MediaType.TEXT_XML;
 
 import java.net.URI;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -28,8 +30,6 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-
-import com.sun.xml.bind.v2.schemagen.xmlschema.List;
 
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.kundenverwaltung.domain.Kunde;
@@ -80,12 +80,12 @@ public class ArtikelResource {
                        .build();
 	}
 	
-	/*
 	//Artikel mit Bezeichnung finden
 	@GET
 	public Response findArtikelByBezeichnung(@QueryParam(ARTIKEL_BEZEICHNUNG_QUERY_PARAM) String bezeichnung) {
 		List<Artikel> artikel_liste = null;
 		if (bezeichnung != null) {
+			System.out.println("RICHTIG");
 			// TODO Anwendungskern statt Mock, Verwendung von Locale
 			artikel_liste = Mock.findArtikelByBezeichnung(bezeichnung);
 			if (artikel_liste.isEmpty()) {
@@ -94,14 +94,14 @@ public class ArtikelResource {
 		}
 		else {
 			// TODO Anwendungskern statt Mock, Verwendung von Locale
-			artikel_liste = Mock.findAllKunden();
+			artikel_liste = Mock.findAllArtikel();
 			if (artikel_liste.isEmpty()) {
 				throw new NotFoundException("Keine Artikel vorhanden.");
 			}
 		}
 
 		return Response.ok(new GenericEntity<List<Artikel>>(artikel_liste){})
-				.links(setTransitionalLinksKunden(artikel_liste, uriInfo))
+				.links(getTransitionalLinksArtikelListe(artikel_liste, uriInfo))
 				.build();
 	}
 	
@@ -109,16 +109,15 @@ public class ArtikelResource {
 	@GET
 	public Response findAllArtikel() {
 		// TODO Anwendungskern statt Mock, Verwendung von Locale
-		final List<Artikel> artikel_liste = new ArrayList<>(3);
-		//final List<Artikel> artikel_liste = Mock.findAllArtikel();
-		if(artikel_liste == null) {
+		List<Artikel> artikel_liste = Mock.findAllArtikel();
+		if(artikel_liste.isEmpty()) {
 			throw new NotFoundException("Es konnte keine Artikel gefunden werden.");
 		}
-		
-		return Response.ok(artikel_liste)
-                       .links(getTransitionalLinks(artikel_liste, uriInfo))
+
+		return Response.ok(new GenericEntity<List<Artikel>>(artikel_liste){})
+                       //.links(getTransitionalLinksArtikelListe(artikel_liste, uriInfo))
                        .build();
-	}*/
+	}
 	
 	//Artikel erstellen
 	@POST
@@ -178,5 +177,21 @@ public class ArtikelResource {
                                 .build();
 		
 		return new Link[] { self/*, list*/, add, update, remove };
+	}
+	
+	public Link[] getTransitionalLinksArtikelListe(List<Artikel> artikel_liste, UriInfo uriInfo) {
+		if (artikel_liste == null || artikel_liste.isEmpty()) {
+			return null;
+		}
+
+		final Link first = Link.fromUri(getUriArtikel(artikel_liste.get(0), uriInfo))
+				.rel(FIRST_LINK)
+				.build();
+		final int lastPos = artikel_liste.size() - 1;
+		final Link last = Link.fromUri(getUriArtikel(artikel_liste.get(lastPos), uriInfo))
+				.rel(LAST_LINK)
+				.build();
+
+		return new Link[] { first, last };
 	}
 }
