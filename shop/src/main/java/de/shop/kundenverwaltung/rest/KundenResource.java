@@ -17,7 +17,6 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -32,6 +31,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import de.shop.bestellverwaltung.domain.Bestellung;
+import de.shop.bestellverwaltung.rest.BestellungResource;
 import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.util.Mock;
 import de.shop.util.rest.UriHelper;
@@ -46,14 +46,15 @@ import de.shop.util.rest.NotFoundException;
 @Produces({ APPLICATION_JSON, APPLICATION_XML + ";qs=0.75", TEXT_XML + ";qs=0.5" })
 @Consumes
 public class KundenResource {
-	public static final String KUNDEN_ID_PATH_PARAM = "kundeId";
-	public static final String KUNDEN_NACHNAME_QUERY_PARAM = "nachname";
 
 	@Context
 	private UriInfo uriInfo;
 
 	@Inject
 	private UriHelper uriHelper;
+
+	@Inject
+	private BestellungResource bestellungResource;
 
 	@GET
 	@Produces({ TEXT_PLAIN, APPLICATION_JSON })
@@ -62,11 +63,29 @@ public class KundenResource {
 		return "1.0";
 	}
 
+
+	// Alle Kunden ausgeben
+	@GET
+	public Response findAllKunden() {
+		// Aufruf der Mock zur Erzeugung der Kunden
+		List<Kunde> all = Mock.findAllKunden();
+		// Plausibilitäsprüfung
+		if(all.isEmpty())
+			throw new NotFoundException("Es konnten keine Kunden gefunden werden!");
+		// Erstellen der Links für die jeweilign Kunden
+		for (Kunde kunde : all) {
+			setStructuralLinks(kunde, uriInfo);
+		}
+		return Response.ok(new GenericEntity<List<Kunde>>(all){})
+		        .links(setTransitionalLinksKunden(all, uriInfo))
+		        .build();
+	}
+
 	// Kunde mit ID finden
 	@GET
-	@Path("{" + KUNDEN_ID_PATH_PARAM + ":[1-9][0-9]*}")
-	public Response findKundeById(@PathParam(KUNDEN_ID_PATH_PARAM) Long id) {
-		// TODO Anwendungskern statt Mock, Verwendung von Locale
+	@Path("{id:[1-9][0-9]*}")
+	public Response findKundeById(@PathParam("id") Long id) {
+		// TODO Anwendungskern statt Mock
 		final Kunde kunde = Mock.findKundeById(id);
 		if (kunde == null) {
 			throw new NotFoundException("Kein Kunde mit der ID " + id + " gefunden.");
@@ -84,17 +103,17 @@ public class KundenResource {
 
 	// Kunden bei Nachname finden
 	@GET
-	public Response findKundenByNachname(@QueryParam(KUNDEN_NACHNAME_QUERY_PARAM) String nachname) {
+	public Response findKundenByNachname(@QueryParam("nachname") String nachname) {
 		List<? extends Kunde> kunden = null;
 		if (nachname != null) {
-			// TODO Anwendungskern statt Mock, Verwendung von Locale
+			// TODO Anwendungskern statt Mock
 			kunden = Mock.findKundenByNachname(nachname);
 			if (kunden.isEmpty()) {
 				throw new NotFoundException("Kein Kunde mit Nachname " + nachname + " gefunden.");
 			}
 		}
 		else {
-			// TODO Anwendungskern statt Mock, Verwendung von Locale
+			// TODO Anwendungskern statt Mock
 			kunden = Mock.findAllKunden();
 			if (kunden.isEmpty()) {
 				throw new NotFoundException("Keine Kunden vorhanden.");
@@ -110,11 +129,11 @@ public class KundenResource {
 				.build();
 	}
 
-	/*
+
 	@GET
 	@Path("{id:[1-9][0-9]*}/bestellungen")
 	public Response findBestellungenByKundeId(@PathParam("id") Long kundeId) {
-		// TODO Anwendungskern statt Mock, Verwendung von Locale
+		// TODO Anwendungskern statt Mock
 		final Kunde kunde = Mock.findKundeById(kundeId);
 		final List<Bestellung> bestellungen = Mock.findBestellungenByKunde(kunde);
 		if (bestellungen.isEmpty()) {
@@ -126,18 +145,19 @@ public class KundenResource {
 			bestellungResource.setStructuralLinks(bestellung, uriInfo);
 		}
 
+		// Rückgabe einer Generische Liste von Bestellungen
 		return Response.ok(new GenericEntity<List<Bestellung>>(bestellungen){})
-                       .links(getTransitionalLinksBestellungen(bestellungen, kunde, uriInfo))
-                       .build();
+				.links(getTransitionalLinksBestellungen(bestellungen, kunde, uriInfo))
+				.build();
 	}
 
-	 */
+
 
 	@POST
 	@Consumes({APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces
 	public Response createKunde(Kunde kunde) {
-		// TODO Anwendungskern statt Mock, Verwendung von Locale
+		// TODO Anwendungskern statt Mock
 		System.out.println("Kunde angekommen im Service");
 		kunde = Mock.createKunde(kunde);
 		System.out.println("Kunde ist aus der Mock zurück");
@@ -149,15 +169,15 @@ public class KundenResource {
 	@Consumes({APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces
 	public void updateKunde(Kunde kunde) {
-		// TODO Anwendungskern statt Mock, Verwendung von Locale
+		// TODO Anwendungskern statt Mock
 		Mock.updateKunde(kunde);
 	}
-	/*
+
 	@DELETE
 	@Path("{id:[1-9][0-9]*}")
 	@Produces
 	public void deleteKunde(@PathParam("id") Long kundeId) {
-		// TODO Anwendungskern statt Mock, Verwendung von Locale
+		// TODO Anwendungskern statt Mock
 		Mock.deleteKunde(kundeId);
 	}
 
@@ -167,21 +187,20 @@ public class KundenResource {
 		}
 
 		final Link self = Link.fromUri(getUriBestellungen(kunde, uriInfo))
-                              .rel(SELF_LINK)
-                              .build();
+				.rel(SELF_LINK)
+				.build();
 
 		final Link first = Link.fromUri(bestellungResource.getUriBestellung(bestellungen.get(0), uriInfo))
-	                           .rel(FIRST_LINK)
-	                           .build();
+				.rel(FIRST_LINK)
+				.build();
 		final int lastPos = bestellungen.size() - 1;
 
 		final Link last = Link.fromUri(bestellungResource.getUriBestellung(bestellungen.get(lastPos), uriInfo))
-                              .rel(LAST_LINK)
-                              .build();
+				.rel(LAST_LINK)
+				.build();
 
 		return new Link[] { self, first, last };
 	}
-	 */
 
 	// Bestellungslink setzen
 	private void setStructuralLinks(Kunde kunde, UriInfo uriInfo) {
@@ -194,9 +213,8 @@ public class KundenResource {
 
 	// BestellungURI erzeugen
 	private URI getUriBestellungen(Kunde kunde, UriInfo uriInfo) {
-		return URI.create("http://localhost:8080/shop/rest/");
-		// TODO: URI für Bestellungen wird später erstellt sobald BestellungenResource bereit steht
-		//return uriHelper.getUri(KundenResource.class, "findBestellungenByKundeId", kunde.getId(), uriInfo);
+		//return URI.create("http://localhost:8080/shop/rest/");
+		return uriHelper.getUri(KundenResource.class, "findBestellungenByKundeId", kunde.getId(), uriInfo);
 	}
 
 	// KundenURI erzeugen
@@ -218,13 +236,12 @@ public class KundenResource {
 				.rel(UPDATE_LINK)
 				.build();
 		System.out.println("Update gesetzt");
-		/*
+
 		final Link remove = Link.fromUri(uriHelper.getUri(KundenResource.class, "deleteKunde", kunde.getId(), uriInfo))
 				.rel(REMOVE_LINK)
 				.build();
 		System.out.println("Delete gesetzt");
-		*/
-		return new Link[] { self, add, update };
+		return new Link[] { self, add, update, remove };
 	}
 
 	private Link[] setTransitionalLinksKunden(List<? extends Kunde> kunden, UriInfo uriInfo) {

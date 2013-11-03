@@ -43,17 +43,13 @@ public final class Mock {
 		adresse.setId(id + 1);        // andere ID fuer die Adresse
 		adresse.setPlz("12345");
 		adresse.setOrt("Testort");
+		adresse.setStraﬂe("Moltkestraﬂe");
+		adresse.setHausnummer(11);
 		adresse.setKunde(kunde);
 		kunde.setAdresse(adresse);
 		
 		if (kunde.getClass().equals(Privatkunde.class)) {
 			final Privatkunde privatkunde = (Privatkunde) kunde;
-			/*
-			final Set<HobbyType> hobbies = new HashSet<>();
-			hobbies.add(HobbyType.LESEN);
-			hobbies.add(HobbyType.REISEN);
-			privatkunde.setHobbies(hobbies);
-			*/
 			privatkunde.setHobby(HobbyType.FUSSBALL);
 		}
 		
