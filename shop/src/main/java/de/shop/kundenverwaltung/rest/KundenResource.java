@@ -216,7 +216,8 @@ public class KundenResource {
 		//return URI.create("http://localhost:8080/shop/rest/");
 		return uriHelper.getUri(KundenResource.class, "findBestellungenByKundeId", kunde.getId(), uriInfo);
 	}
-
+	
+	//FIXME Bitte Überprüfung getKundenUri und getUriKunde, hier beide vorhenden
 	// KundenURI erzeugen
 	private URI getKundenURI(Kunde kunde, UriInfo uriInfo) {
 		return uriHelper.getUri(KundenResource.class, "findKundeById", kunde.getId(), uriInfo);
