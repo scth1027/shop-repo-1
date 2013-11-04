@@ -45,6 +45,7 @@ public class BestellungResource {
 	@Path("{id:[1-9][0-9]*}")
 	public Response findBestellungById(@PathParam("id") Long id) {
 		// TODO Anwendungskern statt Mock, Verwendung von Locale
+		System.out.println("IN Methode");
 		final Bestellung bestellung = Mock.findBestellungById(id);
 		if (bestellung == null) {
 			throw new NotFoundException("Keine Bestellung mit der ID " + id + " gefunden.");
@@ -79,12 +80,11 @@ public class BestellungResource {
 //		return response;
 //	}
 	
-	
 	public void setStructuralLinks(Bestellung bestellung, UriInfo uriInfo) {
 		// URI fuer Kunde setzen
 		final Kunde kunde = bestellung.getKunde();
 		if (kunde != null) {
-			final URI kundeUri = kundeResource.getUriKunde(bestellung.getKunde(), uriInfo);
+			final URI kundeUri = kundeResource.getKundenURI(bestellung.getKunde(), uriInfo);
 			bestellung.setKundeURI(kundeUri);
 		}
 	}
