@@ -1,9 +1,6 @@
 package de.shop.bestellverwaltung.domain;
 
-import java.net.URI;
-
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 import de.shop.artikelverwaltung.domain.Artikel;
 
@@ -11,7 +8,6 @@ import de.shop.artikelverwaltung.domain.Artikel;
 public class Posten {
 	
 	private Artikel artikel;
-	
 	private int anzahl;
 	
 	public Artikel getArtikel() {
@@ -62,6 +58,4 @@ public class Posten {
 	public String toString() {
 		return "Posten [artikel=" + artikel + ", anzahl=" + anzahl + "]";
 	}
-	
-
 }

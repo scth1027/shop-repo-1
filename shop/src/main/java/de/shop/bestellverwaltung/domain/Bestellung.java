@@ -17,8 +17,7 @@ public class Bestellung {
 	private Kunde kunde;
 	private Lieferant lieferant;
 	private BigDecimal gesamtpreis;
-	private Bestellstatus bestellstatus;	
-	//Posten zu Bestellung hinzugefügt
+	private Bestellstatus bestellstatus;
 	private List<Posten> posten;
 	
 	private URI kundeURI;
@@ -76,7 +75,7 @@ public class Bestellung {
 	}
 
 	public void setGesamtpreis(BigDecimal gesamtpreis) {
-		this.gesamtpreis = gesamtpreis;
+		this.gesamtpreis = gesamtpreis.setScale(2);
 	}
 
 	@Override
@@ -145,5 +144,4 @@ public class Bestellung {
 				+ ", bestellstatus=" + bestellstatus + ", posten=" + posten
 				+ ", kundeURI=" + kundeURI + "]";
 	}
-
 }

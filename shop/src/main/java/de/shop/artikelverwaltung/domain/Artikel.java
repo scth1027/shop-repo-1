@@ -21,7 +21,6 @@ public class Artikel implements Serializable {
 	
 	private Long id;
 	private String bezeichnung;
-	//TODO: Besserer Datentyp wählen
 	private BigDecimal preis;
 	
 	public Long getId() {
@@ -45,7 +44,7 @@ public class Artikel implements Serializable {
 	}
 	
 	public void setPreis(BigDecimal preis) {
-		this.preis = preis;
+		this.preis = preis.setScale(2);
 	}
 	
 	public Artikel() {
@@ -59,7 +58,7 @@ public class Artikel implements Serializable {
 		super();
 		this.id = id;
 		this.bezeichnung = bezeichnung;
-		this.preis = preis;
+		this.preis = preis.setScale(2);
 	}
 
 	@Override

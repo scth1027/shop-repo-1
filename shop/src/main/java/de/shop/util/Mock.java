@@ -113,12 +113,12 @@ public final class Mock {
 		System.out.println("Lieferant erzeugt");
 		//bestellung.setBestellstatus("bestellung" + id);
 		//TODO setBestellstatus in Mock überarbeiten
-		bestellung.setGesamtpreis(new BigDecimal(112.0));
+		bestellung.setGesamtpreis(new BigDecimal("112.43"));
 		System.out.print("Gesamtpreis gesetzt");
 		Posten p = new Posten();
 		p.setAnzahl(3);
 		System.out.println("Posten: " + p.toString());
-		p.setArtikel(new Artikel(Long.valueOf(1), "Posten1", new BigDecimal(13.0)));
+		p.setArtikel(new Artikel(Long.valueOf(1), "Posten1", new BigDecimal("13.0")));
 		System.out.println("Posten: " + p.toString());
 		List<Posten> posten = new ArrayList<>();
 		posten.add(p);
