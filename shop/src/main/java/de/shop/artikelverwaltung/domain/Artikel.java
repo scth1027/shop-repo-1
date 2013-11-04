@@ -1,6 +1,7 @@
 package de.shop.artikelverwaltung.domain;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -21,7 +22,7 @@ public class Artikel implements Serializable {
 	private Long id;
 	private String bezeichnung;
 	//TODO: Besserer Datentyp wählen
-	private Double preis;
+	private BigDecimal preis;
 	
 	public Long getId() {
 		return id;
@@ -39,11 +40,11 @@ public class Artikel implements Serializable {
 		this.bezeichnung = bezeichnung;
 	}
 	
-	public Double getPreis() {
+	public BigDecimal getPreis() {
 		return preis;
 	}
 	
-	public void setPreis(Double preis) {
+	public void setPreis(BigDecimal preis) {
 		this.preis = preis;
 	}
 	
@@ -54,7 +55,7 @@ public class Artikel implements Serializable {
 		this.preis = null;
 	}
 
-	public Artikel(Long id, String bezeichnung, Double preis) {
+	public Artikel(Long id, String bezeichnung, BigDecimal preis) {
 		super();
 		this.id = id;
 		this.bezeichnung = bezeichnung;

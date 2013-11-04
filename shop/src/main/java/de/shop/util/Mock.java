@@ -1,5 +1,6 @@
 package de.shop.util;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Set;
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.bestellverwaltung.domain.Bestellstatus;
+import de.shop.bestellverwaltung.domain.Posten;
 import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.domain.Adresse;
 import de.shop.kundenverwaltung.domain.Firmenkunde;
@@ -97,13 +99,26 @@ public final class Mock {
 		}
 
 		final Kunde kunde = findKundeById(id + 1);  // andere ID fuer den Kunden
-
+		System.out.println("Kunde erhalten");
 		final Bestellung bestellung = new Bestellung();
 		bestellung.setId(id);
+		System.out.println("Bestellung erzeugt");
 		final Lieferant lieferant = new Lieferant();
 		lieferant.setId(id);
+		System.out.println("Lieferant erzeugt");
 		//bestellung.setBestellstatus("bestellung" + id);
 		//TODO setBestellstatus in Mock überarbeiten
+		bestellung.setGesamtpreis(new BigDecimal(112.0));
+		System.out.print("Gesamtpreis gesetzt");
+		Posten p = new Posten();
+		p.setAnzahl(3);
+		System.out.println("Posten: " + p.toString());
+		p.setArtikel(new Artikel(Long.valueOf(1), "Posten1", new BigDecimal(13.0)));
+		System.out.println("Posten: " + p.toString());
+		List<Posten> posten = new ArrayList<>();
+		posten.add(p);
+		bestellung.setPosten(posten);
+		System.out.println("Posten in Bestellung");
 		bestellung.setKunde(kunde);
 		
 		return bestellung;
@@ -149,7 +164,7 @@ public final class Mock {
 		Artikel artikel = new Artikel();
 		artikel.setId(id);
 		artikel.setBezeichnung("Bezeichnung" + id);
-		artikel.setPreis(0.0 + id);
+		artikel.setPreis(new BigDecimal(10.0 + id));
 		
 		return artikel;
 	}

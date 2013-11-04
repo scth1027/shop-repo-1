@@ -214,7 +214,7 @@ public class KundenResource {
 		return uriHelper.getUri(KundenResource.class, "findBestellungenByKundeId", kunde.getId(), uriInfo);
 	}
 	
-	private URI getKundenURI(Kunde kunde, UriInfo uriInfo) {
+	public URI getKundenURI(Kunde kunde, UriInfo uriInfo) {
 		return uriHelper.getUri(KundenResource.class, "findKundeById", kunde.getId(), uriInfo);
 	}
 
