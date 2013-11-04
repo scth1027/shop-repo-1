@@ -54,8 +54,8 @@ public abstract class Kunde implements Serializable{
 	public String getNachname() {
 		return nachname;
 	}
-	public void setNachname(String _nachname) {
-		this.nachname = _nachname;
+	public void setNachname(String nachname) {
+		this.nachname = nachname;
 	}
 	public String getVorname() {
 		return vorname;
@@ -66,14 +66,14 @@ public abstract class Kunde implements Serializable{
 	public Adresse getAdresse() {
 		return adresse;
 	}
-	public void setAdresse(Adresse _adresse) {
-		this.adresse = _adresse;
+	public void setAdresse(Adresse adresse) {
+		this.adresse = adresse;
 	}
 	public String getEmail() {
 		return email;
 	}
-	public void setEmail(String _email) {
-		this.email = _email;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	
 	@Override
@@ -122,37 +122,44 @@ public abstract class Kunde implements Serializable{
 		if (adresse == null) {
 			if (other.adresse != null)
 				return false;
-		} else if (!adresse.equals(other.adresse))
+		} 
+		else if (!adresse.equals(other.adresse))
 			return false;
 		if (bestellungen == null) {
 			if (other.bestellungen != null)
 				return false;
-		} else if (!bestellungen.equals(other.bestellungen))
+		} 
+		else if (!bestellungen.equals(other.bestellungen))
 			return false;
 		if (bestellungenURI == null) {
 			if (other.bestellungenURI != null)
 				return false;
-		} else if (!bestellungenURI.equals(other.bestellungenURI))
+		}
+		else if (!bestellungenURI.equals(other.bestellungenURI))
 			return false;
 		if (email == null) {
 			if (other.email != null)
 				return false;
-		} else if (!email.equals(other.email))
+		}
+		else if (!email.equals(other.email))
 			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
-		} else if (!id.equals(other.id))
+		}
+		else if (!id.equals(other.id))
 			return false;
 		if (nachname == null) {
 			if (other.nachname != null)
 				return false;
-		} else if (!nachname.equals(other.nachname))
+		}
+		else if (!nachname.equals(other.nachname))
 			return false;
 		if (vorname == null) {
 			if (other.vorname != null)
 				return false;
-		} else if (!vorname.equals(other.vorname))
+		}
+		else if (!vorname.equals(other.vorname))
 			return false;
 		return true;
 	}
