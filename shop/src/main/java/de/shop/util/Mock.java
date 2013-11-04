@@ -131,7 +131,7 @@ public final class Mock {
 			final Bestellung bestellung = findBestellungById(Long.valueOf(i));
 			Bestellung_liste.add(bestellung);
 		}
-		return null;
+		return Bestellung_liste;
 	}
 	
 	public static Kunde createKunde(Kunde kunde) {

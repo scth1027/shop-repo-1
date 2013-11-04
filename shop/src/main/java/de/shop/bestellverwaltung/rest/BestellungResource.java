@@ -64,7 +64,7 @@ public class BestellungResource {
 	}
 	
 	@GET
-	public Response findBestellungen() {
+	public Response findAllBestellungen() {
 		// Aufruf der Mock zur Erzeugung der Bestellungen
 		List<Bestellung> all = Mock.findAllBestellungen();
 		// Plausibilitäsprüfung
