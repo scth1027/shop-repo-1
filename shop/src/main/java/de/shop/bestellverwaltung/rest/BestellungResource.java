@@ -129,9 +129,9 @@ public class BestellungResource {
 	@Produces
 	public Response createBestellung(Bestellung bestellung) {
 		// TODO Anwendungskern statt Mock
-		System.out.println("Kunde angekommen im Service");
+		System.out.println("Bestellung angekommen im Service");
 		bestellung = Mock.createBestellung(bestellung);
-		System.out.println("Kunde ist aus der Mock zurück");
+		System.out.println("Bestellung ist aus der Mock zurück");
 		return Response.created(getUriBestellung(bestellung, uriInfo))
 				.build();
 	}
