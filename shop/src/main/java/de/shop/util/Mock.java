@@ -2,14 +2,7 @@ package de.shop.util;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
-import javax.ws.rs.DELETE;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.bestellverwaltung.domain.Bestellung;
@@ -115,12 +108,12 @@ public final class Mock {
 		//TODO setBestellstatus in Mock überarbeiten
 		bestellung.setGesamtpreis(new BigDecimal("112.43"));
 		System.out.print("Gesamtpreis gesetzt");
-		Posten p = new Posten();
+		final Posten p = new Posten();
 		p.setAnzahl(3);
 		System.out.println("Posten: " + p.toString());
 		p.setArtikel(new Artikel(Long.valueOf(1), "Posten1", new BigDecimal("13.0")));
 		System.out.println("Posten: " + p.toString());
-		List<Posten> posten = new ArrayList<>();
+		final List<Posten> posten = new ArrayList<>();
 		posten.add(p);
 		bestellung.setPosten(posten);
 		System.out.println("Posten in Bestellung");
@@ -129,22 +122,21 @@ public final class Mock {
 		return bestellung;
 	}
 
-	public static List<Bestellung> findAllBestellungen(){
+	public static List<Bestellung> findAllBestellungen() {
 		final int anzahl = MAX_BESTELLUNGEN;
-		final List<Bestellung> Bestellung_liste = new ArrayList<>(anzahl);
-		for(int i = 1; i <= anzahl; i++) {
+		final List<Bestellung> bestellungliste = new ArrayList<>(anzahl);
+		for (int i = 1; i <= anzahl; i++) {
 			final Bestellung bestellung = findBestellungById(Long.valueOf(i));
-			Bestellung_liste.add(bestellung);
+			bestellungliste.add(bestellung);
 		}
-		return Bestellung_liste;
+		return bestellungliste;
 	}
 	
 	public static Bestellung createBestellung(Bestellung bestellung) {
-		
-		final Kunde kunde = bestellung.getKunde();
-		final Lieferant lieferant = bestellung.getLieferant();
-		final BigDecimal gesamtpreis = bestellung.getGesamtpreis();
-		final Bestellstatus bestellstatus = bestellung.getBestellstatus();
+//		final Kunde kunde = bestellung.getKunde();
+//		final Lieferant lieferant = bestellung.getLieferant();
+//		final BigDecimal gesamtpreis = bestellung.getGesamtpreis();
+//		final Bestellstatus bestellstatus = bestellung.getBestellstatus();
 		return bestellung;
 	}
 	
@@ -179,38 +171,38 @@ public final class Mock {
 	}
 
 	//Artikelteil
-	public static Artikel findArtikelById(Long id){
-		if (id > MAX_ID){
+	public static Artikel findArtikelById(Long id) {
+		if (id > MAX_ID) {
 			return null;
 		}
 		
-		Artikel artikel = new Artikel();
+		final Artikel artikel = new Artikel();
 		artikel.setId(id);
 		artikel.setBezeichnung("Bezeichnung" + id);
-		artikel.setPreis(new BigDecimal(10.0 + id));
+		artikel.setPreis(new BigDecimal(id + "0.0"));
 		
 		return artikel;
 	}
 	
 	public static List<Artikel> findArtikelByBezeichnung(String bezeichnung) {
 		final int anzahl = bezeichnung.length();
-		final List<Artikel> artikel_liste = new ArrayList<>(anzahl);
+		final List<Artikel> artikelliste = new ArrayList<>(anzahl);
 		for (int i = 1; i <= anzahl; i++) {
 			final Artikel artikel = findArtikelById(Long.valueOf(i));
 			artikel.setBezeichnung(bezeichnung);
-			artikel_liste.add(artikel);			
+			artikelliste.add(artikel);			
 		}
-		return artikel_liste;
+		return artikelliste;
 	}
 
 	public static List<Artikel> findAllArtikel(){
 		final int anzahl = MAX_ARTIKEL;
-		final List<Artikel> artikel_liste = new ArrayList<>(anzahl);
-		for(int i = 1; i <= anzahl; i++) {
+		final List<Artikel> artikelliste = new ArrayList<>(anzahl);
+		for (int i = 1; i <= anzahl; i++) {
 			final Artikel artikel = findArtikelById(Long.valueOf(i));
-			artikel_liste.add(artikel);
+			artikelliste.add(artikel);
 		}
-		return artikel_liste;
+		return artikelliste;
 	}
 
 	public static Artikel createArtikel(Artikel artikel) {

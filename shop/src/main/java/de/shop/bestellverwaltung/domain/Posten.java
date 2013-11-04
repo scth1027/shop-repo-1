@@ -43,13 +43,14 @@ public class Posten {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Posten other = (Posten) obj;
+		final Posten other = (Posten) obj;
 		if (anzahl != other.anzahl)
 			return false;
 		if (artikel == null) {
 			if (other.artikel != null)
 				return false;
-		} else if (!artikel.equals(other.artikel))
+		}
+		else if (!artikel.equals(other.artikel))
 			return false;
 		return true;
 	}
