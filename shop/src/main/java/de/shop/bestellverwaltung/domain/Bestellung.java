@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import de.shop.kundenverwaltung.domain.Kunde;
-import de.shop.bestellverwaltung.domain.Bestellstatus;
 import de.shop.lieferantenverwaltung.domain.Lieferant;
 
 
@@ -50,8 +49,8 @@ public class Bestellung {
 		return lieferant;
 	}
 
-	public void setLieferant(Lieferant _lieferant) {
-		this.lieferant = _lieferant;
+	public void setLieferant(Lieferant lieferant) {
+		this.lieferant = lieferant;
 	}
 		
 	public Bestellstatus getBestellstatus() {
@@ -110,29 +109,34 @@ public class Bestellung {
 		if (gesamtpreis == null) {
 			if (other.gesamtpreis != null)
 				return false;
-		} else if (!gesamtpreis.equals(other.gesamtpreis))
+		} 
+		else if (!gesamtpreis.equals(other.gesamtpreis))
 			return false;
 		if (id != other.id)
 			return false;
 		if (kunde == null) {
 			if (other.kunde != null)
 				return false;
-		} else if (!kunde.equals(other.kunde))
+		} 
+		else if (!kunde.equals(other.kunde))
 			return false;
 		if (kundeURI == null) {
 			if (other.kundeURI != null)
 				return false;
-		} else if (!kundeURI.equals(other.kundeURI))
+		} 
+		else if (!kundeURI.equals(other.kundeURI))
 			return false;
 		if (lieferant == null) {
 			if (other.lieferant != null)
 				return false;
-		} else if (!lieferant.equals(other.lieferant))
+		} 
+		else if (!lieferant.equals(other.lieferant))
 			return false;
 		if (posten == null) {
 			if (other.posten != null)
 				return false;
-		} else if (!posten.equals(other.posten))
+		} 
+		else if (!posten.equals(other.posten))
 			return false;
 		return true;
 	}
