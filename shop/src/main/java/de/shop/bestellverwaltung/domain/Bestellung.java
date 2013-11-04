@@ -1,12 +1,10 @@
 package de.shop.bestellverwaltung.domain;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-
-import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.bestellverwaltung.domain.Bestellstatus;
 import de.shop.lieferantenverwaltung.domain.Lieferant;
@@ -18,13 +16,10 @@ public class Bestellung {
 	private long id;
 	private Kunde kunde;
 	private Lieferant lieferant;
-	
-	private Bestellstatus bestellstatus;
-	
-	@XmlTransient
-	private List<Artikel> _artikel;
-	
-	private URI artikelURI;
+	private BigDecimal gesamtpreis;
+	private Bestellstatus bestellstatus;	
+	//Posten zu Bestellung hinzugefügt
+	private List<Posten> posten;
 	
 	private URI kundeURI;
 	
@@ -59,22 +54,6 @@ public class Bestellung {
 	public void setLieferant(Lieferant _lieferant) {
 		this.lieferant = _lieferant;
 	}
-	
-	public URI getArtikelURI() {
-		return artikelURI;
-	}
-
-	public void setArtikelURI(URI artikelURI) {
-		this.artikelURI = artikelURI;
-	}
-
-	public List<Artikel> get_artikel() {
-		return _artikel;
-	}
-
-	public void set_artikel(List<Artikel> _artikel) {
-		this._artikel = _artikel;
-	}
 		
 	public Bestellstatus getBestellstatus() {
 		return bestellstatus;
@@ -83,13 +62,21 @@ public class Bestellung {
 	public void setBestellstatus(Bestellstatus bestellstatus) {
 		this.bestellstatus = bestellstatus;
 	}
+	
+	public List<Posten> getPosten() {
+		return posten;
+	}
 
-	@Override
-	public String toString() {
-		return "Bestellung [id=" + id + ", kunde=" + kunde + ", lieferant="
-				+ lieferant + ", bestellstatus=" + bestellstatus
-				+ ", _artikel=" + _artikel + ", artikelURI=" + artikelURI
-				+ ", kundeURI=" + kundeURI + "]";
+	public void setPosten(List<Posten> posten) {
+		this.posten = posten;
+	}
+
+	public BigDecimal getGesamtpreis() {
+		return gesamtpreis;
+	}
+
+	public void setGesamtpreis(BigDecimal gesamtpreis) {
+		this.gesamtpreis = gesamtpreis;
 	}
 
 	@Override
@@ -97,17 +84,16 @@ public class Bestellung {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((_artikel == null) ? 0 : _artikel.hashCode());
-		result = prime * result
-				+ ((artikelURI == null) ? 0 : artikelURI.hashCode());
-		result = prime * result
 				+ ((bestellstatus == null) ? 0 : bestellstatus.hashCode());
+		result = prime * result
+				+ ((gesamtpreis == null) ? 0 : gesamtpreis.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((kunde == null) ? 0 : kunde.hashCode());
 		result = prime * result
 				+ ((kundeURI == null) ? 0 : kundeURI.hashCode());
 		result = prime * result
 				+ ((lieferant == null) ? 0 : lieferant.hashCode());
+		result = prime * result + ((posten == null) ? 0 : posten.hashCode());
 		return result;
 	}
 
@@ -120,17 +106,12 @@ public class Bestellung {
 		if (getClass() != obj.getClass())
 			return false;
 		Bestellung other = (Bestellung) obj;
-		if (_artikel == null) {
-			if (other._artikel != null)
-				return false;
-		} else if (!_artikel.equals(other._artikel))
-			return false;
-		if (artikelURI == null) {
-			if (other.artikelURI != null)
-				return false;
-		} else if (!artikelURI.equals(other.artikelURI))
-			return false;
 		if (bestellstatus != other.bestellstatus)
+			return false;
+		if (gesamtpreis == null) {
+			if (other.gesamtpreis != null)
+				return false;
+		} else if (!gesamtpreis.equals(other.gesamtpreis))
 			return false;
 		if (id != other.id)
 			return false;
@@ -149,15 +130,20 @@ public class Bestellung {
 				return false;
 		} else if (!lieferant.equals(other.lieferant))
 			return false;
+		if (posten == null) {
+			if (other.posten != null)
+				return false;
+		} else if (!posten.equals(other.posten))
+			return false;
 		return true;
 	}
 
-	
-
-	
-	
-	
-	
-	
+	@Override
+	public String toString() {
+		return "Bestellung [id=" + id + ", kunde=" + kunde + ", lieferant="
+				+ lieferant + ", gesamtpreis=" + gesamtpreis
+				+ ", bestellstatus=" + bestellstatus + ", posten=" + posten
+				+ ", kundeURI=" + kundeURI + "]";
+	}
 
 }
