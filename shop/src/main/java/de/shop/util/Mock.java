@@ -142,9 +142,14 @@ public final class Mock {
 	public static Bestellung createBestellung(Bestellung bestellung) {
 		
 		final Kunde kunde = bestellung.getKunde();
+		kunde.setId(Long.valueOf(2));
 		final Lieferant lieferant = bestellung.getLieferant();
+		lieferant.setId(Long.valueOf(2));
 		final BigDecimal gesamtpreis = bestellung.getGesamtpreis();
+		gesamtpreis.setScale(15);
 		final Bestellstatus bestellstatus = bestellung.getBestellstatus();
+
+		
 		return bestellung;
 	}
 	
