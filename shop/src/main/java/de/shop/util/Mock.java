@@ -6,6 +6,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.ws.rs.DELETE;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.bestellverwaltung.domain.Bestellstatus;
@@ -133,6 +138,24 @@ public final class Mock {
 		}
 		return Bestellung_liste;
 	}
+	
+	public static Bestellung createBestellung(Bestellung bestellung) {
+		
+		final Kunde kunde = bestellung.getKunde();
+		final Lieferant lieferant = bestellung.getLieferant();
+		final BigDecimal gesamtpreis = bestellung.getGesamtpreis();
+		final Bestellstatus bestellstatus = bestellung.getBestellstatus();
+		return bestellung;
+	}
+	
+	public static void updateBestellung(Bestellung bestellung) {
+		System.out.println("Aktualisierter Bestellung: " + bestellung);
+	}
+
+	public static void deleteBestellung(Long bestellungId) {
+		System.out.println("Bestellung mit ID=" + bestellungId + " geloescht");
+	}
+	
 	
 	public static Kunde createKunde(Kunde kunde) {
 		// Neue IDs fuer Kunde und zugehoerige Adresse

@@ -12,7 +12,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -79,7 +82,6 @@ public class BestellungResource {
 		        .build();
 	}
 	
-	
 	private Link[] setTransitionalLinksBestellungen(List<Bestellung> bestellungen, UriInfo uriInfo) {
 		if (bestellungen == null || bestellungen.isEmpty()) {
 			return null;
@@ -121,4 +123,32 @@ public class BestellungResource {
 	public URI getUriBestellung(Bestellung bestellung, UriInfo uriInfo) {
 		return uriHelper.getUri(BestellungResource.class, "findBestellungById", bestellung.getId(), uriInfo);
 	}
+
+	@POST
+	@Consumes({APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
+	@Produces
+	public Response createBestellung(Bestellung bestellung) {
+		// TODO Anwendungskern statt Mock
+		System.out.println("Kunde angekommen im Service");
+		bestellung = Mock.createBestellung(bestellung);
+		System.out.println("Kunde ist aus der Mock zurück");
+		return Response.created(getUriBestellung(bestellung, uriInfo))
+				.build();
+	}
+
+	@DELETE
+	@Path("{id:[1-9][0-9]*}")
+	@Produces
+	public void deleteBestellung(@PathParam("id") Long bestellungId) {
+		Mock.deleteBestellung(bestellungId);
+	}
+
+	@PUT
+	@Consumes({APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
+	@Produces
+	public void updateBestellung(Bestellung bestellung) {
+		// TODO Anwendungskern statt Mock
+		Mock.updateBestellung(bestellung);
+	}
+
 }
