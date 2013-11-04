@@ -1,5 +1,7 @@
 package de.shop.bestellverwaltung.rest;
 
+import static de.shop.util.Constants.FIRST_LINK;
+import static de.shop.util.Constants.LAST_LINK;
 import static de.shop.util.Constants.SELF_LINK;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
@@ -61,25 +63,44 @@ public class BestellungResource {
 		return response;
 	}
 	
-//	@GET
-//	@Path("{id:[1-9][0-9]*}")
-//	public Response findAllBestellungen() {
-//		// TODO Anwendungskern statt Mock, Verwendung von Locale
-//		final List<Bestellung> bestellung = Mock.findAllBestellungen();
-//		if (bestellung == null) {
-//			throw new NotFoundException("Keine Bestellung gefunden.");
-//		}
-//		
-//		setStructuralLinks(bestellung, uriInfo);
-//		
-//		// Link-Header setzen
-//		return Response.ok(new GenericEntity<List<? extends Bestellung>>(bestellung){})
-//				.links(setTransitionalLinksKunden(bestellung, uriInfo))
-//				.build();
-//		
-//		return response;
-//	}
+	@GET
+	public Response findBestellungen() {
+		// Aufruf der Mock zur Erzeugung der Bestellungen
+		List<Bestellung> all = Mock.findAllBestellungen();
+		// Plausibilitäsprüfung
+		if(all.isEmpty())
+			throw new NotFoundException("Es konnten keine Kunden gefunden werden!");
+		// Erstellen der Links für die jeweilign Bestellungen
+		for (Bestellung bestellung : all) {
+			setStructuralLinks(bestellung, uriInfo);
+		}
+		return Response.ok(new GenericEntity<List<Bestellung>>(all){})
+		        .links(setTransitionalLinksBestellungen(all, uriInfo))
+		        .build();
+	}
 	
+	
+	private Link[] setTransitionalLinksBestellungen(List<Bestellung> bestellungen, UriInfo uriInfo) {
+		if (bestellungen == null || bestellungen.isEmpty()) {
+			return null;
+		}
+
+		final Link first = Link.fromUri(getBestellungenURI(bestellungen.get(0), uriInfo))
+				.rel(FIRST_LINK)
+				.build();
+		final int lastPos = bestellungen.size() - 1;
+		final Link last = Link.fromUri(getBestellungenURI(bestellungen.get(lastPos), uriInfo))
+				.rel(LAST_LINK)
+				.build();
+
+		return new Link[] { first, last };
+	}
+
+	private URI getBestellungenURI(Bestellung bestellung, UriInfo uriInfo2) {
+		return uriHelper.getUri(BestellungResource.class, "findBestellungById", bestellung.getId(), uriInfo);
+		
+	}
+
 	public void setStructuralLinks(Bestellung bestellung, UriInfo uriInfo) {
 		// URI fuer Kunde setzen
 		final Kunde kunde = bestellung.getKunde();
@@ -95,6 +116,7 @@ public class BestellungResource {
                               .build();
 		return new Link[] { self };
 	}
+	
 	
 	public URI getUriBestellung(Bestellung bestellung, UriInfo uriInfo) {
 		return uriHelper.getUri(BestellungResource.class, "findBestellungById", bestellung.getId(), uriInfo);
