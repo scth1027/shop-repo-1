@@ -104,8 +104,7 @@ public final class Mock {
 		final Lieferant lieferant = new Lieferant();
 		lieferant.setId(id);
 		System.out.println("Lieferant erzeugt");
-		//bestellung.setBestellstatus("bestellung" + id);
-		//TODO setBestellstatus in Mock überarbeiten
+		
 		bestellung.setGesamtpreis(new BigDecimal("112.43"));
 		System.out.print("Gesamtpreis gesetzt");
 		final Posten p = new Posten();
