@@ -6,12 +6,11 @@ import java.util.List;
 
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.bestellverwaltung.domain.Bestellung;
-import de.shop.bestellverwaltung.domain.Bestellstatus;
 import de.shop.bestellverwaltung.domain.Posten;
-import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.domain.Adresse;
 import de.shop.kundenverwaltung.domain.Firmenkunde;
 import de.shop.kundenverwaltung.domain.HobbyType;
+import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.domain.Privatkunde;
 import de.shop.lieferantenverwaltung.domain.Lieferant;
 import de.shop.lieferantenverwaltung.domain.Lieferantenadresse;
@@ -24,8 +23,6 @@ public final class Mock {
 	private static final int MAX_KUNDEN = 8;
 	private static final int MAX_ARTIKEL = 5;
 	private static final int MAX_BESTELLUNGEN = 4;
-	private static final int MAX_LIEFERANTEN = 8;
-	
 	
 	//Kundenteil
 	public static Kunde findKundeById(Long id) {
@@ -43,8 +40,8 @@ public final class Mock {
 		adresse.setId(id + 1);        // andere ID fuer die Adresse
 		adresse.setPlz("12345");
 		adresse.setOrt("Testort");
-		adresse.setStraﬂe("Moltkestraﬂe");
-		adresse.setHausnummer(11);
+		adresse.setStrasse("Moltkestrasse");
+		adresse.setHausnummer(id.intValue() + 1);
 		adresse.setKunde(kunde);
 		kunde.setAdresse(adresse);
 		
@@ -108,7 +105,7 @@ public final class Mock {
 		bestellung.setGesamtpreis(new BigDecimal("112.43"));
 		System.out.print("Gesamtpreis gesetzt");
 		final Posten p = new Posten();
-		p.setAnzahl(3);
+		p.setAnzahl(id.intValue() + 1);
 		System.out.println("Posten: " + p.toString());
 		p.setArtikel(new Artikel(Long.valueOf(1), "Posten1", new BigDecimal("13.0")));
 		System.out.println("Posten: " + p.toString());
@@ -138,8 +135,6 @@ public final class Mock {
 		lieferant.setId(Long.valueOf(2));
 		final BigDecimal gesamtpreis = bestellung.getGesamtpreis();
 		gesamtpreis.setScale(15);
-		final Bestellstatus bestellstatus = bestellung.getBestellstatus();
-		
 		return bestellung;
 	}
 	

@@ -21,48 +21,48 @@ public class Lieferantenadresse implements Serializable {
 	private String plz;
 	private String strasse;
 	private Integer hausnummer;
-	
+
 	@XmlTransient
 	private Lieferant lieferant;
-	
+
 	public Long getId() {
 		return id;
 	}
-	public void setId(Long _id) {
-		this.id = _id;
+	public void setId(Long id) {
+		this.id = id;
 	}
 	public String getOrt() {
 		return ort;
 	}
-	public void setOrt(String _ort) {
-		this.ort = _ort;
+	public void setOrt(String ort) {
+		this.ort = ort;
 	}
 	public String getPlz() {
 		return plz;
 	}
-	public void setPlz(String _plz) {
-		this.plz = _plz;
+	public void setPlz(String plz) {
+		this.plz = plz;
 	}
 	public String getStraße() {
 		return strasse;
 	}
-	public void setStraße(String _straße) {
-		this.strasse = _straße;
+	public void setStraße(String straße) {
+		this.strasse = straße;
 	}
 	public Integer getHausnummer() {
 		return hausnummer;
 	}
-	public void setHausnummer(Integer _hausnummer) {
-		this.hausnummer = _hausnummer;
+	public void setHausnummer(Integer hausnummer) {
+		this.hausnummer = hausnummer;
 	}
-	
+
 	public Lieferant getLieferant() {
 		return lieferant;
 	}
-	public void setLieferant(Lieferant _lieferant) {
-		this.lieferant = _lieferant;
+	public void setLieferant(Lieferant lieferant) {
+		this.lieferant = lieferant;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -83,31 +83,36 @@ public class Lieferantenadresse implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Lieferantenadresse other = (Lieferantenadresse) obj;
+		final Lieferantenadresse other = (Lieferantenadresse) obj;
 		if (hausnummer == null) {
 			if (other.hausnummer != null)
 				return false;
-		} else if (!hausnummer.equals(other.hausnummer))
+		}
+		else if (!hausnummer.equals(other.hausnummer))
 			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
-		} else if (!id.equals(other.id))
+		}
+		else if (!id.equals(other.id))
 			return false;
 		if (ort == null) {
 			if (other.ort != null)
 				return false;
-		} else if (!ort.equals(other.ort))
+		}
+		else if (!ort.equals(other.ort))
 			return false;
 		if (plz == null) {
 			if (other.plz != null)
 				return false;
-		} else if (!plz.equals(other.plz))
+		}
+		else if (!plz.equals(other.plz))
 			return false;
 		if (strasse == null) {
 			if (other.strasse != null)
 				return false;
-		} else if (!strasse.equals(other.strasse))
+		}
+		else if (!strasse.equals(other.strasse))
 			return false;
 		return true;
 	}

@@ -24,18 +24,18 @@ import de.shop.bestellverwaltung.domain.Bestellung;
 public class Lieferant implements Serializable{
 
 	private static final long serialVersionUID = 1430771599450877428L;
-	
+
 	private Long id;
 	private String firma;
 	private Lieferantenadresse adresse;
 	private String email;
-	
+
 	@XmlTransient
 	// Bestellungsklasse mitbenutzen oder eigene Klasse für Lieferantenbestellungen?
 	private List<Bestellung> bestellungen;
-	
+
 	private URI bestellungenURI;
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -45,22 +45,22 @@ public class Lieferant implements Serializable{
 	public String getFirma() {
 		return firma;
 	}
-	public void setFirma(String _firma) {
-		this.firma = _firma;
+	public void setFirma(String firma) {
+		this.firma = firma;
 	}
 	public Lieferantenadresse getLieferantenadresse() {
 		return adresse;
 	}
-	public void setLieferantenadresse(Lieferantenadresse _adresse) {
-		this.adresse = _adresse;
+	public void setLieferantenadresse(Lieferantenadresse adresse) {
+		this.adresse = adresse;
 	}
 	public String getEmail() {
 		return email;
 	}
-	public void setEmail(String _email) {
-		this.email = _email;
+	public void setEmail(String email) {
+		this.email = email;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Lieferant [id=" + id + ", firma=" + firma + ", email="
@@ -78,7 +78,7 @@ public class Lieferant implements Serializable{
 	public void setBestellungen(List<Bestellung> _bestellungen) {
 		this.bestellungen = _bestellungen;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -99,38 +99,44 @@ public class Lieferant implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Lieferant other = (Lieferant) obj;
+		final Lieferant other = (Lieferant) obj;
 		if (adresse == null) {
 			if (other.adresse != null)
 				return false;
-		} else if (!adresse.equals(other.adresse))
+		}
+		else if (!adresse.equals(other.adresse))
 			return false;
 		if (bestellungen == null) {
 			if (other.bestellungen != null)
 				return false;
-		} else if (!bestellungen.equals(other.bestellungen))
+		}
+		else if (!bestellungen.equals(other.bestellungen))
 			return false;
 		if (bestellungenURI == null) {
 			if (other.bestellungenURI != null)
 				return false;
-		} else if (!bestellungenURI.equals(other.bestellungenURI))
+		}
+		else if (!bestellungenURI.equals(other.bestellungenURI))
 			return false;
 		if (email == null) {
 			if (other.email != null)
 				return false;
-		} else if (!email.equals(other.email))
+		}
+		else if (!email.equals(other.email))
 			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
-		} else if (!id.equals(other.id))
+		}
+		else if (!id.equals(other.id))
 			return false;
 		if (firma == null) {
 			if (other.firma != null)
 				return false;
-		} else if (!firma.equals(other.firma))
+		}
+		else if (!firma.equals(other.firma))
 			return false;
 		return true;
 	}
-	
+
 }

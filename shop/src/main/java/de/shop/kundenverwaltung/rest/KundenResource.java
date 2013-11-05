@@ -68,7 +68,7 @@ public class KundenResource {
 	@GET
 	public Response findAllKunden() {
 		// Aufruf der Mock zur Erzeugung der Kunden
-		List<Kunde> all = Mock.findAllKunden();
+		final List<Kunde> all = Mock.findAllKunden();
 		// Plausibilitäsprüfung
 		if(all.isEmpty())
 			throw new NotFoundException("Es konnten keine Kunden gefunden werden!");
@@ -77,8 +77,8 @@ public class KundenResource {
 			setStructuralLinks(kunde, uriInfo);
 		}
 		return Response.ok(new GenericEntity<List<Kunde>>(all){})
-		        .links(setTransitionalLinksKunden(all, uriInfo))
-		        .build();
+				.links(setTransitionalLinksKunden(all, uriInfo))
+				.build();
 	}
 
 	// Kunde mit ID finden
@@ -213,7 +213,7 @@ public class KundenResource {
 		//return URI.create("http://localhost:8080/shop/rest/");
 		return uriHelper.getUri(KundenResource.class, "findBestellungenByKundeId", kunde.getId(), uriInfo);
 	}
-	
+
 	public URI getKundenURI(Kunde kunde, UriInfo uriInfo) {
 		return uriHelper.getUri(KundenResource.class, "findKundeById", kunde.getId(), uriInfo);
 	}

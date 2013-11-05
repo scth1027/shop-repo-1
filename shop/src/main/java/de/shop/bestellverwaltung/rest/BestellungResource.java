@@ -39,13 +39,13 @@ import de.shop.util.rest.NotFoundException;
 public class BestellungResource {
 	@Context
 	private UriInfo uriInfo;
-	
+
 	@Inject
 	private UriHelper uriHelper;
-	
+
 	@Inject
 	private KundenResource kundeResource;
-	
+
 	@GET
 	@Path("{id:[1-9][0-9]*}")
 	public Response findBestellungById(@PathParam("id") Long id) {
@@ -55,33 +55,34 @@ public class BestellungResource {
 		if (bestellung == null) {
 			throw new NotFoundException("Keine Bestellung mit der ID " + id + " gefunden.");
 		}
-		
+
 		setStructuralLinks(bestellung, uriInfo);
-		
+
 		// Link-Header setzen
 		final Response response = Response.ok(bestellung)
-                                          .links(getTransitionalLinks(bestellung, uriInfo))
-                                          .build();
-		
+				.links(getTransitionalLinks(bestellung, uriInfo))
+				.build();
+
 		return response;
 	}
-	
+
 	@GET
 	public Response findAllBestellungen() {
 		// Aufruf der Mock zur Erzeugung der Bestellungen
-		List<Bestellung> all = Mock.findAllBestellungen();
+		final List<Bestellung> all = Mock.findAllBestellungen();
 		// Plausibilitäsprüfung
 		if(all.isEmpty())
 			throw new NotFoundException("Es konnten keine Kunden gefunden werden!");
 		// Erstellen der Links für die jeweilign Bestellungen
-		for (Bestellung bestellung : all) {
+		for (Bestellung bestellung : all)
+		{
 			setStructuralLinks(bestellung, uriInfo);
 		}
 		return Response.ok(new GenericEntity<List<Bestellung>>(all){})
-		        .links(setTransitionalLinksBestellungen(all, uriInfo))
-		        .build();
+				.links(setTransitionalLinksBestellungen(all, uriInfo))
+				.build();
 	}
-	
+
 	private Link[] setTransitionalLinksBestellungen(List<Bestellung> bestellungen, UriInfo uriInfo) {
 		if (bestellungen == null || bestellungen.isEmpty()) {
 			return null;
@@ -100,7 +101,7 @@ public class BestellungResource {
 
 	private URI getBestellungenURI(Bestellung bestellung, UriInfo uriInfo2) {
 		return uriHelper.getUri(BestellungResource.class, "findBestellungById", bestellung.getId(), uriInfo);
-		
+
 	}
 
 	public void setStructuralLinks(Bestellung bestellung, UriInfo uriInfo) {
@@ -111,15 +112,15 @@ public class BestellungResource {
 			bestellung.setKundeURI(kundeUri);
 		}
 	}
-	
+
 	private Link[] getTransitionalLinks(Bestellung bestellung, UriInfo uriInfo) {
 		final Link self = Link.fromUri(getUriBestellung(bestellung, uriInfo))
-                              .rel(SELF_LINK)
-                              .build();
+				.rel(SELF_LINK)
+				.build();
 		return new Link[] { self };
 	}
-	
-	
+
+
 	public URI getUriBestellung(Bestellung bestellung, UriInfo uriInfo) {
 		return uriHelper.getUri(BestellungResource.class, "findBestellungById", bestellung.getId(), uriInfo);
 	}

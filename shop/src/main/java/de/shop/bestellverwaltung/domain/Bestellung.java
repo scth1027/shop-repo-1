@@ -8,7 +8,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.lieferantenverwaltung.domain.Lieferant;
 
-
 @XmlRootElement
 public class Bestellung {
 	
@@ -103,7 +102,7 @@ public class Bestellung {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Bestellung other = (Bestellung) obj;
+		final Bestellung other = (Bestellung) obj;
 		if (bestellstatus != other.bestellstatus)
 			return false;
 		if (gesamtpreis == null) {
