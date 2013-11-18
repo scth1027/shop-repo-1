@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlTransient;
@@ -28,16 +31,24 @@ import de.shop.bestellverwaltung.domain.Bestellung;
 @JsonSubTypes({
 	@Type(value = Privatkunde.class, name = Kunde.PRIVATKUNDE),
 	@Type(value = Firmenkunde.class, name = Kunde.FIRMENKUNDE) })
-public abstract class Kunde implements Serializable{
+public abstract class Kunde implements Serializable {
 
 	private static final long serialVersionUID = 1430771599450877428L;
 	public static final String PRIVATKUNDE = "P";
 	public static final String FIRMENKUNDE = "F";
 	
 	private Long id;
+	@NotNull(message = "{kunde.nachname.notNull}")
+	@Size(min = 2, max = 32, message = "{kunde.nachname.length}")
 	private String nachname;
+	@NotNull(message = "{kunde.vorname.notNull}")
+	@Size(min = 2, max = 32, message = "{kunde.vorname.length}")
 	private String vorname;
+	@Valid
+	@NotNull(message = "{kunde.adresse.notNull}")
 	private Adresse adresse;
+	@Size(min = 4, message = "{kunde.email.length}")
+	@NotNull(message = "{kunde.email.notNull}")
 	private String email;
 	
 	@XmlTransient
@@ -118,7 +129,7 @@ public abstract class Kunde implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Kunde other = (Kunde) obj;
+		final Kunde other = (Kunde) obj;
 		if (adresse == null) {
 			if (other.adresse != null)
 				return false;

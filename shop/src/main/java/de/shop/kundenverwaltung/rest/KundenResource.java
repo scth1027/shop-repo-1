@@ -14,6 +14,7 @@ import static javax.ws.rs.core.MediaType.TEXT_XML;
 import java.net.URI;
 import java.util.List;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -42,6 +43,7 @@ import de.shop.util.rest.NotFoundException;
  * enthaelt die RestServices fuer die Kundenverwaltung/Domain
  * Zugriff auf den Mock später Anwendungslogik
  */
+@RequestScoped
 @Path("/kunden")
 @Produces({ APPLICATION_JSON, APPLICATION_XML + ";qs=0.75", TEXT_XML + ";qs=0.5" })
 @Consumes
@@ -76,7 +78,7 @@ public class KundenResource {
 		for (Kunde kunde : all) {
 			setStructuralLinks(kunde, uriInfo);
 		}
-		return Response.ok(new GenericEntity<List<Kunde>>(all){})
+		return Response.ok(new GenericEntity<List<Kunde>>(all) {} )
 				.links(setTransitionalLinksKunden(all, uriInfo))
 				.build();
 	}
@@ -112,7 +114,7 @@ public class KundenResource {
 		else {
 			// TODO Anwendungskern statt Mock
 			kunden = Mock.findAllKunden();
-			if (kunden.isEmpty()) {
+			if(kunden.isEmpty()) {
 				throw new NotFoundException("Keine Kunden vorhanden.");
 			}
 		}
