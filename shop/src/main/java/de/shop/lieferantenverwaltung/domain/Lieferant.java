@@ -4,8 +4,12 @@ import java.io.Serializable;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.validation.constraints.Pattern;
 
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 
@@ -26,8 +30,15 @@ public class Lieferant implements Serializable{
 	private static final long serialVersionUID = 1430771599450877428L;
 
 	private Long id;
+	@NotNull(message = "{lieferant.firma.notNull}")
+	@Size(min = 2, max = 50, message = "{lieferant.firma.length}")
 	private String firma;
+	@Valid
+	@NotNull(message = "{lieferant.adresse.notNull}")
 	private Lieferantenadresse adresse;
+	@Size(min = 4, max = 128, message = "{lieferant.email.length}")
+	@Pattern(regexp = "[\\w.%-]+@[\\w.%-]+\\.[A-Za-z]{2,4}")
+	@NotNull(message = "{lieferant.email.notNull}")
 	private String email;
 
 	@XmlTransient
