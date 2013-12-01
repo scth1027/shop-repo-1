@@ -21,8 +21,11 @@ import de.shop.lieferantenverwaltung.domain.Lieferantenadresse;
 public final class Mock {
 	private static final int MAX_ID = 99;
 	private static final int MAX_KUNDEN = 8;
-	private static final int MAX_ARTIKEL = 5;
 	private static final int MAX_BESTELLUNGEN = 4;
+	
+	private static final int A_MIN_ID = 700;
+	private static final int A_MAX_ID = 799;
+	private static final int MAX_ARTIKEL = 5;
 	
 	//Kundenteil
 	public static Kunde findKundeById(Long id) {
@@ -170,7 +173,7 @@ public final class Mock {
 
 	//Artikelteil
 	public static Artikel findArtikelById(Long id) {
-		if (id > MAX_ID) {
+		if (id < A_MIN_ID && id > A_MAX_ID) {
 			return null;
 		}
 		

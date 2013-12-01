@@ -3,6 +3,11 @@ package de.shop.artikelverwaltung.domain;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.codehaus.jackson.annotate.JsonTypeInfo;
@@ -19,8 +24,15 @@ public class Artikel implements Serializable {
 	
 	private static final long serialVersionUID = 1430771599450877428L;
 	
+	@NotNull
+	@Min(1)
 	private Long id;
+	@NotNull
+	@Size(max = 100)
+	@Pattern(regexp = "[A-ZÄÖÜ][a-zäöü_-/]+")
 	private String bezeichnung;
+	@NotNull
+	@DecimalMin("0")
 	private BigDecimal preis;
 	
 	public Long getId() {

@@ -15,6 +15,7 @@ import static javax.ws.rs.core.MediaType.TEXT_XML;
 import java.net.URI;
 import java.util.List;
 
+import javax.faces.bean.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -32,7 +33,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import de.shop.artikelverwaltung.domain.Artikel;
-import de.shop.util.Mock;
+import de.shop.artikelverwaltung.service.ArtikelService;
 import de.shop.util.rest.NotFoundException;
 import de.shop.util.rest.UriHelper;
 
@@ -44,9 +45,13 @@ import de.shop.util.rest.UriHelper;
 @Path("/artikel")
 @Produces({ APPLICATION_JSON, APPLICATION_XML + ";qs=0.75", TEXT_XML + ";qs=0.5" })
 @Consumes
+@RequestScoped
 public class ArtikelResource {
 	public static final String ARTIKEL_ID_PATH_PARAM = "artikelId";
 	public static final String ARTIKEL_BEZEICHNUNG_QUERY_PARAM = "bezeichnung";
+	
+	@Inject
+	private ArtikelService as;
 	
 	//TODO Erweitern findAllArtikel, findArtikelByBezeichnung
 	@Context
@@ -67,8 +72,7 @@ public class ArtikelResource {
 	@GET
 	@Path("{" + ARTIKEL_ID_PATH_PARAM + ":[1-9][0-9]*}")
 	public Response findArtikelById(@PathParam(ARTIKEL_ID_PATH_PARAM) Long id) {
-		// TODO Anwendungskern statt Mock, Verwendung von Locale
-		final Artikel artikel = Mock.findArtikelById(id);
+		final Artikel artikel = as.findArtikelById(id);
 		if (artikel == null) {
 			throw new NotFoundException("Der Artikel mit der ID:" + id + " konnte nicht gefunden werden.");
 		}
@@ -85,15 +89,14 @@ public class ArtikelResource {
 		List<Artikel> artikelliste = null;
 		if (bezeichnung != null) {
 			System.out.println("RICHTIG");
-			// TODO Anwendungskern statt Mock, Verwendung von Locale
-			artikelliste = Mock.findArtikelByBezeichnung(bezeichnung);
+			
+			artikelliste = as.findArtikelByBezeichnung(bezeichnung);
 			if (artikelliste.isEmpty()) {
 				throw new NotFoundException("Kein Artikel mit Bezeichnung " + bezeichnung + " gefunden.");
 			}
 		}
 		else {
-			// TODO Anwendungskern statt Mock, Verwendung von Locale
-			artikelliste = Mock.findAllArtikel();
+			artikelliste = as.findAllArtikel();
 			if (artikelliste.isEmpty()) {
 				throw new NotFoundException("Keine Artikel vorhanden.");
 			}
@@ -107,8 +110,7 @@ public class ArtikelResource {
 	//Alle Artikel auflisten
 	@GET
 	public Response findAllArtikel() {
-		// TODO Anwendungskern statt Mock, Verwendung von Locale
-		final List<Artikel> artikelliste = Mock.findAllArtikel();
+		final List<Artikel> artikelliste = as.findAllArtikel();
 		if (artikelliste.isEmpty()) {
 			throw new NotFoundException("Es konnte keine Artikel gefunden werden.");
 		}
@@ -123,8 +125,7 @@ public class ArtikelResource {
 	@Consumes({APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces
 	public Response createArtikel(Artikel artikel) {
-		// TODO Anwendungskern statt Mock, Verwendung von Locale
-		artikel = Mock.createArtikel(artikel);
+		artikel = as.createArtikel(artikel);
 		return Response.created(getUriArtikel(artikel, uriInfo))
 			           .build();
 	}
@@ -134,8 +135,7 @@ public class ArtikelResource {
 	@Consumes({APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces
 	public void updateArtikel(Artikel artikel) {
-		// TODO Anwendungskern statt Mock, Verwendung von Locale
-		Mock.updateArtikel(artikel);
+		as.updateArtikel(artikel);
 	}
 	
 	//Artikel loeschen bzw. als nicht mehr aktiv makieren
@@ -143,8 +143,7 @@ public class ArtikelResource {
 	@Path("{id:[1-9][0-9]*}")
 	@Produces
 	public void deleteArtikel(@PathParam("id") Long artikelId) {
-		// TODO Anwendungskern statt Mock, Verwendung von Locale
-		Mock.deleteArtikel(artikelId);
+		as.deleteArtikel(artikelId);
 	}
 	
 	//Artikel URI erzeugen
