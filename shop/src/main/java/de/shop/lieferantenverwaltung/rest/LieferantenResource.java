@@ -16,6 +16,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -30,7 +31,6 @@ import javax.ws.rs.core.UriInfo;
 
 import de.shop.lieferantenverwaltung.domain.Lieferant;
 import de.shop.util.Mock;
-import de.shop.util.rest.NotFoundException;
 import de.shop.util.rest.UriHelper;
 
 /*

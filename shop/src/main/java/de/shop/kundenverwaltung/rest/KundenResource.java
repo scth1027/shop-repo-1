@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -36,7 +37,6 @@ import de.shop.bestellverwaltung.rest.BestellungResource;
 import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.util.Mock;
 import de.shop.util.rest.UriHelper;
-import de.shop.util.rest.NotFoundException;
 
 /*
  * KundenResource Klasse
