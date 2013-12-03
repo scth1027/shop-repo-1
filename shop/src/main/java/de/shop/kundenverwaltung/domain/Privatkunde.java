@@ -1,5 +1,7 @@
 package de.shop.kundenverwaltung.domain;
 
+import java.util.Set;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 /*
@@ -13,20 +15,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Privatkunde extends Kunde {
 
 	private static final long serialVersionUID = 870262362508397649L;
-//	TODO: hobby sollte spaeter zu einem HashSet geändert werden, sodass mehrere Hobbys aufgenommen werden koennen
-	private HobbyType hobby;
+	private Set<HobbyType> hobbies;
 
-	public HobbyType getHobby() {
-		return hobby;
+	public Set<HobbyType> getHobbies() {
+		return hobbies;
 	}
-
-	public void setHobby(HobbyType hobby) {
-		this.hobby = hobby;
+	public void setHobbies(Set<HobbyType> hobbies) {
+		this.hobbies = hobbies;
 	}
-
 	@Override
 	public String toString() {
-		return "Privatkunde[" + super.toString() + "] hobby=" + hobby;
+		return "Privatkunde [" + super.toString() + ", hobbies=" + hobbies + "]";
 	}
 
 }

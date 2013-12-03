@@ -2,7 +2,11 @@ package de.shop.util;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.bestellverwaltung.domain.Bestellung;
@@ -22,7 +26,9 @@ public final class Mock {
 	private static final int MAX_ID = 99;
 	private static final int MAX_KUNDEN = 8;
 	private static final int MAX_BESTELLUNGEN = 4;
-	
+	private static final int JAHR = 2000;
+	private static final int MONAT = 0; 
+	private static final int TAG = 1;
 	private static final int A_MIN_ID = 700;
 	private static final int A_MAX_ID = 799;
 	private static final int MAX_ARTIKEL = 5;
@@ -50,7 +56,10 @@ public final class Mock {
 		
 		if (kunde.getClass().equals(Privatkunde.class)) {
 			final Privatkunde privatkunde = (Privatkunde) kunde;
-			privatkunde.setHobby(HobbyType.FUSSBALL);
+			final Set<HobbyType> hobbies = new HashSet<>();
+			hobbies.add(HobbyType.LESEN);
+			hobbies.add(HobbyType.FUSSBALL);
+			privatkunde.setHobbies(hobbies);
 		}
 		
 		return kunde;
@@ -75,6 +84,37 @@ public final class Mock {
 			kunden.add(kunde);			
 		}
 		return kunden;
+	}
+	
+	public static Kunde findKundeByEmail(String email) {
+		if (email.startsWith("x")) {
+			return null;
+		}
+		
+		final Kunde kunde = email.length() % 2 == 1 ? new Privatkunde() : new Firmenkunde();
+		kunde.setId(Long.valueOf(email.length()));
+		kunde.setNachname("Nachname");
+		kunde.setEmail(email);
+		final GregorianCalendar seitCal = new GregorianCalendar(JAHR, MONAT, TAG);
+		final Date seit = seitCal.getTime();
+		kunde.setSeit(seit);
+		
+		final Adresse adresse = new Adresse();
+		adresse.setId(kunde.getId() + 1);        // andere ID fuer die Adresse
+		adresse.setPlz("12345");
+		adresse.setOrt("Testort");
+		adresse.setKunde(kunde);
+		kunde.setAdresse(adresse);
+		
+		if (kunde.getClass().equals(Privatkunde.class)) {
+			final Privatkunde privatkunde = (Privatkunde) kunde;
+			final Set<HobbyType> hobbies = new HashSet<>();
+			hobbies.add(HobbyType.LESEN);
+			hobbies.add(HobbyType.FUSSBALL);
+			privatkunde.setHobbies(hobbies);
+		}
+
+		return kunde;
 	}
 
 	public static List<Bestellung> findBestellungenByKunde(Kunde kunde) {
