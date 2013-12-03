@@ -35,6 +35,7 @@ import javax.ws.rs.core.UriInfo;
 
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.artikelverwaltung.service.ArtikelService;
+import de.shop.util.Mock;
 import de.shop.util.rest.UriHelper;
 
 /*
@@ -42,10 +43,11 @@ import de.shop.util.rest.UriHelper;
  * enthaelt die RestServices fuer die Artikelverwaltung/Domain
  * Zugriff auf den Mock spaeter Anwendungslogik
  */
+
+@RequestScoped
 @Path("/artikel")
 @Produces({ APPLICATION_JSON, APPLICATION_XML + ";qs=0.75", TEXT_XML + ";qs=0.5" })
 @Consumes
-@RequestScoped
 public class ArtikelResource {
 	public static final String ARTIKEL_ID_PATH_PARAM = "artikelId";
 	public static final String ARTIKEL_BEZEICHNUNG_QUERY_PARAM = "bezeichnung";
@@ -72,12 +74,10 @@ public class ArtikelResource {
 	@GET
 	@Path("{" + ARTIKEL_ID_PATH_PARAM + ":[1-9][0-9]*}")
 	public Response findArtikelById(@PathParam(ARTIKEL_ID_PATH_PARAM) Long id) {
+		System.out.println("1");
 		final Artikel artikel = as.findArtikelById(id);
-		if (artikel == null) {
-			throw new NotFoundException("Der Artikel mit der ID:" + id + " konnte nicht gefunden werden.");
-		}
-		//System.out.println("Artikel ist nicht null");
-		//System.out.println(artikel.getId() + ", " + artikel.getBezeichnung() + ", " + artikel.getPreis());
+		//final Artikel artikel = Mock.findArtikelById(id);
+		
 		return Response.ok(artikel)
                        .links(getTransitionalLinks(artikel, uriInfo))
                        .build();

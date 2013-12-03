@@ -24,7 +24,6 @@ public class Artikel implements Serializable {
 	
 	private static final long serialVersionUID = 1430771599450877428L;
 	
-	@NotNull
 	@Min(1)
 	private Long id;
 	@NotNull

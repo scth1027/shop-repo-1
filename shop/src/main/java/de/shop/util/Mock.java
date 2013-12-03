@@ -199,7 +199,7 @@ public final class Mock {
 	public static List<Artikel> findAllArtikel(){
 		final int anzahl = MAX_ARTIKEL;
 		final List<Artikel> artikelliste = new ArrayList<>(anzahl);
-		for (int i = 1; i <= anzahl; i++) {
+		for (int i = 700; i <= 700 + anzahl; i++) {
 			final Artikel artikel = findArtikelById(Long.valueOf(i));
 			artikelliste.add(artikel);
 		}

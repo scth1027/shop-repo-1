@@ -15,6 +15,7 @@ public class ArtikelService implements Serializable{
 	
 	//@NotNull(message = "{artikel.notFound.id}")
 	public Artikel findArtikelById(Long id) {
+		System.out.println("2");
 		return Mock.findArtikelById(id);
 	}
 	
