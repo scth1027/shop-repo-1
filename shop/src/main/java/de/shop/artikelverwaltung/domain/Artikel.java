@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -24,14 +25,13 @@ public class Artikel implements Serializable {
 	
 	private static final long serialVersionUID = 1430771599450877428L;
 	
-	@Min(1)
 	private Long id;
 	@NotNull
 	@Size(max = 100)
 	@Pattern(regexp = "[A-ZÄÖÜ][a-zäöü_-/]+")
 	private String bezeichnung;
 	@NotNull
-	@DecimalMin("0")
+	@Digits(integer = 10, fraction = 2, message = "{artikel.preis.digits}")
 	private BigDecimal preis;
 	
 	public Long getId() {
