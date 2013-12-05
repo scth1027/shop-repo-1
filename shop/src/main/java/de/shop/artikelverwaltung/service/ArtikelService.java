@@ -17,10 +17,7 @@ public class ArtikelService implements Serializable{
 	
 	@NotNull(message = "{artikel.notFound.id}")
 	public Artikel findArtikelById(Long id) {
-		final Artikel artikel = Mock.findArtikelById(id);
-		System.out.println(artikel);
-		return artikel;
-		//return Mock.findArtikelById(id);
+		return Mock.findArtikelById(id);
 	}
 	
 	@Size(min = 1, message = "{artikel.notFound.bezeichnung}")
@@ -43,9 +40,5 @@ public class ArtikelService implements Serializable{
 
 	public void deleteArtikel(Long id) {
 		Mock.deleteArtikel(id);
-	}
-	
-	public String asd() {
-		return "1.0";
 	}
 }

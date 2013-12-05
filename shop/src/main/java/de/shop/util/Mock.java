@@ -29,8 +29,6 @@ public final class Mock {
 	private static final int JAHR = 2000;
 	private static final int MONAT = 0; 
 	private static final int TAG = 1;
-	private static final int A_MIN_ID = 700;
-	private static final int A_MAX_ID = 799;
 	private static final int MAX_ARTIKEL = 5;
 	
 	//Kundenteil
@@ -213,7 +211,7 @@ public final class Mock {
 
 	//Artikelteil
 	public static Artikel findArtikelById(Long id) {
-		if (id < A_MIN_ID && id > A_MAX_ID) {
+		if (id > MAX_ID) {
 			return null;
 		}
 		

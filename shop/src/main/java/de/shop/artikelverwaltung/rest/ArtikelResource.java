@@ -15,7 +15,7 @@ import static javax.ws.rs.core.MediaType.TEXT_XML;
 import java.net.URI;
 import java.util.List;
 
-import javax.faces.bean.RequestScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -35,7 +35,6 @@ import javax.ws.rs.core.UriInfo;
 
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.artikelverwaltung.service.ArtikelService;
-import de.shop.util.Mock;
 import de.shop.util.rest.UriHelper;
 
 /*
@@ -66,24 +65,17 @@ public class ArtikelResource {
 	@Produces({ TEXT_PLAIN, APPLICATION_JSON })
 	@Path("version")
 	public String getVersion() {
-		
-		return as.asd();
+		return "1.0";
 	}
 	
 	//Artikel mit ID finden
 	@GET
 	@Path("{" + ARTIKEL_ID_PATH_PARAM + ":[1-9][0-9]*}")
 	public Response findArtikelById(@PathParam(ARTIKEL_ID_PATH_PARAM) Long id) {
-		System.out.println("Marker1");
 		final Artikel artikel = as.findArtikelById(id);
-//		final Artikel artikel = Mock.findArtikelById(id);
 
-		System.out.println("Marker2: " + artikel);
-		//getTransitionalLinks(artikel, uriInfo);
-		System.out.println("Marker3: " + artikel);
-		
 		return Response.ok(artikel)
-                       //.links(getTransitionalLinks(artikel, uriInfo))
+                       .links(getTransitionalLinks(artikel, uriInfo))
                        .build();
 	}
 	
@@ -92,8 +84,6 @@ public class ArtikelResource {
 	public Response findArtikelByBezeichnung(@QueryParam(ARTIKEL_BEZEICHNUNG_QUERY_PARAM) String bezeichnung) {
 		List<Artikel> artikelliste = null;
 		if (bezeichnung != null) {
-			System.out.println("RICHTIG");
-			
 			artikelliste = as.findArtikelByBezeichnung(bezeichnung);
 			if (artikelliste.isEmpty()) {
 				throw new NotFoundException("Kein Artikel mit Bezeichnung " + bezeichnung + " gefunden.");
@@ -120,7 +110,7 @@ public class ArtikelResource {
 		}
 
 		return Response.ok(new GenericEntity<List<Artikel>>(artikelliste) { })
-                       //.links(getTransitionalLinksArtikelListe(artikel_liste, uriInfo))
+                       .links(getTransitionalLinksArtikelListe(artikelliste, uriInfo))
                        .build();
 	}
 	
@@ -152,11 +142,7 @@ public class ArtikelResource {
 	
 	//Artikel URI erzeugen
 	public URI getUriArtikel(Artikel artikel, UriInfo uriInfo) {
-		System.out.println("Marker 2.1");
-		URI test = uriHelper.getUri(ArtikelResource.class, "findArtikelById", artikel.getId(), uriInfo);
-		System.out.println("Marker 2.1");
-		//return uriHelper.getUri(ArtikelResource.class, "findArtikelById", artikel.getId(), uriInfo);
-		return test;
+		return uriHelper.getUri(ArtikelResource.class, "findArtikelById", artikel.getId(), uriInfo);
 	}
 	
 	//TODO Hinzufügen des LIST_LINKS
@@ -165,45 +151,21 @@ public class ArtikelResource {
 		final Link self = Link.fromUri(getUriArtikel(artikel, uriInfo))
 	                          .rel(SELF_LINK)
 	                          .build();
-		System.out.println("Self gesetzt");
 		/*final Link list = Link.fromUri(uriHelper.getUri(ArtikelResource.class,
 		 * "findAllArtikel", artikel.getId(), uriInfo))
 							.rel(LIST_LINK)
 							.build();*/
-		
 		final Link add = Link.fromUri(uriHelper.getUri(ArtikelResource.class, uriInfo))
                              .rel(ADD_LINK)
                              .build();
-		System.out.println("Add gesetzt");
 		final Link update = Link.fromUri(uriHelper.getUri(ArtikelResource.class, uriInfo))
                                 .rel(UPDATE_LINK)
                                 .build();
-		System.out.println("Update gesetzt");
 		final Link remove = Link.fromUri(uriHelper.getUri(ArtikelResource.class,
 				"deleteArtikel", artikel.getId(), uriInfo))
                                 .rel(REMOVE_LINK)
                                 .build();
-		System.out.println("Delete gesetzt");
 		return new Link[] {self/*, list*/, add, update, remove };
-		
-//		final Link self = Link.fromUri(getKundenURI(kunde, uriInfo))
-//				.rel(SELF_LINK)
-//				.build();
-//		System.out.println("Self gesetzt");
-//		final Link add = Link.fromUri(uriHelper.getUri(KundenResource.class, uriInfo))
-//				.rel(ADD_LINK)
-//				.build();
-//		System.out.println("Add gesetzt");
-//		final Link update = Link.fromUri(uriHelper.getUri(KundenResource.class, uriInfo))
-//				.rel(UPDATE_LINK)
-//				.build();
-//		System.out.println("Update gesetzt");
-//
-//		final Link remove = Link.fromUri(uriHelper.getUri(KundenResource.class, "deleteKunde", kunde.getId(), uriInfo))
-//				.rel(REMOVE_LINK)
-//				.build();
-//		System.out.println("Delete gesetzt");
-//		return new Link[] { self, add, update, remove };
 	}
 	
 	public Link[] getTransitionalLinksArtikelListe(List<Artikel> artikelliste, UriInfo uriInfo) {
