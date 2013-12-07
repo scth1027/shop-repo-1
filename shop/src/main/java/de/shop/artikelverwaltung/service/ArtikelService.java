@@ -25,7 +25,7 @@ public class ArtikelService implements Serializable{
 		return Mock.findArtikelByBezeichnung(bezeichnung);
 	}
 	
-	@Size(min = 1, message = "{artikel.notFound}")
+	@Size(min = 1, message = "{artikel.notFound.all}")
 	public List<Artikel> findAllArtikel(){
 		return Mock.findAllArtikel();
 	}
