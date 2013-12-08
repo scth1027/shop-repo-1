@@ -18,7 +18,7 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
 
 
 
-import de.shop.bestellverwaltung.domain.Bestellung;
+import de.shop.lieferantenbestellverwaltung.domain.Lieferantenbestellung;
 
 /*
  * Abstrakte Lieferanten Klasse
@@ -50,7 +50,7 @@ public class Lieferant implements Serializable{
 
 	@XmlTransient
 	// Bestellungsklasse mitbenutzen oder eigene Klasse für Lieferantenbestellungen?
-	private List<Bestellung> bestellungen;
+	private List<Lieferantenbestellung> bestellungen;
 
 	private URI bestellungenURI;
 
@@ -103,10 +103,10 @@ public class Lieferant implements Serializable{
 	public void setBestellungenURI(URI bestellungenURI) {
 		this.bestellungenURI = bestellungenURI;
 	}
-	public List<Bestellung> getBestellungen() {
+	public List<Lieferantenbestellung> getBestellungen() {
 		return bestellungen;
 	}
-	public void setBestellungen(List<Bestellung> _bestellungen) {
+	public void setBestellungen(List<Lieferantenbestellung> _bestellungen) {
 		this.bestellungen = _bestellungen;
 	}
 
