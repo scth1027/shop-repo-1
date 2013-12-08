@@ -27,9 +27,11 @@ import javax.ws.rs.core.Link;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import de.shop.bestellverwaltung.Service.BestellungService;
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.rest.KundenResource;
+import de.shop.kundenverwaltung.service.KundeService;
 import de.shop.util.Mock;
 import de.shop.util.rest.UriHelper;
 
@@ -47,13 +49,16 @@ public class BestellungResource {
 
 	@Inject
 	private KundenResource kundeResource;
+	
+	@Inject
+	private BestellungService bs;
 
 	@GET
 	@Path("{id:[1-9][0-9]*}")
 	public Response findBestellungById(@PathParam("id") Long id) {
 		// TODO Anwendungskern statt Mock, Verwendung von Locale
 		System.out.println("IN Methode");
-		final Bestellung bestellung = Mock.findBestellungById(id);
+		final Bestellung bestellung = bs.findBestellungById(id);
 		if (bestellung == null) {
 			throw new NotFoundException("Keine Bestellung mit der ID " + id + " gefunden.");
 		}

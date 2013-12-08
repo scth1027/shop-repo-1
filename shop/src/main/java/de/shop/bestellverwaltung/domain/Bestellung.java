@@ -4,7 +4,9 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
+
 import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.lieferantenverwaltung.domain.Lieferant;
 
@@ -12,10 +14,20 @@ import de.shop.lieferantenverwaltung.domain.Lieferant;
 public class Bestellung {
 	
 	private long id;
+	
+	@NotNull(message="{bestellung.Kunde.NotNull}")
 	private Kunde kunde;
+	
+	@NotNull(message="{bestellung.Lieferant.NotNull}")
 	private Lieferant lieferant;
+	
+	@NotNull(message="{bestellung.gesamtpreis.NotNull}")
 	private BigDecimal gesamtpreis;
+	
+	@NotNull(message="{bestellung.bestellstatus.NotNull}")
 	private Bestellstatus bestellstatus;
+	
+	@NotNull(message="{bestellung.posten.NotNull}")
 	private List<Posten> posten;
 	
 	private URI kundeURI;
