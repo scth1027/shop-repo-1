@@ -17,6 +17,7 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -35,6 +36,7 @@ import javax.ws.rs.core.UriInfo;
 
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.artikelverwaltung.service.ArtikelService;
+import de.shop.util.interceptor.Log;
 import de.shop.util.rest.UriHelper;
 
 /*
@@ -47,6 +49,7 @@ import de.shop.util.rest.UriHelper;
 @Produces({ APPLICATION_JSON, APPLICATION_XML + ";qs=0.75", TEXT_XML + ";qs=0.5" })
 @Consumes
 @RequestScoped
+@Log
 public class ArtikelResource {
 	public static final String ARTIKEL_ID_PATH_PARAM = "artikelId";
 	public static final String ARTIKEL_BEZEICHNUNG_QUERY_PARAM = "bezeichnung";
@@ -118,7 +121,7 @@ public class ArtikelResource {
 	@POST
 	@Consumes({APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces
-	public Response createArtikel(Artikel artikel) {
+	public Response createArtikel(@Valid Artikel artikel) {
 		artikel = as.createArtikel(artikel);
 		return Response.created(getUriArtikel(artikel, uriInfo))
 			           .build();
@@ -128,7 +131,7 @@ public class ArtikelResource {
 	@PUT
 	@Consumes({APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces
-	public void updateArtikel(Artikel artikel) {
+	public void updateArtikel(@Valid Artikel artikel) {
 		as.updateArtikel(artikel);
 	}
 	
