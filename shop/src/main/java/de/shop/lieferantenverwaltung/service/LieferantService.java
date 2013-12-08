@@ -25,11 +25,11 @@ public class LieferantService implements Serializable {
 	}
 	
 	@NotNull(message = "lieferant.notFound.email")
-	/*Mock noch anpassen public Lieferant findLieferantByEmail(String email) {
+	public Lieferant findLieferantByEmail(String email) {
 		if (email == null)
 			return null;
 		return Mock.findLieferantByEmail(email);
-	}*/
+	}
 	
 	@Size(min = 1, message = "lieferant.notFound.nachname")
 	public List<Lieferant> findLieferantenByFirma(String firma) {
@@ -45,11 +45,11 @@ public class LieferantService implements Serializable {
 			return lieferant;
 		}
 
-		/*Mock noch anpassenfinal Lieferant tmp = findLieferantByEmail(lieferant.getEmail()); 
+		final Lieferant tmp = findLieferantByEmail(lieferant.getEmail()); 
 		if (tmp != null) {
 			// TODO: EmailException
 			//throw new EmailExistsException(lieferant.getEmail());
-		}*/
+		}
 		lieferant = Mock.createLieferant(lieferant);
 
 		return lieferant;
@@ -60,13 +60,13 @@ public class LieferantService implements Serializable {
 			return null;
 		}
 
-		/*Mock noch anpassenfinal Lieferant vorhandenerLieferant = findLieferantByEmail(lieferant.getEmail());
+		final Lieferant vorhandenerLieferant = findLieferantByEmail(lieferant.getEmail());
 		if (vorhandenerLieferant != null) {
 			if (vorhandenerLieferant.getId().longValue() != lieferant.getId().longValue()) {
 				// TODO: EmailException
 				//throw new EmailExistsException(lieferant.getEmail());
 			}
-		}*/
+		}
 
 		// TODO Datenbanzugriffsschicht statt Mock
 		Mock.updateLieferant(lieferant);

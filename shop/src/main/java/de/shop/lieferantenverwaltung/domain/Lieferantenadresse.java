@@ -43,11 +43,11 @@ public class Lieferantenadresse implements Serializable {
 	public void setPlz(String plz) {
 		this.plz = plz;
 	}
-	public String getStraße() {
+	public String getStrasse() {
 		return strasse;
 	}
-	public void setStraße(String straße) {
-		this.strasse = straße;
+	public void setStrasse(String strasse) {
+		this.strasse = strasse;
 	}
 	public Integer getHausnummer() {
 		return hausnummer;

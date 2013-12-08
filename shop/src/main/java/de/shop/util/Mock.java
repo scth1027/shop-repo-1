@@ -276,9 +276,11 @@ public final class Mock {
 		adresse.setId(id + 1);        // andere ID fuer die Adresse
 		adresse.setPlz("12345");
 		adresse.setOrt("Testort");
+		adresse.setStrasse("Moltkestrasse");
+		adresse.setHausnummer(id.intValue() + 1);
 		adresse.setLieferant(lieferant);
 		lieferant.setLieferantenadresse(adresse);
-		
+
 		return lieferant;
 	}
 
@@ -302,8 +304,32 @@ public final class Mock {
 		}
 		return lieferanten;
 	}
+	
+	public static Lieferant findLieferantByEmail(String email) {
+		if (email.startsWith("x")) {
+			return null;
+		}
+		
+		final Lieferant lieferant = new Lieferant();
+		lieferant.setId(Long.valueOf(email.length()));
+		lieferant.setFirma("Firma");
+		lieferant.setEmail(email);
+		final GregorianCalendar seitCal = new GregorianCalendar(JAHR, MONAT, TAG);
+		final Date seit = seitCal.getTime();
+		lieferant.setSeit(seit);
+		
+		final Lieferantenadresse adresse = new Lieferantenadresse();
+		adresse.setId(lieferant.getId() + 1);        // andere ID fuer die Adresse
+		adresse.setPlz("12345");
+		adresse.setOrt("Testort");
+		adresse.setLieferant(lieferant);
+		lieferant.setLieferantenadresse(adresse);
 
-	public static List<Bestellung> findBestellungenByLieferant(Lieferant lieferant) {
+		return lieferant;
+	}
+
+	//TODO: Lieferantenbestellung erstellen
+	/*public static List<Bestellung> findBestellungenByLieferant(Lieferant lieferant) {
 		// Beziehungsgeflecht zwischen Lieferant und Bestellungen aufbauen
 		final int anzahl = lieferant.getId().intValue() % MAX_BESTELLUNGEN + 1;  // 1, 2, 3 oder 4 Bestellungen
 		final List<Bestellung> bestellungen = new ArrayList<>(anzahl);
@@ -317,21 +343,65 @@ public final class Mock {
 		return bestellungen;
 	}
 
-	/*public static Bestellung findBestellungById(Long id) {
+	public static Bestellung findBestellungById(Long id) {
 		if (id > MAX_ID) {
 			return null;
 		}
-		
+
 		final Lieferant lieferant = findLieferantById(id + 1);  // andere ID fuer den Lieferanten
+		System.out.println("Lieferant erhalten");
 		final Bestellung bestellung = new Bestellung();
 		bestellung.setId(id);
-		//bestellung.setBestellstatus("bestellung" + id);
-		//TODO setBestellstatus in Mock überarbeiten
+		System.out.println("Bestellung erzeugt");
+		final Lieferant lieferant = new Lieferant();
+		lieferant.setId(id);
+		System.out.println("Lieferant erzeugt");
+		
+		bestellung.setGesamtpreis(new BigDecimal("112.43"));
+		System.out.print("Gesamtpreis gesetzt");
+		final Posten p = new Posten();
+		p.setAnzahl(id.intValue() + 1);
+		System.out.println("Posten: " + p.toString());
+		p.setArtikel(new Artikel(Long.valueOf(1), "Posten1", new BigDecimal("13.0")));
+		System.out.println("Posten: " + p.toString());
+		final List<Posten> posten = new ArrayList<>();
+		posten.add(p);
+		bestellung.setPosten(posten);
+		System.out.println("Posten in Bestellung");
 		bestellung.setLieferant(lieferant);
 		
 		return bestellung;
-	}*/
+	}
 
+	public static List<Bestellung> findAllBestellungen() {
+		final int anzahl = MAX_BESTELLUNGEN;
+		final List<Bestellung> bestellungliste = new ArrayList<>(anzahl);
+		for (int i = 1; i <= anzahl; i++) {
+			final Bestellung bestellung = findBestellungById(Long.valueOf(i));
+			bestellungliste.add(bestellung);
+		}
+		return bestellungliste;
+	}
+	
+	public static Bestellung createBestellung(Bestellung bestellung) {
+		final Lieferant lieferant = bestellung.getLieferant();
+		lieferant.setId(Long.valueOf(2));
+		final Lieferant lieferant = bestellung.getLieferant();
+		lieferant.setId(Long.valueOf(2));
+		final BigDecimal gesamtpreis = bestellung.getGesamtpreis();
+		gesamtpreis.setScale(15);
+		return bestellung;
+	}
+	
+	public static void updateBestellung(Bestellung bestellung) {
+		System.out.println("Aktualisierter Bestellung: " + bestellung);
+	}
+
+	public static void deleteBestellung(Long bestellungId) {
+		System.out.println("Bestellung mit ID=" + bestellungId + " geloescht");
+	}
+	*/
+	
 	public static Lieferant createLieferant(Lieferant lieferant) {
 		// Neue IDs fuer Lieferant und zugehoerige Adresse
 		// Ein neuer Lieferant hat auch keine Bestellungen

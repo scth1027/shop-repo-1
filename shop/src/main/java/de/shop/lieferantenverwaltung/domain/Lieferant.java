@@ -2,16 +2,21 @@ package de.shop.lieferantenverwaltung.domain;
 
 import java.io.Serializable;
 import java.net.URI;
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.validation.constraints.Past;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import javax.validation.constraints.Pattern;
 
+import org.hibernate.validator.constraints.Email;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
+
+
+
 
 import de.shop.bestellverwaltung.domain.Bestellung;
 
@@ -36,10 +41,12 @@ public class Lieferant implements Serializable{
 	@Valid
 	@NotNull(message = "{lieferant.adresse.notNull}")
 	private Lieferantenadresse adresse;
-	@Size(min = 4, max = 128, message = "{lieferant.email.length}")
-	@Pattern(regexp = "[\\w.%-]+@[\\w.%-]+\\.[A-Za-z]{2,4}")
+	@Size(min = 4, message = "{lieferant.email.length}")
 	@NotNull(message = "{lieferant.email.notNull}")
+	@Email(message = "{lieferant.email.pattern}")
 	private String email;
+	@Past(message = "{lieferant.seit.past}")
+	private Date seit;
 
 	@XmlTransient
 	// Bestellungsklasse mitbenutzen oder eigene Klasse für Lieferantenbestellungen?
@@ -50,6 +57,7 @@ public class Lieferant implements Serializable{
 	public Long getId() {
 		return id;
 	}
+	
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -59,17 +67,29 @@ public class Lieferant implements Serializable{
 	public void setFirma(String firma) {
 		this.firma = firma;
 	}
+	
 	public Lieferantenadresse getLieferantenadresse() {
 		return adresse;
 	}
+	
 	public void setLieferantenadresse(Lieferantenadresse adresse) {
 		this.adresse = adresse;
 	}
+	
 	public String getEmail() {
 		return email;
 	}
+	
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	public Date getSeit() {
+		return seit;
+	}
+
+	public void setSeit(Date seit) {
+		this.seit = seit;
 	}
 
 	@Override
@@ -94,14 +114,10 @@ public class Lieferant implements Serializable{
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((adresse == null) ? 0 : adresse.hashCode());
-		result = prime * result	+ ((bestellungen == null) ? 0 : bestellungen.hashCode());
-		result = prime * result	+ ((bestellungenURI == null) ? 0 : bestellungenURI.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result	+ ((firma == null) ? 0 : firma.hashCode());
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -110,42 +126,11 @@ public class Lieferant implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		final Lieferant other = (Lieferant) obj;
-		if (adresse == null) {
-			if (other.adresse != null)
-				return false;
-		}
-		else if (!adresse.equals(other.adresse))
-			return false;
-		if (bestellungen == null) {
-			if (other.bestellungen != null)
-				return false;
-		}
-		else if (!bestellungen.equals(other.bestellungen))
-			return false;
-		if (bestellungenURI == null) {
-			if (other.bestellungenURI != null)
-				return false;
-		}
-		else if (!bestellungenURI.equals(other.bestellungenURI))
-			return false;
+		Lieferant other = (Lieferant) obj;
 		if (email == null) {
 			if (other.email != null)
 				return false;
-		}
-		else if (!email.equals(other.email))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		}
-		else if (!id.equals(other.id))
-			return false;
-		if (firma == null) {
-			if (other.firma != null)
-				return false;
-		}
-		else if (!firma.equals(other.firma))
+		} else if (!email.equals(other.email))
 			return false;
 		return true;
 	}
