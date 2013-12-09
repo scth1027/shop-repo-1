@@ -76,7 +76,7 @@ public class BestellungResource {
 	@GET
 	public Response findAllBestellungen() {
 		// Aufruf der Mock zur Erzeugung der Bestellungen
-		final List<Bestellung> all = Mock.findAllBestellungen();
+		final List<Bestellung> all = bs.findAllBestellungen();
 		// Plausibilitäsprüfung
 		if(all.isEmpty())
 			throw new NotFoundException("Es konnten keine Kunden gefunden werden!");
@@ -138,7 +138,7 @@ public class BestellungResource {
 	public Response createBestellung(Bestellung bestellung) {
 		// TODO Anwendungskern statt Mock
 		System.out.println("Bestellung angekommen im Service");
-		bestellung = Mock.createBestellung(bestellung);
+		bestellung = bs.createBestellung(bestellung);
 		System.out.println("Bestellung ist aus der Mock zurück");
 		return Response.created(getUriBestellung(bestellung, uriInfo))
 				.build();
@@ -148,7 +148,7 @@ public class BestellungResource {
 	@Path("{id:[1-9][0-9]*}")
 	@Produces
 	public void deleteBestellung(@PathParam("id") Long bestellungId) {
-		Mock.deleteBestellung(bestellungId);
+		bs.deleteBestellung(bestellungId);
 	}
 
 	@PUT
@@ -156,7 +156,7 @@ public class BestellungResource {
 	@Produces
 	public void updateBestellung(Bestellung bestellung) {
 		// TODO Anwendungskern statt Mock
-		Mock.updateBestellung(bestellung);
+		bs.updateBestellung(bestellung);
 	}
 
 }
