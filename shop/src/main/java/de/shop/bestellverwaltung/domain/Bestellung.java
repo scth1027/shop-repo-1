@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.lieferantenverwaltung.domain.Lieferant;
@@ -15,13 +16,9 @@ public class Bestellung {
 	
 	private long id;
 	
-	@NotNull(message="{bestellung.Kunde.NotNull}")
+	@XmlTransient
 	private Kunde kunde;
 	
-	@NotNull(message="{bestellung.Lieferant.NotNull}")
-	private Lieferant lieferant;
-	
-	@NotNull(message="{bestellung.gesamtpreis.NotNull}")
 	private BigDecimal gesamtpreis;
 	
 	@NotNull(message="{bestellung.bestellstatus.NotNull}")
@@ -54,14 +51,6 @@ public class Bestellung {
 
 	public void setKunde(Kunde kunde) {
 		this.kunde = kunde;
-	}
-	
-	public Lieferant getLieferant() {
-		return lieferant;
-	}
-
-	public void setLieferant(Lieferant lieferant) {
-		this.lieferant = lieferant;
 	}
 		
 	public Bestellstatus getBestellstatus() {
@@ -100,8 +89,6 @@ public class Bestellung {
 		result = prime * result + ((kunde == null) ? 0 : kunde.hashCode());
 		result = prime * result
 				+ ((kundeURI == null) ? 0 : kundeURI.hashCode());
-		result = prime * result
-				+ ((lieferant == null) ? 0 : lieferant.hashCode());
 		result = prime * result + ((posten == null) ? 0 : posten.hashCode());
 		return result;
 	}
@@ -137,12 +124,6 @@ public class Bestellung {
 		} 
 		else if (!kundeURI.equals(other.kundeURI))
 			return false;
-		if (lieferant == null) {
-			if (other.lieferant != null)
-				return false;
-		} 
-		else if (!lieferant.equals(other.lieferant))
-			return false;
 		if (posten == null) {
 			if (other.posten != null)
 				return false;
@@ -154,8 +135,7 @@ public class Bestellung {
 
 	@Override
 	public String toString() {
-		return "Bestellung [id=" + id + ", kunde=" + kunde + ", lieferant="
-				+ lieferant + ", gesamtpreis=" + gesamtpreis
+		return "Bestellung [id=" + id + ", kunde=" + kunde + ", gesamtpreis=" + gesamtpreis
 				+ ", bestellstatus=" + bestellstatus + ", posten=" + posten
 				+ ", kundeURI=" + kundeURI + "]";
 	}

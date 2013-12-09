@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.Past;
+import javax.validation.constraints.Pattern;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlTransient;
@@ -38,18 +39,28 @@ public abstract class Kunde implements Serializable {
 	private static final long serialVersionUID = 1430771599450877428L;
 	public static final String PRIVATKUNDE = "P";
 	public static final String FIRMENKUNDE = "F";
+	
+	private static final String NAME_PATTERN = "[A-Z\u00C4\u00D6\u00DC][a-z\u00E4\u00F6\u00FC\u00DF]+";
+	private static final String NACHNAME_PREFIX = "(o'|von|von der|von und zu|van)?";
+	
+	public static final String NACHNAME_PATTERN = NACHNAME_PREFIX + NAME_PATTERN + "(-" + NAME_PATTERN + ")?";
+	private static final int NAME_LENGTH_MIN = 2;
+	private static final int NAME_LENGTH_MAX = 32;
+	private static final int EMAIL_LENGTH_MAX = 128;
 
 	private Long id;
 	@NotNull(message = "{kunde.nachname.notNull}")
-	@Size(min = 2, max = 32, message = "{kunde.nachname.length}")
+	@Size(min = NAME_LENGTH_MIN, max = NAME_LENGTH_MAX, message = "{kunde.nachname.length}")
+	@Pattern(regexp = NACHNAME_PATTERN, message = "{kunde.nachname.pattern}")
 	private String nachname;
 	@NotNull(message = "{kunde.vorname.notNull}")
-	@Size(min = 2, max = 32, message = "{kunde.vorname.length}")
+	@Size(min = NAME_LENGTH_MIN, max = NAME_LENGTH_MAX, message = "{kunde.vorname.length}")
+	@Pattern(regexp = NAME_PATTERN, message = "{kunde.vorname.pattern}")
 	private String vorname;
 	@Valid
 	@NotNull(message = "{kunde.adresse.notNull}")
 	private Adresse adresse;
-	@Size(min = 4, message = "{kunde.email.length}")
+	@Size(max = EMAIL_LENGTH_MAX, message = "{kunde.email.length}")
 	@NotNull(message = "{kunde.email.notNull}")
 	@Email(message = "{kunde.email.pattern}")
 	private String email;

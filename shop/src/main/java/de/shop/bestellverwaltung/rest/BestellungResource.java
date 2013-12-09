@@ -23,6 +23,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -135,10 +136,10 @@ public class BestellungResource {
 	@POST
 	@Consumes({APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces
-	public Response createBestellung(Bestellung bestellung) {
+	public Response createBestellung(Bestellung bestellung, @Context HttpHeaders headers) {
 		// TODO Anwendungskern statt Mock
 		System.out.println("Bestellung angekommen im Service");
-		bestellung = bs.createBestellung(bestellung);
+		bestellung = bs.createBestellung(bestellung, headers.getLanguage());
 		System.out.println("Bestellung ist aus der Mock zurück");
 		return Response.created(getUriBestellung(bestellung, uriInfo))
 				.build();
