@@ -69,8 +69,8 @@ public class Adresse implements Serializable {
 		return kunde;
 	}
 
-	public void setKunde(Kunde _kunde) {
-		this.kunde = _kunde;
+	public void setKunde(Kunde kunde) {
+		this.kunde = kunde;
 	}
 
 	@Override

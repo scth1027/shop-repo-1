@@ -208,7 +208,7 @@ public class KundenResource {
 								bestellungen.get(lastPos), uriInfo))
 				.rel(LAST_LINK).build();
 
-		return new Link[] { self, first, last };
+		return new Link[] {self, first, last};
 	}
 
 	// Bestellungslink setzen
@@ -252,7 +252,7 @@ public class KundenResource {
 								kunde.getId(), uriInfo)).rel(REMOVE_LINK)
 				.build();
 		System.out.println("Delete gesetzt");
-		return new Link[] { self, add, update, remove };
+		return new Link[] {self, add, update, remove};
 	}
 
 	private Link[] setTransitionalLinksKunden(List<? extends Kunde> kunden,
@@ -268,7 +268,7 @@ public class KundenResource {
 				.fromUri(getKundenURI(kunden.get(lastPos), uriInfo))
 				.rel(LAST_LINK).build();
 
-		return new Link[] { first, last };
+		return new Link[] {first, last};
 	}
 
 }

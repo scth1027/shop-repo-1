@@ -93,7 +93,8 @@ public class ArtikelResource {
 				throw new NotFoundException("Kein Artikel mit Bezeichnung "
 						+ bezeichnung + " gefunden.");
 			}
-		} else {
+		} 
+		else {
 			artikelliste = as.findAllArtikel();
 			if (artikelliste.isEmpty()) {
 				throw new NotFoundException("Keine Artikel vorhanden.");
@@ -172,7 +173,7 @@ public class ArtikelResource {
 						uriHelper.getUri(ArtikelResource.class,
 								"deleteArtikel", artikel.getId(), uriInfo))
 				.rel(REMOVE_LINK).build();
-		return new Link[] { self/* , list */, add, update, remove };
+		return new Link[] {self/* , list */, add, update, remove};
 	}
 
 	public Link[] getTransitionalLinksArtikelListe(List<Artikel> artikelliste,
@@ -189,6 +190,6 @@ public class ArtikelResource {
 				.fromUri(getUriArtikel(artikelliste.get(lastPos), uriInfo))
 				.rel(LAST_LINK).build();
 
-		return new Link[] { first, last };
+		return new Link[] {first, last};
 	}
 }

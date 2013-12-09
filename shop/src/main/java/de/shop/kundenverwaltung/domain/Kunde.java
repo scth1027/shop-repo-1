@@ -131,8 +131,8 @@ public abstract class Kunde implements Serializable {
 		return bestellungen;
 	}
 
-	public void setBestellungen(List<Bestellung> _bestellungen) {
-		this.bestellungen = _bestellungen;
+	public void setBestellungen(List<Bestellung> bestellungen) {
+		this.bestellungen = bestellungen;
 	}
 
 	public Date getSeit() {

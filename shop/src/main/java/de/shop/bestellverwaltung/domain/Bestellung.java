@@ -106,24 +106,28 @@ public class Bestellung {
 		if (gesamtpreis == null) {
 			if (other.gesamtpreis != null)
 				return false;
-		} else if (!gesamtpreis.equals(other.gesamtpreis))
+		} 
+		else if (!gesamtpreis.equals(other.gesamtpreis))
 			return false;
 		if (id != other.id)
 			return false;
 		if (kunde == null) {
 			if (other.kunde != null)
 				return false;
-		} else if (!kunde.equals(other.kunde))
+		} 
+		else if (!kunde.equals(other.kunde))
 			return false;
 		if (kundeURI == null) {
 			if (other.kundeURI != null)
 				return false;
-		} else if (!kundeURI.equals(other.kundeURI))
+		} 
+		else if (!kundeURI.equals(other.kundeURI))
 			return false;
 		if (posten == null) {
 			if (other.posten != null)
 				return false;
-		} else if (!posten.equals(other.posten))
+		} 
+		else if (!posten.equals(other.posten))
 			return false;
 		return true;
 	}
@@ -135,3 +139,4 @@ public class Bestellung {
 				+ ", posten=" + posten + ", kundeURI=" + kundeURI + "]";
 	}
 }
+

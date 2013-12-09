@@ -49,7 +49,8 @@ public class Posten {
 		if (artikel == null) {
 			if (other.artikel != null)
 				return false;
-		} else if (!artikel.equals(other.artikel))
+		} 
+		else if (!artikel.equals(other.artikel))
 			return false;
 		return true;
 	}
@@ -59,3 +60,4 @@ public class Posten {
 		return "Posten [artikel=" + artikel + ", anzahl=" + anzahl + "]";
 	}
 }
+

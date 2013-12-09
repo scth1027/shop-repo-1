@@ -106,7 +106,7 @@ public class BestellungResource {
 				.fromUri(getBestellungenURI(bestellungen.get(lastPos), uriInfo))
 				.rel(LAST_LINK).build();
 
-		return new Link[] { first, last };
+		return new Link[] {first, last};
 	}
 
 	private URI getBestellungenURI(Bestellung bestellung, UriInfo uriInfo2) {
@@ -128,7 +128,7 @@ public class BestellungResource {
 	private Link[] getTransitionalLinks(Bestellung bestellung, UriInfo uriInfo) {
 		final Link self = Link.fromUri(getUriBestellung(bestellung, uriInfo))
 				.rel(SELF_LINK).build();
-		return new Link[] { self };
+		return new Link[] {self};
 	}
 
 	public URI getUriBestellung(Bestellung bestellung, UriInfo uriInfo) {
@@ -167,3 +167,4 @@ public class BestellungResource {
 	}
 
 }
+
