@@ -2,12 +2,16 @@ package de.shop.bestellverwaltung.Service;
 
 import java.util.List;
 
+import javax.enterprise.context.Dependent;
 import javax.validation.constraints.NotNull;
 
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.util.Mock;
+import de.shop.util.interceptor.Log;
 
+@Dependent
+@Log
 public class BestellungService {
 
 	
