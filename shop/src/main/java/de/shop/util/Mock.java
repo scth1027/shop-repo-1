@@ -171,7 +171,10 @@ public final class Mock {
 		return bestellungliste;
 	}
 	
-	public static Bestellung createBestellung(Bestellung bestellung) {
+	public static Bestellung createBestellung(Bestellung bestellung, Kunde kunde) {
+		bestellung.setKunde(kunde);
+		final BigDecimal gesamtpreis = bestellung.getGesamtpreis();
+		gesamtpreis.setScale(15);
 		return bestellung;
 	}
 	

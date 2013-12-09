@@ -47,6 +47,9 @@ public class BestellungResource {
 
 	@Inject
 	private UriHelper uriHelper;
+	
+	@Inject
+	private KundeService ks;
 
 	@Inject
 	private KundenResource kundeResource;
@@ -138,8 +141,11 @@ public class BestellungResource {
 	@Produces
 	public Response createBestellung(Bestellung bestellung, @Context HttpHeaders headers) {
 		// TODO Anwendungskern statt Mock
+		String kundenId = bestellung.getKundeURI().toString();
+		kundenId = kundenId.substring(kundenId.lastIndexOf("/")+1);
+		final Kunde k = ks.findKundeById(Long.valueOf(kundenId).longValue());
 		System.out.println("Bestellung angekommen im Service");
-		bestellung = bs.createBestellung(bestellung, headers.getLanguage());
+		bestellung = bs.createBestellung(bestellung, k, headers.getLanguage());
 		System.out.println("Bestellung ist aus der Mock zurück");
 		return Response.created(getUriBestellung(bestellung, uriInfo))
 				.build();

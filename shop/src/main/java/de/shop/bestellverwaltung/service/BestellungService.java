@@ -12,7 +12,7 @@ import de.shop.kundenverwaltung.domain.Kunde;
 public interface BestellungService {
 
 	
-	Bestellung createBestellung(Bestellung bestellung, Locale locale);
+	Bestellung createBestellung(Bestellung bestellung, Kunde kunde, Locale locale);
 	
 	@NotNull(message ="bestellung.notFound.id")
 	Bestellung findBestellungById(Long id);

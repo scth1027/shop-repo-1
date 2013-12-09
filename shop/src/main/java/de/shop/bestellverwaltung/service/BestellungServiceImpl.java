@@ -25,9 +25,10 @@ public class BestellungServiceImpl implements BestellungService, Serializable {
 	private transient Event<Bestellung> event;
 
 	@Override
-	public Bestellung createBestellung(Bestellung bestellung, Locale locale) {
-		bestellung = Mock.createBestellung(bestellung);
+	public Bestellung createBestellung(Bestellung bestellung, Kunde kunde, Locale locale) {
+		bestellung = Mock.createBestellung(bestellung, kunde);
 		event.fire(bestellung);
+		System.out.println("da");
 		return bestellung;
 	}
 
