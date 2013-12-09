@@ -27,8 +27,8 @@ import javax.ws.rs.core.Link;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import de.shop.bestellverwaltung.Service.BestellungService;
 import de.shop.bestellverwaltung.domain.Bestellung;
+import de.shop.bestellverwaltung.service.BestellungService;
 import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.rest.KundenResource;
 import de.shop.kundenverwaltung.service.KundeService;

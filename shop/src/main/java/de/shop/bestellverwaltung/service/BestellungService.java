@@ -1,4 +1,4 @@
-package de.shop.bestellverwaltung.Service;
+package de.shop.bestellverwaltung.service;
 
 import java.util.List;
 
