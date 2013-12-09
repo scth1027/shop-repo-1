@@ -15,23 +15,22 @@ import de.shop.kundenverwaltung.service.KundeDeleteBestellungException;
 import de.shop.util.interceptor.Log;
 import de.shop.util.rest.Messages;
 
-
 @Provider
 @ApplicationScoped
 @Log
-public class KundeDeleteBestellungExceptionMapper implements ExceptionMapper<KundeDeleteBestellungException> {
+public class KundeDeleteBestellungExceptionMapper implements
+		ExceptionMapper<KundeDeleteBestellungException> {
 	@Context
 	private HttpHeaders headers;
-	
+
 	@Inject
 	private Messages messages;
-	
+
 	@Override
 	public Response toResponse(KundeDeleteBestellungException e) {
-		final String msg = messages.getMessage(headers, e.getMessageKey(), e.getKundeId(), e.getAnzahlBestellungen());
-		return Response.status(BAD_REQUEST)
-		               .type(TEXT_PLAIN)
-		               .entity(msg)
-		               .build();
+		final String msg = messages.getMessage(headers, e.getMessageKey(),
+				e.getKundeId(), e.getAnzahlBestellungen());
+		return Response.status(BAD_REQUEST).type(TEXT_PLAIN).entity(msg)
+				.build();
 	}
 }

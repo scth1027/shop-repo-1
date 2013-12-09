@@ -47,11 +47,12 @@ import de.shop.util.rest.UriHelper;
  */
 @RequestScoped
 @Path("/lieferanten")
-@Produces({ APPLICATION_JSON, APPLICATION_XML + ";qs=0.75", TEXT_XML + ";qs=0.5" })
+@Produces({ APPLICATION_JSON, APPLICATION_XML + ";qs=0.75",
+		TEXT_XML + ";qs=0.5" })
 @Consumes
 @Log
 public class LieferantenResource {
-	
+
 	@Context
 	private UriInfo uriInfo;
 
@@ -60,7 +61,7 @@ public class LieferantenResource {
 
 	@Inject
 	private LieferantenbestellungResource bestellungResource;
-	
+
 	@Inject
 	private LieferantService ls;
 
@@ -77,17 +78,17 @@ public class LieferantenResource {
 		// Aufruf der Mock zur Erzeugung der Lieferanten
 		final List<Lieferant> all = ls.findAllLieferanten();
 		// Plausibilitäsprüfung
-		if(all.isEmpty())
-			throw new NotFoundException("Es konnten keine Lieferanten gefunden werden!");
+		if (all.isEmpty())
+			throw new NotFoundException(
+					"Es konnten keine Lieferanten gefunden werden!");
 		// Erstellen der Links für die jeweilign Lieferanten
 		for (Lieferant lieferant : all) {
 			setStructuralLinks(lieferant, uriInfo);
 		}
-		return Response.ok(new GenericEntity<List<Lieferant>>(all) {} )
-				.links(setTransitionalLinksLieferanten(all, uriInfo))
-				.build();
+		return Response.ok(new GenericEntity<List<Lieferant>>(all) {
+		}).links(setTransitionalLinksLieferanten(all, uriInfo)).build();
 	}
-	
+
 	// Lieferant mit ID finden
 	@GET
 	@Path("{id:[1-9][0-9]*}")
@@ -95,14 +96,14 @@ public class LieferantenResource {
 		// TODO Anwendungskern statt Mock
 		final Lieferant lieferant = ls.findLieferantById(id);
 		if (lieferant == null) {
-			throw new NotFoundException("Kein Lieferant mit der ID " + id + " gefunden.");
+			throw new NotFoundException("Kein Lieferant mit der ID " + id
+					+ " gefunden.");
 		}
 		System.out.println("Lieferant ist nicht null");
 		setStructuralLinks(lieferant, uriInfo);
 		System.out.println("Structural Links überstanden");
 		return Response.ok(lieferant)
-				.links(setTransitionalLinks(lieferant, uriInfo))
-				.build();
+				.links(setTransitionalLinks(lieferant, uriInfo)).build();
 	}
 
 	// Lieferant mit Firma finden
@@ -113,9 +114,10 @@ public class LieferantenResource {
 			// TODO Anwendungskern statt Mock
 			lieferanten = ls.findLieferantenByFirma(firma);
 			if (lieferanten.isEmpty()) {
-				throw new NotFoundException("Kein Lieferant mit Firma " + firma + " gefunden.");
+				throw new NotFoundException("Kein Lieferant mit Firma " + firma
+						+ " gefunden.");
 			}
-		}
+		} 
 		else {
 			// TODO Anwendungskern statt Mock
 			lieferanten = Mock.findAllLieferanten();
@@ -128,20 +130,23 @@ public class LieferantenResource {
 			setStructuralLinks(l, uriInfo);
 		}
 
-		return Response.ok(new GenericEntity<List<? extends Lieferant>>(lieferanten){})
-				.links(setTransitionalLinksLieferanten(lieferanten, uriInfo))
+		return Response
+				.ok(new GenericEntity<List<? extends Lieferant>>(lieferanten) {
+				}).links(setTransitionalLinksLieferanten(lieferanten, uriInfo))
 				.build();
 	}
-	
-	
+
 	@GET
 	@Path("{id:[1-9][0-9]*}/bestellungen")
-	public Response findBestellungenByLieferantId(@PathParam("id") Long lieferantId) {
+	public Response findBestellungenByLieferantId(
+			@PathParam("id") Long lieferantId) {
 		// TODO Anwendungskern statt Mock
 		final Lieferant lieferant = ls.findLieferantById(lieferantId);
-		final List<Lieferantenbestellung> bestellungen = Mock.findBestellungenByLieferant(lieferant);
+		final List<Lieferantenbestellung> bestellungen = Mock
+				.findBestellungenByLieferant(lieferant);
 		if (bestellungen.isEmpty()) {
-			throw new NotFoundException("Zur ID " + lieferantId + " wurden keine Bestellungen gefunden");
+			throw new NotFoundException("Zur ID " + lieferantId
+					+ " wurden keine Bestellungen gefunden");
 		}
 
 		// URIs innerhalb der gefundenen Bestellungen anpassen
@@ -149,31 +154,32 @@ public class LieferantenResource {
 			bestellungResource.setStructuralLinks(bestellung, uriInfo);
 		}
 		// Rückgabe einer Generische Liste von Bestellungen
-		return Response.ok(new GenericEntity<List<Lieferantenbestellung>>(bestellungen){})
-                       .links(getTransitionalLinksBestellungen(bestellungen, lieferant, uriInfo))
-                       .build();
+		return Response
+				.ok(new GenericEntity<List<Lieferantenbestellung>>(bestellungen) {
+				})
+				.links(getTransitionalLinksBestellungen(bestellungen,
+						lieferant, uriInfo)).build();
 	}
-	
+
 	@POST
-	@Consumes({APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
+	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces
 	public Response createLieferant(Lieferant lieferant) {
 		// TODO Anwendungskern statt Mock
 		System.out.println("Lieferant angekommen im Service");
 		lieferant = ls.createLieferant(lieferant);
 		System.out.println("Lieferant ist aus der Mock zurück");
-		return Response.created(getLieferantenURI(lieferant, uriInfo))
-				.build();
+		return Response.created(getLieferantenURI(lieferant, uriInfo)).build();
 	}
 
 	@PUT
-	@Consumes({APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
+	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces
 	public void updateLieferant(Lieferant lieferant) {
 		// TODO Anwendungskern statt Mock
 		ls.updateLieferant(lieferant);
 	}
-	
+
 	@DELETE
 	@Path("{id:[1-9][0-9]*}")
 	@Produces
@@ -182,27 +188,32 @@ public class LieferantenResource {
 		ls.deleteLieferant(lieferantId);
 	}
 
-	private Link[] getTransitionalLinksBestellungen(List<Lieferantenbestellung> bestellungen, Lieferant lieferant, UriInfo uriInfo) {
+	private Link[] getTransitionalLinksBestellungen(
+			List<Lieferantenbestellung> bestellungen, Lieferant lieferant,
+			UriInfo uriInfo) {
 		if (bestellungen == null || bestellungen.isEmpty()) {
 			return new Link[0];
 		}
 
 		final Link self = Link.fromUri(getUriBestellungen(lieferant, uriInfo))
-                              .rel(SELF_LINK)
-                              .build();
+				.rel(SELF_LINK).build();
 
-		final Link first = Link.fromUri(bestellungResource.getUriLieferantenbestellung(bestellungen.get(0), uriInfo))
-	                           .rel(FIRST_LINK)
-	                           .build();
+		final Link first = Link
+				.fromUri(
+						bestellungResource.getUriLieferantenbestellung(
+								bestellungen.get(0), uriInfo)).rel(FIRST_LINK)
+				.build();
 		final int lastPos = bestellungen.size() - 1;
 
-		final Link last = Link.fromUri(bestellungResource.getUriLieferantenbestellung(bestellungen.get(lastPos), uriInfo))
-                              .rel(LAST_LINK)
-                              .build();
+		final Link last = Link
+				.fromUri(
+						bestellungResource.getUriLieferantenbestellung(
+								bestellungen.get(lastPos), uriInfo))
+				.rel(LAST_LINK).build();
 
 		return new Link[] { self, first, last };
 	}
-	
+
 	// Bestellungslink setzen
 	private void setStructuralLinks(Lieferant lieferant, UriInfo uriInfo) {
 		// URI fuer Bestellungen setzen
@@ -214,48 +225,52 @@ public class LieferantenResource {
 
 	// BestellungURI erzeugen
 	private URI getUriBestellungen(Lieferant lieferant, UriInfo uriInfo) {
-		//return URI.create("http://localhost:8080/shop/rest/");
-		return uriHelper.getUri(LieferantenResource.class, "findBestellungenByLieferantId", lieferant.getId(), uriInfo);
+		// return URI.create("http://localhost:8080/shop/rest/");
+		return uriHelper.getUri(LieferantenResource.class,
+				"findBestellungenByLieferantId", lieferant.getId(), uriInfo);
 	}
-	
+
 	// LieferantenURI erzeugen
 	public URI getLieferantenURI(Lieferant lieferant, UriInfo uriInfo) {
-		return uriHelper.getUri(LieferantenResource.class, "findLieferantById", lieferant.getId(), uriInfo);
+		return uriHelper.getUri(LieferantenResource.class, "findLieferantById",
+				lieferant.getId(), uriInfo);
 	}
 
 	// VerwaltungsURIs erzeugen
 	private Link[] setTransitionalLinks(Lieferant lieferant, UriInfo uriInfo) {
 		final Link self = Link.fromUri(getLieferantenURI(lieferant, uriInfo))
-				.rel(SELF_LINK)
-				.build();
+				.rel(SELF_LINK).build();
 		System.out.println("Self gesetzt");
-		final Link add = Link.fromUri(uriHelper.getUri(LieferantenResource.class, uriInfo))
-				.rel(ADD_LINK)
-				.build();
+		final Link add = Link
+				.fromUri(uriHelper.getUri(LieferantenResource.class, uriInfo))
+				.rel(ADD_LINK).build();
 		System.out.println("Add gesetzt");
-		final Link update = Link.fromUri(uriHelper.getUri(LieferantenResource.class, uriInfo))
-				.rel(UPDATE_LINK)
-				.build();
+		final Link update = Link
+				.fromUri(uriHelper.getUri(LieferantenResource.class, uriInfo))
+				.rel(UPDATE_LINK).build();
 		System.out.println("Update gesetzt");
-		final Link remove = Link.fromUri(uriHelper.getUri(LieferantenResource.class, "deleteLieferant", lieferant.getId(), uriInfo))
-				.rel(REMOVE_LINK)
-				.build();
+		final Link remove = Link
+				.fromUri(
+						uriHelper.getUri(LieferantenResource.class,
+								"deleteLieferant", lieferant.getId(), uriInfo))
+				.rel(REMOVE_LINK).build();
 		System.out.println("Delete gesetzt");
 		return new Link[] { self, add, update, remove };
 	}
 
-	private Link[] setTransitionalLinksLieferanten(List<? extends Lieferant> lieferanten, UriInfo uriInfo) {
+	private Link[] setTransitionalLinksLieferanten(
+			List<? extends Lieferant> lieferanten, UriInfo uriInfo) {
 		if (lieferanten == null || lieferanten.isEmpty()) {
 			return null;
 		}
 
-		final Link first = Link.fromUri(getLieferantenURI(lieferanten.get(0), uriInfo))
-				.rel(FIRST_LINK)
-				.build();
+		final Link first = Link
+				.fromUri(getLieferantenURI(lieferanten.get(0), uriInfo))
+				.rel(FIRST_LINK).build();
 		final int lastPos = lieferanten.size() - 1;
-		final Link last = Link.fromUri(getLieferantenURI(lieferanten.get(lastPos), uriInfo))
-				.rel(LAST_LINK)
-				.build();
+		final Link last = Link
+				.fromUri(getLieferantenURI(lieferanten.get(lastPos), uriInfo))
+				.rel(LAST_LINK).build();
 
 		return new Link[] { first, last };
 	}

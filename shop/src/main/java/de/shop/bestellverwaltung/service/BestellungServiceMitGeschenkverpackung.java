@@ -15,24 +15,23 @@ import org.jboss.logging.Logger;
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.kundenverwaltung.domain.Kunde;
 
-
 @Decorator
 @Dependent
-public abstract class BestellungServiceMitGeschenkverpackung implements BestellungService {
-	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass());
-	
+public abstract class BestellungServiceMitGeschenkverpackung implements
+		BestellungService {
+	private static final Logger LOGGER = Logger.getLogger(MethodHandles
+			.lookup().lookupClass());
+
 	@Inject
 	@Delegate
 	@Any
 	private BestellungService bs;
 
-	
 	@Override
 	public Bestellung findBestellungById(Long id) {
 		return bs.findBestellungById(id);
 	}
 
-	
 	@Override
 	public List<Bestellung> findBestellungenByKunde(Kunde kunde) {
 		return bs.findBestellungenByKunde(kunde);
@@ -42,9 +41,10 @@ public abstract class BestellungServiceMitGeschenkverpackung implements Bestellu
 	 * {inheritDoc}
 	 */
 	@Override
-	public Bestellung createBestellung(Bestellung bestellung, Kunde kunde, Locale locale) {
+	public Bestellung createBestellung(Bestellung bestellung, Kunde kunde,
+			Locale locale) {
 		LOGGER.warn("Geschenkverpackung noch nicht implementiert");
-		
+
 		return bs.createBestellung(bestellung, kunde, locale);
 	}
 }

@@ -1,10 +1,10 @@
 package de.shop.lieferantenverwaltung.domain;
 
-
 import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+
 /*
  * Klasse Lieferantenadresse
  * enthaelt id, ort, plz, strasse, hausnummer
@@ -28,30 +28,39 @@ public class Lieferantenadresse implements Serializable {
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
+
 	public String getOrt() {
 		return ort;
 	}
+
 	public void setOrt(String ort) {
 		this.ort = ort;
 	}
+
 	public String getPlz() {
 		return plz;
 	}
+
 	public void setPlz(String plz) {
 		this.plz = plz;
 	}
+
 	public String getStrasse() {
 		return strasse;
 	}
+
 	public void setStrasse(String strasse) {
 		this.strasse = strasse;
 	}
+
 	public Integer getHausnummer() {
 		return hausnummer;
 	}
+
 	public void setHausnummer(Integer hausnummer) {
 		this.hausnummer = hausnummer;
 	}
@@ -59,6 +68,7 @@ public class Lieferantenadresse implements Serializable {
 	public Lieferant getLieferant() {
 		return lieferant;
 	}
+
 	public void setLieferant(Lieferant lieferant) {
 		this.lieferant = lieferant;
 	}
@@ -75,6 +85,7 @@ public class Lieferantenadresse implements Serializable {
 		result = prime * result + ((strasse == null) ? 0 : strasse.hashCode());
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -87,31 +98,31 @@ public class Lieferantenadresse implements Serializable {
 		if (hausnummer == null) {
 			if (other.hausnummer != null)
 				return false;
-		}
+		} 
 		else if (!hausnummer.equals(other.hausnummer))
 			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
-		}
+		} 
 		else if (!id.equals(other.id))
 			return false;
 		if (ort == null) {
 			if (other.ort != null)
 				return false;
-		}
+		} 
 		else if (!ort.equals(other.ort))
 			return false;
 		if (plz == null) {
 			if (other.plz != null)
 				return false;
-		}
+		} 
 		else if (!plz.equals(other.plz))
 			return false;
 		if (strasse == null) {
 			if (other.strasse != null)
 				return false;
-		}
+		} 
 		else if (!strasse.equals(other.strasse))
 			return false;
 		return true;

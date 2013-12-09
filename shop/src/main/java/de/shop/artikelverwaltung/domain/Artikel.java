@@ -24,11 +24,11 @@ public class Artikel implements Serializable {
 	private static final long serialVersionUID = 1430771599450877428L;
 	
 	private Long id;
-	@NotNull(message="{artikel.bezeichnung.notnull}")
-	@Size(max = 100, message="{artikel.bezeichnung.length}")
-	@Pattern(regexp = "[A-ZÄÖÜ][a-z0-9äöüß_-]+", message="{artikel.bezeichnung.pattern}")
+	@NotNull(message = "{artikel.bezeichnung.notnull}")
+	@Size(max = 100, message = "{artikel.bezeichnung.length}")
+	@Pattern(regexp = "[A-ZÄÖÜ][a-z0-9äöüß_-]+", message = "{artikel.bezeichnung.pattern}")
 	private String bezeichnung;
-	@NotNull(message="{artikel.preis.notnull}")
+	@NotNull(message = "{artikel.preis.notnull}")
 	@Digits(integer = 10, fraction = 2, message = "{artikel.preis.digits}")
 	private BigDecimal preis;
 	

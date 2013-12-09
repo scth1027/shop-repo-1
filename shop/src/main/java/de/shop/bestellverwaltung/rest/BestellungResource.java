@@ -33,12 +33,11 @@ import de.shop.bestellverwaltung.service.BestellungService;
 import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.rest.KundenResource;
 import de.shop.kundenverwaltung.service.KundeService;
-import de.shop.util.Mock;
 import de.shop.util.rest.UriHelper;
 
-
 @Path("/bestellungen")
-@Produces({ APPLICATION_JSON, APPLICATION_XML + ";qs=0.75", TEXT_XML + ";qs=0.5" })
+@Produces({ APPLICATION_JSON, APPLICATION_XML + ";qs=0.75",
+		TEXT_XML + ";qs=0.5" })
 @Consumes
 @RequestScoped
 public class BestellungResource {
@@ -47,13 +46,13 @@ public class BestellungResource {
 
 	@Inject
 	private UriHelper uriHelper;
-	
+
 	@Inject
 	private KundeService ks;
 
 	@Inject
 	private KundenResource kundeResource;
-	
+
 	@Inject
 	private BestellungService bs;
 
@@ -64,15 +63,15 @@ public class BestellungResource {
 		System.out.println("IN Methode");
 		final Bestellung bestellung = bs.findBestellungById(id);
 		if (bestellung == null) {
-			throw new NotFoundException("Keine Bestellung mit der ID " + id + " gefunden.");
+			throw new NotFoundException("Keine Bestellung mit der ID " + id
+					+ " gefunden.");
 		}
 
 		setStructuralLinks(bestellung, uriInfo);
 
 		// Link-Header setzen
 		final Response response = Response.ok(bestellung)
-				.links(getTransitionalLinks(bestellung, uriInfo))
-				.build();
+				.links(getTransitionalLinks(bestellung, uriInfo)).build();
 
 		return response;
 	}
@@ -82,36 +81,37 @@ public class BestellungResource {
 		// Aufruf der Mock zur Erzeugung der Bestellungen
 		final List<Bestellung> all = bs.findAllBestellungen();
 		// Plausibilitäsprüfung
-		if(all.isEmpty())
-			throw new NotFoundException("Es konnten keine Kunden gefunden werden!");
+		if (all.isEmpty())
+			throw new NotFoundException(
+					"Es konnten keine Kunden gefunden werden!");
 		// Erstellen der Links für die jeweilign Bestellungen
-		for (Bestellung bestellung : all)
-		{
+		for (Bestellung bestellung : all) {
 			setStructuralLinks(bestellung, uriInfo);
 		}
-		return Response.ok(new GenericEntity<List<Bestellung>>(all){})
-				.links(setTransitionalLinksBestellungen(all, uriInfo))
-				.build();
+		return Response.ok(new GenericEntity<List<Bestellung>>(all) {
+		}).links(setTransitionalLinksBestellungen(all, uriInfo)).build();
 	}
 
-	private Link[] setTransitionalLinksBestellungen(List<Bestellung> bestellungen, UriInfo uriInfo) {
+	private Link[] setTransitionalLinksBestellungen(
+			List<Bestellung> bestellungen, UriInfo uriInfo) {
 		if (bestellungen == null || bestellungen.isEmpty()) {
 			return null;
 		}
 
-		final Link first = Link.fromUri(getBestellungenURI(bestellungen.get(0), uriInfo))
-				.rel(FIRST_LINK)
-				.build();
+		final Link first = Link
+				.fromUri(getBestellungenURI(bestellungen.get(0), uriInfo))
+				.rel(FIRST_LINK).build();
 		final int lastPos = bestellungen.size() - 1;
-		final Link last = Link.fromUri(getBestellungenURI(bestellungen.get(lastPos), uriInfo))
-				.rel(LAST_LINK)
-				.build();
+		final Link last = Link
+				.fromUri(getBestellungenURI(bestellungen.get(lastPos), uriInfo))
+				.rel(LAST_LINK).build();
 
 		return new Link[] { first, last };
 	}
 
 	private URI getBestellungenURI(Bestellung bestellung, UriInfo uriInfo2) {
-		return uriHelper.getUri(BestellungResource.class, "findBestellungById", bestellung.getId(), uriInfo);
+		return uriHelper.getUri(BestellungResource.class, "findBestellungById",
+				bestellung.getId(), uriInfo);
 
 	}
 
@@ -119,36 +119,36 @@ public class BestellungResource {
 		// URI fuer Kunde setzen
 		final Kunde kunde = bestellung.getKunde();
 		if (kunde != null) {
-			final URI kundeUri = kundeResource.getKundenURI(bestellung.getKunde(), uriInfo);
+			final URI kundeUri = kundeResource.getKundenURI(
+					bestellung.getKunde(), uriInfo);
 			bestellung.setKundeURI(kundeUri);
 		}
 	}
 
 	private Link[] getTransitionalLinks(Bestellung bestellung, UriInfo uriInfo) {
 		final Link self = Link.fromUri(getUriBestellung(bestellung, uriInfo))
-				.rel(SELF_LINK)
-				.build();
+				.rel(SELF_LINK).build();
 		return new Link[] { self };
 	}
 
-
 	public URI getUriBestellung(Bestellung bestellung, UriInfo uriInfo) {
-		return uriHelper.getUri(BestellungResource.class, "findBestellungById", bestellung.getId(), uriInfo);
+		return uriHelper.getUri(BestellungResource.class, "findBestellungById",
+				bestellung.getId(), uriInfo);
 	}
 
 	@POST
-	@Consumes({APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
+	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces
-	public Response createBestellung(Bestellung bestellung, @Context HttpHeaders headers) {
+	public Response createBestellung(Bestellung bestellung,
+			@Context HttpHeaders headers) {
 		// TODO Anwendungskern statt Mock
 		String kundenId = bestellung.getKundeURI().toString();
-		kundenId = kundenId.substring(kundenId.lastIndexOf("/")+1);
+		kundenId = kundenId.substring(kundenId.lastIndexOf("/") + 1);
 		final Kunde k = ks.findKundeById(Long.valueOf(kundenId).longValue());
 		System.out.println("Bestellung angekommen im Service");
 		bestellung = bs.createBestellung(bestellung, k, headers.getLanguage());
 		System.out.println("Bestellung ist aus der Mock zurück");
-		return Response.created(getUriBestellung(bestellung, uriInfo))
-				.build();
+		return Response.created(getUriBestellung(bestellung, uriInfo)).build();
 	}
 
 	@DELETE
@@ -159,7 +159,7 @@ public class BestellungResource {
 	}
 
 	@PUT
-	@Consumes({APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
+	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces
 	public void updateBestellung(Bestellung bestellung) {
 		// TODO Anwendungskern statt Mock

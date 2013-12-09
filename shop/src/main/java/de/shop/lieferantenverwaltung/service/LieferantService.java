@@ -16,73 +16,72 @@ import de.shop.util.interceptor.Log;
 public class LieferantService implements Serializable {
 
 	private static final long serialVersionUID = 4360325837484294309L;
-	
-	@NotNull(message ="lieferant.notFound.id")
+
+	@NotNull(message = "lieferant.notFound.id")
 	public Lieferant findLieferantById(Long id) {
-		if(id == null)
+		if (id == null)
 			return null;
 		return Mock.findLieferantById(id);
 	}
-	
+
 	@NotNull(message = "lieferant.notFound.email")
 	public Lieferant findLieferantByEmail(String email) {
 		if (email == null)
 			return null;
 		return Mock.findLieferantByEmail(email);
 	}
-	
+
 	@Size(min = 1, message = "lieferant.notFound.nachname")
 	public List<Lieferant> findLieferantenByFirma(String firma) {
 		return Mock.findLieferantenByFirma(firma);
 	}
-	
+
 	public List<Lieferant> findAllLieferanten() {
 		return Mock.findAllLieferanten();
 	}
-	
+
 	public Lieferant createLieferant(Lieferant lieferant) {
 		if (lieferant == null) {
 			return lieferant;
 		}
 
-		final Lieferant tmp = findLieferantByEmail(lieferant.getEmail()); 
+		final Lieferant tmp = findLieferantByEmail(lieferant.getEmail());
 		if (tmp != null) {
-			// TODO: EmailException
-			//throw new EmailExistsException(lieferant.getEmail());
+			throw new EmailExistsException(lieferant.getEmail());
 		}
 		lieferant = Mock.createLieferant(lieferant);
 
 		return lieferant;
-	} 
-	
+	}
+
 	public Lieferant updateLieferant(Lieferant lieferant) {
 		if (lieferant == null) {
 			return null;
 		}
 
-		final Lieferant vorhandenerLieferant = findLieferantByEmail(lieferant.getEmail());
+		final Lieferant vorhandenerLieferant = findLieferantByEmail(lieferant
+				.getEmail());
 		if (vorhandenerLieferant != null) {
-			if (vorhandenerLieferant.getId().longValue() != lieferant.getId().longValue()) {
-				// TODO: EmailException
-				//throw new EmailExistsException(lieferant.getEmail());
+			if (vorhandenerLieferant.getId().longValue() != lieferant.getId()
+					.longValue()) {
+				throw new EmailExistsException(lieferant.getEmail());
 			}
 		}
 
 		// TODO Datenbanzugriffsschicht statt Mock
 		Mock.updateLieferant(lieferant);
-		
+
 		return lieferant;
 	}
-	
+
 	public void deleteLieferant(Long lieferantId) {
-		Lieferant lieferant = findLieferantById(lieferantId);
+		final Lieferant lieferant = findLieferantById(lieferantId);
 		if (lieferant == null) {
 			return;
 		}
-		
+
 		if (!lieferant.getBestellungen().isEmpty()) {
-			//TODO : LieferantDeleteBestellungException
-			//throw new LieferantDeleteBestellungException(lieferant);
+			throw new LieferantDeleteBestellungException(lieferant);
 		}
 		Mock.deleteLieferant(lieferant.getId());
 	}

@@ -20,12 +20,15 @@ public class Privatkunde extends Kunde {
 	public Set<HobbyType> getHobbies() {
 		return hobbies;
 	}
+
 	public void setHobbies(Set<HobbyType> hobbies) {
 		this.hobbies = hobbies;
 	}
+
 	@Override
 	public String toString() {
-		return "Privatkunde [" + super.toString() + ", hobbies=" + hobbies + "]";
+		return "Privatkunde [" + super.toString() + ", hobbies=" + hobbies
+				+ "]";
 	}
 
 }

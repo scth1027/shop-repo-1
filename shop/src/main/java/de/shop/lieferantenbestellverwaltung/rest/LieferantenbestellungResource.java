@@ -33,9 +33,9 @@ import de.shop.lieferantenverwaltung.rest.LieferantenResource;
 import de.shop.util.Mock;
 import de.shop.util.rest.UriHelper;
 
-
 @Path("/lieferantenbestellungen")
-@Produces({ APPLICATION_JSON, APPLICATION_XML + ";qs=0.75", TEXT_XML + ";qs=0.5" })
+@Produces({ APPLICATION_JSON, APPLICATION_XML + ";qs=0.75",
+		TEXT_XML + ";qs=0.5" })
 @Consumes
 @RequestScoped
 public class LieferantenbestellungResource {
@@ -53,17 +53,18 @@ public class LieferantenbestellungResource {
 	public Response findLieferantenbestellungById(@PathParam("id") Long id) {
 		// TODO Anwendungskern statt Mock
 		System.out.println("IN Methode");
-		final Lieferantenbestellung bestellung = Mock.findLieferantenbestellungById(id);
+		final Lieferantenbestellung bestellung = Mock
+				.findLieferantenbestellungById(id);
 		if (bestellung == null) {
-			throw new NotFoundException("Keine Bestellung mit der ID " + id + " gefunden.");
+			throw new NotFoundException("Keine Bestellung mit der ID " + id
+					+ " gefunden.");
 		}
 
 		setStructuralLinks(bestellung, uriInfo);
 
 		// Link-Header setzen
 		final Response response = Response.ok(bestellung)
-				.links(getTransitionalLinks(bestellung, uriInfo))
-				.build();
+				.links(getTransitionalLinks(bestellung, uriInfo)).build();
 
 		return response;
 	}
@@ -71,72 +72,80 @@ public class LieferantenbestellungResource {
 	@GET
 	public Response findAllBestellungen() {
 		// Aufruf der Mock zur Erzeugung der Bestellungen
-		final List<Lieferantenbestellung> all = Mock.findAllLieferantenbestellungen();
+		final List<Lieferantenbestellung> all = Mock
+				.findAllLieferantenbestellungen();
 		// Plausibilitäsprüfung
-		if(all.isEmpty())
-			throw new NotFoundException("Es konnten keine Kunden gefunden werden!");
+		if (all.isEmpty())
+			throw new NotFoundException(
+					"Es konnten keine Kunden gefunden werden!");
 		// Erstellen der Links für die jeweilign Bestellungen
-		for (Lieferantenbestellung bestellung : all)
-		{
+		for (Lieferantenbestellung bestellung : all) {
 			setStructuralLinks(bestellung, uriInfo);
 		}
-		return Response.ok(new GenericEntity<List<Lieferantenbestellung>>(all){})
-				.links(setTransitionalLinksLieferantenbestellungen(all, uriInfo))
+		return Response.ok(new GenericEntity<List<Lieferantenbestellung>>(all) {
+		}).links(setTransitionalLinksLieferantenbestellungen(all, uriInfo))
 				.build();
 	}
 
-	private Link[] setTransitionalLinksLieferantenbestellungen(List<Lieferantenbestellung> bestellungen, UriInfo uriInfo) {
+	private Link[] setTransitionalLinksLieferantenbestellungen(
+			List<Lieferantenbestellung> bestellungen, UriInfo uriInfo) {
 		if (bestellungen == null || bestellungen.isEmpty()) {
 			return null;
 		}
 
-		final Link first = Link.fromUri(getBestellungenURI(bestellungen.get(0), uriInfo))
-				.rel(FIRST_LINK)
-				.build();
+		final Link first = Link
+				.fromUri(getBestellungenURI(bestellungen.get(0), uriInfo))
+				.rel(FIRST_LINK).build();
 		final int lastPos = bestellungen.size() - 1;
-		final Link last = Link.fromUri(getBestellungenURI(bestellungen.get(lastPos), uriInfo))
-				.rel(LAST_LINK)
-				.build();
+		final Link last = Link
+				.fromUri(getBestellungenURI(bestellungen.get(lastPos), uriInfo))
+				.rel(LAST_LINK).build();
 
 		return new Link[] { first, last };
 	}
 
-	private URI getBestellungenURI(Lieferantenbestellung bestellung, UriInfo uriInfo2) {
-		return uriHelper.getUri(LieferantenbestellungResource.class, "findLieferantenbestellungById", bestellung.getId(), uriInfo);
+	private URI getBestellungenURI(Lieferantenbestellung bestellung,
+			UriInfo uriInfo2) {
+		return uriHelper.getUri(LieferantenbestellungResource.class,
+				"findLieferantenbestellungById", bestellung.getId(), uriInfo);
 
 	}
 
-	public void setStructuralLinks(Lieferantenbestellung bestellung, UriInfo uriInfo) {
+	public void setStructuralLinks(Lieferantenbestellung bestellung,
+			UriInfo uriInfo) {
 		// URI fuer Kunde setzen
 		final Lieferant lieferant = bestellung.getLieferant();
 		if (lieferant != null) {
-			final URI lieferantUri = lieferantResource.getLieferantenURI(bestellung.getLieferant(), uriInfo);
+			final URI lieferantUri = lieferantResource.getLieferantenURI(
+					bestellung.getLieferant(), uriInfo);
 			bestellung.setLieferantURI(lieferantUri);
 		}
 	}
 
-	private Link[] getTransitionalLinks(Lieferantenbestellung bestellung, UriInfo uriInfo) {
-		final Link self = Link.fromUri(getUriLieferantenbestellung(bestellung, uriInfo))
-				.rel(SELF_LINK)
-				.build();
+	private Link[] getTransitionalLinks(Lieferantenbestellung bestellung,
+			UriInfo uriInfo) {
+		final Link self = Link
+				.fromUri(getUriLieferantenbestellung(bestellung, uriInfo))
+				.rel(SELF_LINK).build();
 		return new Link[] { self };
 	}
 
-
-	public URI getUriLieferantenbestellung(Lieferantenbestellung bestellung, UriInfo uriInfo) {
-		return uriHelper.getUri(LieferantenbestellungResource.class, "findLieferantenbestellungById", bestellung.getId(), uriInfo);
+	public URI getUriLieferantenbestellung(Lieferantenbestellung bestellung,
+			UriInfo uriInfo) {
+		return uriHelper.getUri(LieferantenbestellungResource.class,
+				"findLieferantenbestellungById", bestellung.getId(), uriInfo);
 	}
 
 	@POST
-	@Consumes({APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
+	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces
 	public Response createBestellung(Lieferantenbestellung bestellung) {
 		// TODO Anwendungskern statt Mock
 		System.out.println("Lieferantenbestellung angekommen im Service");
 		bestellung = Mock.createLieferantenbestellung(bestellung);
 		System.out.println("Lieferantenbestellung ist aus der Mock zurück");
-		return Response.created(getUriLieferantenbestellung(bestellung, uriInfo))
-				.build();
+		return Response.created(
+				getUriLieferantenbestellung(bestellung, uriInfo)).build();
 	}
 
 	@DELETE
@@ -147,7 +156,7 @@ public class LieferantenbestellungResource {
 	}
 
 	@PUT
-	@Consumes({APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
+	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces
 	public void updateBestellung(Lieferantenbestellung bestellung) {
 		// TODO Anwendungskern statt Mock

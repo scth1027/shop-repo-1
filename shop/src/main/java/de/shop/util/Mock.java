@@ -29,31 +29,32 @@ public final class Mock {
 	private static final int MAX_KUNDEN = 8;
 	private static final int MAX_BESTELLUNGEN = 4;
 	private static final int JAHR = 2000;
-	private static final int MONAT = 0; 
+	private static final int MONAT = 0;
 	private static final int TAG = 1;
 	private static final int MAX_ARTIKEL = 5;
-	
-	//Kundenteil
+	private static final int BD_SCALE = 5;
+
+	// Kundenteil
 	public static Kunde findKundeById(Long id) {
 		if (id > MAX_ID) {
 			return null;
 		}
-		
+
 		final Kunde kunde = id % 2 == 1 ? new Privatkunde() : new Firmenkunde();
 		kunde.setId(id);
 		kunde.setNachname("Nachname" + id);
 		kunde.setVorname("Vorname" + id);
 		kunde.setEmail("" + id + "@hska.de");
-		
+
 		final Adresse adresse = new Adresse();
-		adresse.setId(id + 1);        // andere ID fuer die Adresse
+		adresse.setId(id + 1); // andere ID fuer die Adresse
 		adresse.setPlz("12345");
 		adresse.setOrt("Testort");
 		adresse.setStrasse("Moltkestrasse");
 		adresse.setHausnummer(id.intValue() + 1);
 		adresse.setKunde(kunde);
 		kunde.setAdresse(adresse);
-		
+
 		if (kunde.getClass().equals(Privatkunde.class)) {
 			final Privatkunde privatkunde = (Privatkunde) kunde;
 			final Set<HobbyType> hobbies = new HashSet<>();
@@ -61,7 +62,7 @@ public final class Mock {
 			hobbies.add(HobbyType.FUSSBALL);
 			privatkunde.setHobbies(hobbies);
 		}
-		
+
 		return kunde;
 	}
 
@@ -70,7 +71,7 @@ public final class Mock {
 		final List<Kunde> kunden = new ArrayList<>(anzahl);
 		for (int i = 1; i <= anzahl; i++) {
 			final Kunde kunde = findKundeById(Long.valueOf(i));
-			kunden.add(kunde);			
+			kunden.add(kunde);
 		}
 		return kunden;
 	}
@@ -81,31 +82,33 @@ public final class Mock {
 		for (int i = 1; i <= anzahl; i++) {
 			final Kunde kunde = findKundeById(Long.valueOf(i));
 			kunde.setNachname(nachname);
-			kunden.add(kunde);			
+			kunden.add(kunde);
 		}
 		return kunden;
 	}
-	
+
 	public static Kunde findKundeByEmail(String email) {
 		if (email.startsWith("x")) {
 			return null;
 		}
-		
-		final Kunde kunde = email.length() % 2 == 1 ? new Privatkunde() : new Firmenkunde();
+
+		final Kunde kunde = email.length() % 2 == 1 ? new Privatkunde()
+				: new Firmenkunde();
 		kunde.setId(Long.valueOf(email.length()));
 		kunde.setNachname("Nachname");
 		kunde.setEmail(email);
-		final GregorianCalendar seitCal = new GregorianCalendar(JAHR, MONAT, TAG);
+		final GregorianCalendar seitCal = new GregorianCalendar(JAHR, MONAT,
+				TAG);
 		final Date seit = seitCal.getTime();
 		kunde.setSeit(seit);
-		
+
 		final Adresse adresse = new Adresse();
-		adresse.setId(kunde.getId() + 1);        // andere ID fuer die Adresse
+		adresse.setId(kunde.getId() + 1); // andere ID fuer die Adresse
 		adresse.setPlz("12345");
 		adresse.setOrt("Testort");
 		adresse.setKunde(kunde);
 		kunde.setAdresse(adresse);
-		
+
 		if (kunde.getClass().equals(Privatkunde.class)) {
 			final Privatkunde privatkunde = (Privatkunde) kunde;
 			final Set<HobbyType> hobbies = new HashSet<>();
@@ -119,15 +122,20 @@ public final class Mock {
 
 	public static List<Bestellung> findBestellungenByKunde(Kunde kunde) {
 		// Beziehungsgeflecht zwischen Kunde und Bestellungen aufbauen
-		final int anzahl = kunde.getId().intValue() % MAX_BESTELLUNGEN + 1;  // 1, 2, 3 oder 4 Bestellungen
+		final int anzahl = kunde.getId().intValue() % MAX_BESTELLUNGEN + 1; // 1,
+																			// 2,
+																			// 3
+																			// oder
+																			// 4
+																			// Bestellungen
 		final List<Bestellung> bestellungen = new ArrayList<>(anzahl);
 		for (int i = 1; i <= anzahl; i++) {
 			final Bestellung bestellung = findBestellungById(Long.valueOf(i));
 			bestellung.setKunde(kunde);
-			bestellungen.add(bestellung);			
+			bestellungen.add(bestellung);
 		}
 		kunde.setBestellungen(bestellungen);
-		
+
 		return bestellungen;
 	}
 
@@ -136,7 +144,7 @@ public final class Mock {
 			return null;
 		}
 
-		final Kunde kunde = findKundeById(id + 1);  // andere ID fuer den Kunden
+		final Kunde kunde = findKundeById(id + 1); // andere ID fuer den Kunden
 		System.out.println("Kunde erhalten");
 		final Bestellung bestellung = new Bestellung();
 		bestellung.setId(id);
@@ -144,20 +152,21 @@ public final class Mock {
 		final Lieferant lieferant = new Lieferant();
 		lieferant.setId(id);
 		System.out.println("Lieferant erzeugt");
-		
+
 		bestellung.setGesamtpreis(new BigDecimal("112.43"));
 		System.out.print("Gesamtpreis gesetzt");
 		final Posten p = new Posten();
 		p.setAnzahl(id.intValue() + 1);
 		System.out.println("Posten: " + p.toString());
-		p.setArtikel(new Artikel(Long.valueOf(1), "Posten1", new BigDecimal("13.0")));
+		p.setArtikel(new Artikel(Long.valueOf(1), "Posten1", new BigDecimal(
+				"13.0")));
 		System.out.println("Posten: " + p.toString());
 		final List<Posten> posten = new ArrayList<>();
 		posten.add(p);
 		bestellung.setPosten(posten);
 		System.out.println("Posten in Bestellung");
 		bestellung.setKunde(kunde);
-		
+
 		return bestellung;
 	}
 
@@ -170,14 +179,14 @@ public final class Mock {
 		}
 		return bestellungliste;
 	}
-	
+
 	public static Bestellung createBestellung(Bestellung bestellung, Kunde kunde) {
 		bestellung.setKunde(kunde);
 		final BigDecimal gesamtpreis = bestellung.getGesamtpreis();
-		gesamtpreis.setScale(15);
+		gesamtpreis.setScale(BD_SCALE);
 		return bestellung;
 	}
-	
+
 	public static void updateBestellung(Bestellung bestellung) {
 		System.out.println("Aktualisierter Bestellung: " + bestellung);
 	}
@@ -185,8 +194,7 @@ public final class Mock {
 	public static void deleteBestellung(Long bestellungId) {
 		System.out.println("Bestellung mit ID=" + bestellungId + " geloescht");
 	}
-	
-	
+
 	public static Kunde createKunde(Kunde kunde) {
 		// Neue IDs fuer Kunde und zugehoerige Adresse
 		// Ein neuer Kunde hat auch keine Bestellungen
@@ -208,32 +216,32 @@ public final class Mock {
 		System.out.println("Kunde mit ID=" + kundeId + " geloescht");
 	}
 
-	//Artikelteil
+	// Artikelteil
 	public static Artikel findArtikelById(Long id) {
 		if (id > MAX_ID) {
 			return null;
 		}
-		
+
 		final Artikel artikel = new Artikel();
 		artikel.setId(id);
 		artikel.setBezeichnung("Bezeichnung" + id);
 		artikel.setPreis(new BigDecimal(id + "0.0"));
-		
+
 		return artikel;
 	}
-	
+
 	public static List<Artikel> findArtikelByBezeichnung(String bezeichnung) {
 		final int anzahl = bezeichnung.length();
 		final List<Artikel> artikelliste = new ArrayList<>(anzahl);
 		for (int i = 1; i <= anzahl; i++) {
 			final Artikel artikel = findArtikelById(Long.valueOf(i));
 			artikel.setBezeichnung(bezeichnung);
-			artikelliste.add(artikel);			
+			artikelliste.add(artikel);
 		}
 		return artikelliste;
 	}
 
-	public static List<Artikel> findAllArtikel(){
+	public static List<Artikel> findAllArtikel() {
 		final int anzahl = MAX_ARTIKEL;
 		final List<Artikel> artikelliste = new ArrayList<>(anzahl);
 		for (int i = 0; i <= anzahl; i++) {
@@ -244,10 +252,10 @@ public final class Mock {
 	}
 
 	public static Artikel createArtikel(Artikel artikel) {
-		//Nur neue ID zugewiesen
+		// Nur neue ID zugewiesen
 		final String bezeichnung = artikel.getBezeichnung();
 		artikel.setId(Long.valueOf(bezeichnung.length()));
-		
+
 		System.out.println("Neuer Artikel: " + artikel);
 		return artikel;
 	}
@@ -260,19 +268,19 @@ public final class Mock {
 		System.out.println("Artikel mit ID=" + id + " geloescht");
 	}
 
-	//Lieferantenteil
+	// Lieferantenteil
 	public static Lieferant findLieferantById(Long id) {
 		if (id > MAX_ID) {
 			return null;
 		}
-		
+
 		final Lieferant lieferant = new Lieferant();
 		lieferant.setId(id);
 		lieferant.setFirma("Firma" + id);
 		lieferant.setEmail("" + id + "@hska.de");
-		
+
 		final Lieferantenadresse adresse = new Lieferantenadresse();
-		adresse.setId(id + 1);        // andere ID fuer die Adresse
+		adresse.setId(id + 1); // andere ID fuer die Adresse
 		adresse.setPlz("12345");
 		adresse.setOrt("Testort");
 		adresse.setStrasse("Moltkestrasse");
@@ -288,7 +296,7 @@ public final class Mock {
 		final List<Lieferant> lieferanten = new ArrayList<>(anzahl);
 		for (int i = 1; i <= anzahl; i++) {
 			final Lieferant lieferant = findLieferantById(Long.valueOf(i));
-			lieferanten.add(lieferant);			
+			lieferanten.add(lieferant);
 		}
 		return lieferanten;
 	}
@@ -299,26 +307,27 @@ public final class Mock {
 		for (int i = 1; i <= anzahl; i++) {
 			final Lieferant lieferant = findLieferantById(Long.valueOf(i));
 			lieferant.setFirma(firma);
-			lieferanten.add(lieferant);			
+			lieferanten.add(lieferant);
 		}
 		return lieferanten;
 	}
-	
+
 	public static Lieferant findLieferantByEmail(String email) {
 		if (email.startsWith("x")) {
 			return null;
 		}
-		
+
 		final Lieferant lieferant = new Lieferant();
 		lieferant.setId(Long.valueOf(email.length()));
 		lieferant.setFirma("Firma");
 		lieferant.setEmail(email);
-		final GregorianCalendar seitCal = new GregorianCalendar(JAHR, MONAT, TAG);
+		final GregorianCalendar seitCal = new GregorianCalendar(JAHR, MONAT,
+				TAG);
 		final Date seit = seitCal.getTime();
 		lieferant.setSeit(seit);
-		
+
 		final Lieferantenadresse adresse = new Lieferantenadresse();
-		adresse.setId(lieferant.getId() + 1);        // andere ID fuer die Adresse
+		adresse.setId(lieferant.getId() + 1); // andere ID fuer die Adresse
 		adresse.setPlz("12345");
 		adresse.setOrt("Testort");
 		adresse.setLieferant(lieferant);
@@ -327,17 +336,24 @@ public final class Mock {
 		return lieferant;
 	}
 
-	public static List<Lieferantenbestellung> findBestellungenByLieferant(Lieferant lieferant) {
+	public static List<Lieferantenbestellung> findBestellungenByLieferant(
+			Lieferant lieferant) {
 		// Beziehungsgeflecht zwischen Lieferant und Bestellungen aufbauen
-		final int anzahl = lieferant.getId().intValue() % MAX_BESTELLUNGEN + 1;  // 1, 2, 3 oder 4 Bestellungen
+		final int anzahl = lieferant.getId().intValue() % MAX_BESTELLUNGEN + 1; // 1,
+																				// 2,
+																				// 3
+																				// oder
+																				// 4
+																				// Bestellungen
 		final List<Lieferantenbestellung> bestellungen = new ArrayList<>(anzahl);
 		for (int i = 1; i <= anzahl; i++) {
-			final Lieferantenbestellung bestellung = findLieferantenbestellungById(Long.valueOf(i));
+			final Lieferantenbestellung bestellung = findLieferantenbestellungById(Long
+					.valueOf(i));
 			bestellung.setLieferant(lieferant);
-			bestellungen.add(bestellung);			
+			bestellungen.add(bestellung);
 		}
 		lieferant.setBestellungen(bestellungen);
-		
+
 		return bestellungen;
 	}
 
@@ -346,54 +362,61 @@ public final class Mock {
 			return null;
 		}
 
-		final Lieferant lieferant = findLieferantById(id + 1);  // andere ID fuer den Lieferanten
+		final Lieferant lieferant = findLieferantById(id + 1); // andere ID fuer
+																// den
+																// Lieferanten
 		System.out.println("Lieferant erhalten");
 		final Lieferantenbestellung bestellung = new Lieferantenbestellung();
 		bestellung.setId(id);
 		System.out.println("Bestellung erzeugt");
-		
+
 		bestellung.setGesamtpreis(new BigDecimal("112.43"));
 		System.out.print("Gesamtpreis gesetzt");
 		final PostenLB p = new PostenLB();
 		p.setAnzahl(id.intValue() + 1);
 		System.out.println("Posten: " + p.toString());
-		p.setArtikel(new Artikel(Long.valueOf(1), "Posten1", new BigDecimal("13.0")));
+		p.setArtikel(new Artikel(Long.valueOf(1), "Posten1", new BigDecimal(
+				"13.0")));
 		System.out.println("Posten: " + p.toString());
 		final List<PostenLB> posten = new ArrayList<>();
 		posten.add(p);
 		bestellung.setPostenLB(posten);
 		System.out.println("Posten in Bestellung");
 		bestellung.setLieferant(lieferant);
-		
+
 		return bestellung;
 	}
 
 	public static List<Lieferantenbestellung> findAllLieferantenbestellungen() {
 		final int anzahl = MAX_BESTELLUNGEN;
-		final List<Lieferantenbestellung> bestellungliste = new ArrayList<>(anzahl);
+		final List<Lieferantenbestellung> bestellungliste = new ArrayList<>(
+				anzahl);
 		for (int i = 1; i <= anzahl; i++) {
-			final Lieferantenbestellung bestellung = findLieferantenbestellungById(Long.valueOf(i));
+			final Lieferantenbestellung bestellung = findLieferantenbestellungById(Long
+					.valueOf(i));
 			bestellungliste.add(bestellung);
 		}
 		return bestellungliste;
 	}
-	
-	public static Lieferantenbestellung createLieferantenbestellung(Lieferantenbestellung bestellung) {
+
+	public static Lieferantenbestellung createLieferantenbestellung(
+			Lieferantenbestellung bestellung) {
 		final Lieferant lieferant = bestellung.getLieferant();
 		lieferant.setId(Long.valueOf(2));
 		final BigDecimal gesamtpreis = bestellung.getGesamtpreis();
-		gesamtpreis.setScale(15);
+		gesamtpreis.setScale(BD_SCALE);
 		return bestellung;
 	}
-	
-	public static void updateLieferantenbestellung(Lieferantenbestellung bestellung) {
+
+	public static void updateLieferantenbestellung(
+			Lieferantenbestellung bestellung) {
 		System.out.println("Aktualisierter Bestellung: " + bestellung);
 	}
 
 	public static void deleteLieferantenbestellung(Long bestellungId) {
 		System.out.println("Bestellung mit ID=" + bestellungId + " geloescht");
 	}
-	
+
 	public static Lieferant createLieferant(Lieferant lieferant) {
 		// Neue IDs fuer Lieferant und zugehoerige Adresse
 		// Ein neuer Lieferant hat auch keine Bestellungen
@@ -415,5 +438,6 @@ public final class Mock {
 		System.out.println("Lieferant mit ID=" + lieferantId + " geloescht");
 	}
 
-	private Mock() { /**/ }
+	private Mock() { /**/
+	}
 }

@@ -46,144 +46,149 @@ import de.shop.util.rest.UriHelper;
  */
 
 @Path("/artikel")
-@Produces({ APPLICATION_JSON, APPLICATION_XML + ";qs=0.75", TEXT_XML + ";qs=0.5" })
+@Produces({ APPLICATION_JSON, APPLICATION_XML + ";qs=0.75",
+		TEXT_XML + ";qs=0.5" })
 @Consumes
 @RequestScoped
 @Log
 public class ArtikelResource {
 	public static final String ARTIKEL_ID_PATH_PARAM = "artikelId";
 	public static final String ARTIKEL_BEZEICHNUNG_QUERY_PARAM = "bezeichnung";
-	
+
 	@Inject
 	private ArtikelService as;
-	
+
 	@Context
 	private UriInfo uriInfo;
-	
+
 	@Inject
 	private UriHelper uriHelper;
-	
-	//Aktuelle Version ausgeben
+
+	// Aktuelle Version ausgeben
 	@GET
 	@Produces({ TEXT_PLAIN, APPLICATION_JSON })
 	@Path("version")
 	public String getVersion() {
 		return "1.0";
 	}
-	
-	//Artikel mit ID finden
+
+	// Artikel mit ID finden
 	@GET
 	@Path("{" + ARTIKEL_ID_PATH_PARAM + ":[1-9][0-9]*}")
 	public Response findArtikelById(@PathParam(ARTIKEL_ID_PATH_PARAM) Long id) {
 		final Artikel artikel = as.findArtikelById(id);
 
 		return Response.ok(artikel)
-                       .links(getTransitionalLinks(artikel, uriInfo))
-                       .build();
+				.links(getTransitionalLinks(artikel, uriInfo)).build();
 	}
-	
-	//Artikel mit Bezeichnung finden
+
+	// Artikel mit Bezeichnung finden
 	@GET
-	public Response findArtikelByBezeichnung(@QueryParam(ARTIKEL_BEZEICHNUNG_QUERY_PARAM) String bezeichnung) {
+	public Response findArtikelByBezeichnung(
+			@QueryParam(ARTIKEL_BEZEICHNUNG_QUERY_PARAM) String bezeichnung) {
 		List<Artikel> artikelliste = null;
 		if (bezeichnung != null) {
 			artikelliste = as.findArtikelByBezeichnung(bezeichnung);
 			if (artikelliste.isEmpty()) {
-				throw new NotFoundException("Kein Artikel mit Bezeichnung " + bezeichnung + " gefunden.");
+				throw new NotFoundException("Kein Artikel mit Bezeichnung "
+						+ bezeichnung + " gefunden.");
 			}
-		}
-		else {
+		} else {
 			artikelliste = as.findAllArtikel();
 			if (artikelliste.isEmpty()) {
 				throw new NotFoundException("Keine Artikel vorhanden.");
 			}
 		}
 
-		return Response.ok(new GenericEntity<List<Artikel>>(artikelliste) { })
-				.links(getTransitionalLinksArtikelListe(artikelliste, uriInfo))
+		return Response.ok(new GenericEntity<List<Artikel>>(artikelliste) {
+		}).links(getTransitionalLinksArtikelListe(artikelliste, uriInfo))
 				.build();
 	}
-	
-	//Alle Artikel auflisten
+
+	// Alle Artikel auflisten
 	@GET
 	public Response findAllArtikel() {
 		final List<Artikel> artikelliste = as.findAllArtikel();
 		if (artikelliste.isEmpty()) {
-			throw new NotFoundException("Es konnte keine Artikel gefunden werden.");
+			throw new NotFoundException(
+					"Es konnte keine Artikel gefunden werden.");
 		}
 
-		return Response.ok(new GenericEntity<List<Artikel>>(artikelliste) { })
-                       .links(getTransitionalLinksArtikelListe(artikelliste, uriInfo))
-                       .build();
+		return Response.ok(new GenericEntity<List<Artikel>>(artikelliste) {
+		}).links(getTransitionalLinksArtikelListe(artikelliste, uriInfo))
+				.build();
 	}
-	
-	//Artikel erstellen
+
+	// Artikel erstellen
 	@POST
-	@Consumes({APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
+	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces
 	public Response createArtikel(@Valid Artikel artikel) {
 		artikel = as.createArtikel(artikel);
-		return Response.created(getUriArtikel(artikel, uriInfo))
-			           .build();
+		return Response.created(getUriArtikel(artikel, uriInfo)).build();
 	}
-	
-	//Artikel aendern
+
+	// Artikel aendern
 	@PUT
-	@Consumes({APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
+	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces
 	public void updateArtikel(@Valid Artikel artikel) {
 		as.updateArtikel(artikel);
 	}
-	
-	//Artikel loeschen bzw. als nicht mehr aktiv makieren
+
+	// Artikel loeschen bzw. als nicht mehr aktiv makieren
 	@DELETE
 	@Path("{id:[1-9][0-9]*}")
 	@Produces
 	public void deleteArtikel(@PathParam("id") Long artikelId) {
 		as.deleteArtikel(artikelId);
 	}
-	
-	//Artikel URI erzeugen
+
+	// Artikel URI erzeugen
 	public URI getUriArtikel(Artikel artikel, UriInfo uriInfo) {
-		return uriHelper.getUri(ArtikelResource.class, "findArtikelById", artikel.getId(), uriInfo);
+		return uriHelper.getUri(ArtikelResource.class, "findArtikelById",
+				artikel.getId(), uriInfo);
 	}
-	
-	//TODO Hinzufügen des LIST_LINKS
-	//Verwaltungs URIs erzeugen
+
+	// TODO Hinzufügen des LIST_LINKS
+	// Verwaltungs URIs erzeugen
 	public Link[] getTransitionalLinks(Artikel artikel, UriInfo uriInfo) {
 		final Link self = Link.fromUri(getUriArtikel(artikel, uriInfo))
-	                          .rel(SELF_LINK)
-	                          .build();
-		/*final Link list = Link.fromUri(uriHelper.getUri(ArtikelResource.class,
-		 * "findAllArtikel", artikel.getId(), uriInfo))
-							.rel(LIST_LINK)
-							.build();*/
-		final Link add = Link.fromUri(uriHelper.getUri(ArtikelResource.class, uriInfo))
-                             .rel(ADD_LINK)
-                             .build();
-		final Link update = Link.fromUri(uriHelper.getUri(ArtikelResource.class, uriInfo))
-                                .rel(UPDATE_LINK)
-                                .build();
-		final Link remove = Link.fromUri(uriHelper.getUri(ArtikelResource.class,
-				"deleteArtikel", artikel.getId(), uriInfo))
-                                .rel(REMOVE_LINK)
-                                .build();
-		return new Link[] {self/*, list*/, add, update, remove };
+				.rel(SELF_LINK).build();
+		/*
+		 * final Link list =
+		 * Link.fromUri(uriHelper.getUri(ArtikelResource.class,
+		 * "findAllArtikel", artikel.getId(), uriInfo)) .rel(LIST_LINK)
+		 * .build();
+		 */
+		final Link add = Link
+				.fromUri(uriHelper.getUri(ArtikelResource.class, uriInfo))
+				.rel(ADD_LINK).build();
+		final Link update = Link
+				.fromUri(uriHelper.getUri(ArtikelResource.class, uriInfo))
+				.rel(UPDATE_LINK).build();
+		final Link remove = Link
+				.fromUri(
+						uriHelper.getUri(ArtikelResource.class,
+								"deleteArtikel", artikel.getId(), uriInfo))
+				.rel(REMOVE_LINK).build();
+		return new Link[] { self/* , list */, add, update, remove };
 	}
-	
-	public Link[] getTransitionalLinksArtikelListe(List<Artikel> artikelliste, UriInfo uriInfo) {
+
+	public Link[] getTransitionalLinksArtikelListe(List<Artikel> artikelliste,
+			UriInfo uriInfo) {
 		if (artikelliste == null || artikelliste.isEmpty()) {
 			return null;
 		}
 
-		final Link first = Link.fromUri(getUriArtikel(artikelliste.get(0), uriInfo))
-				.rel(FIRST_LINK)
-				.build();
+		final Link first = Link
+				.fromUri(getUriArtikel(artikelliste.get(0), uriInfo))
+				.rel(FIRST_LINK).build();
 		final int lastPos = artikelliste.size() - 1;
-		final Link last = Link.fromUri(getUriArtikel(artikelliste.get(lastPos), uriInfo))
-				.rel(LAST_LINK)
-				.build();
+		final Link last = Link
+				.fromUri(getUriArtikel(artikelliste.get(lastPos), uriInfo))
+				.rel(LAST_LINK).build();
 
-		return new Link[] {first, last };
+		return new Link[] { first, last };
 	}
 }

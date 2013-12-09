@@ -13,7 +13,7 @@ import de.shop.util.interceptor.Log;
 
 @Dependent
 @Log
-public class ArtikelService implements Serializable{
+public class ArtikelService implements Serializable {
 	
 	private static final long serialVersionUID = 3076865030092242363L;
 	
@@ -28,7 +28,7 @@ public class ArtikelService implements Serializable{
 	}
 	
 	@Size(min = 1, message = "{artikel.notFound.all}")
-	public List<Artikel> findAllArtikel(){
+	public List<Artikel> findAllArtikel() {
 		return Mock.findAllArtikel();
 	}
 

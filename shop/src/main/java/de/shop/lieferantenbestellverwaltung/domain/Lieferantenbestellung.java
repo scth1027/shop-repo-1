@@ -9,15 +9,15 @@ import de.shop.lieferantenverwaltung.domain.Lieferant;
 
 @XmlRootElement
 public class Lieferantenbestellung {
-	
+
 	private long id;
 	private Lieferant lieferant;
 	private BigDecimal gesamtpreis;
 	private Bestellstatus bestellstatus;
 	private List<PostenLB> posten;
-	
+
 	private URI lieferantURI;
-	
+
 	public URI getLieferantURI() {
 		return lieferantURI;
 	}
@@ -33,7 +33,7 @@ public class Lieferantenbestellung {
 	public void setId(long id) {
 		this.id = id;
 	}
-	
+
 	public Lieferant getLieferant() {
 		return lieferant;
 	}
@@ -41,7 +41,7 @@ public class Lieferantenbestellung {
 	public void setLieferant(Lieferant lieferant) {
 		this.lieferant = lieferant;
 	}
-		
+
 	public Bestellstatus getBestellstatus() {
 		return bestellstatus;
 	}
@@ -49,7 +49,7 @@ public class Lieferantenbestellung {
 	public void setBestellstatus(Bestellstatus bestellstatus) {
 		this.bestellstatus = bestellstatus;
 	}
-	
+
 	public List<PostenLB> getPostenLB() {
 		return posten;
 	}
@@ -75,7 +75,8 @@ public class Lieferantenbestellung {
 		result = prime * result
 				+ ((gesamtpreis == null) ? 0 : gesamtpreis.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
-		result = prime * result + ((lieferant == null) ? 0 : lieferant.hashCode());
+		result = prime * result
+				+ ((lieferant == null) ? 0 : lieferant.hashCode());
 		result = prime * result
 				+ ((lieferantURI == null) ? 0 : lieferantURI.hashCode());
 		result = prime * result + ((posten == null) ? 0 : posten.hashCode());
@@ -124,8 +125,9 @@ public class Lieferantenbestellung {
 
 	@Override
 	public String toString() {
-		return "Bestellung [id=" + id + ", lieferant=" + lieferant + ", gesamtpreis=" + gesamtpreis
-				+ ", bestellstatus=" + bestellstatus + ", posten=" + posten
-				+ ", lieferantURI=" + lieferantURI + "]";
+		return "Bestellung [id=" + id + ", lieferant=" + lieferant
+				+ ", gesamtpreis=" + gesamtpreis + ", bestellstatus="
+				+ bestellstatus + ", posten=" + posten + ", lieferantURI="
+				+ lieferantURI + "]";
 	}
 }

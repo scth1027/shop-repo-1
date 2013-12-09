@@ -1,8 +1,5 @@
 package de.shop.lieferantenbestellverwaltung.domain;
 
 public enum Bestellstatus {
-	angenommen, 
-	versendet, 
-	storniert, 
-	bezahlt
+	angenommen, versendet, storniert, bezahlt
 }

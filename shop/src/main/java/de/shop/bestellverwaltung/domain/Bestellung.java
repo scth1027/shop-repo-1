@@ -9,26 +9,25 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import de.shop.kundenverwaltung.domain.Kunde;
-import de.shop.lieferantenverwaltung.domain.Lieferant;
 
 @XmlRootElement
 public class Bestellung {
-	
+
 	private long id;
-	
+
 	@XmlTransient
 	private Kunde kunde;
-	
+
 	private BigDecimal gesamtpreis;
-	
-	@NotNull(message="{bestellung.bestellstatus.NotNull}")
+
+	@NotNull(message = "{bestellung.bestellstatus.NotNull}")
 	private Bestellstatus bestellstatus;
-	
-	@NotNull(message="{bestellung.posten.NotNull}")
+
+	@NotNull(message = "{bestellung.posten.NotNull}")
 	private List<Posten> posten;
-	
+
 	private URI kundeURI;
-	
+
 	public URI getKundeURI() {
 		return kundeURI;
 	}
@@ -52,7 +51,7 @@ public class Bestellung {
 	public void setKunde(Kunde kunde) {
 		this.kunde = kunde;
 	}
-		
+
 	public Bestellstatus getBestellstatus() {
 		return bestellstatus;
 	}
@@ -60,7 +59,7 @@ public class Bestellung {
 	public void setBestellstatus(Bestellstatus bestellstatus) {
 		this.bestellstatus = bestellstatus;
 	}
-	
+
 	public List<Posten> getPosten() {
 		return posten;
 	}
@@ -107,36 +106,32 @@ public class Bestellung {
 		if (gesamtpreis == null) {
 			if (other.gesamtpreis != null)
 				return false;
-		} 
-		else if (!gesamtpreis.equals(other.gesamtpreis))
+		} else if (!gesamtpreis.equals(other.gesamtpreis))
 			return false;
 		if (id != other.id)
 			return false;
 		if (kunde == null) {
 			if (other.kunde != null)
 				return false;
-		} 
-		else if (!kunde.equals(other.kunde))
+		} else if (!kunde.equals(other.kunde))
 			return false;
 		if (kundeURI == null) {
 			if (other.kundeURI != null)
 				return false;
-		} 
-		else if (!kundeURI.equals(other.kundeURI))
+		} else if (!kundeURI.equals(other.kundeURI))
 			return false;
 		if (posten == null) {
 			if (other.posten != null)
 				return false;
-		} 
-		else if (!posten.equals(other.posten))
+		} else if (!posten.equals(other.posten))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Bestellung [id=" + id + ", kunde=" + kunde + ", gesamtpreis=" + gesamtpreis
-				+ ", bestellstatus=" + bestellstatus + ", posten=" + posten
-				+ ", kundeURI=" + kundeURI + "]";
+		return "Bestellung [id=" + id + ", kunde=" + kunde + ", gesamtpreis="
+				+ gesamtpreis + ", bestellstatus=" + bestellstatus
+				+ ", posten=" + posten + ", kundeURI=" + kundeURI + "]";
 	}
 }

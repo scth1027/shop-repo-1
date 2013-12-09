@@ -19,13 +19,14 @@ import de.shop.util.interceptor.Log;
 public class BestellungServiceImpl implements BestellungService, Serializable {
 
 	private static final long serialVersionUID = 3222788597519982182L;
-	
+
 	@Inject
 	@NeueBestellung
 	private transient Event<Bestellung> event;
 
 	@Override
-	public Bestellung createBestellung(Bestellung bestellung, Kunde kunde, Locale locale) {
+	public Bestellung createBestellung(Bestellung bestellung, Kunde kunde,
+			Locale locale) {
 		bestellung = Mock.createBestellung(bestellung, kunde);
 		event.fire(bestellung);
 		System.out.println("da");

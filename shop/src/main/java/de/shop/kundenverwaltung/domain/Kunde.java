@@ -39,11 +39,12 @@ public abstract class Kunde implements Serializable {
 	private static final long serialVersionUID = 1430771599450877428L;
 	public static final String PRIVATKUNDE = "P";
 	public static final String FIRMENKUNDE = "F";
-	
+
 	private static final String NAME_PATTERN = "[A-Z\u00C4\u00D6\u00DC][a-z\u00E4\u00F6\u00FC\u00DF]+";
 	private static final String NACHNAME_PREFIX = "(o'|von|von der|von und zu|van)?";
-	
-	public static final String NACHNAME_PATTERN = NACHNAME_PREFIX + NAME_PATTERN + "(-" + NAME_PATTERN + ")?";
+
+	public static final String NACHNAME_PATTERN = NACHNAME_PREFIX
+			+ NAME_PATTERN + "(-" + NAME_PATTERN + ")?";
 	private static final int NAME_LENGTH_MIN = 2;
 	private static final int NAME_LENGTH_MAX = 32;
 	private static final int EMAIL_LENGTH_MAX = 128;
@@ -158,11 +159,12 @@ public abstract class Kunde implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Kunde other = (Kunde) obj;
+		final Kunde other = (Kunde) obj;
 		if (email == null) {
 			if (other.email != null)
 				return false;
-		} else if (!email.equals(other.email))
+		} 
+		else if (!email.equals(other.email))
 			return false;
 		return true;
 	}

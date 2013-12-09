@@ -6,22 +6,22 @@ import de.shop.artikelverwaltung.domain.Artikel;
 
 @XmlRootElement
 public class Posten {
-	
+
 	private Artikel artikel;
 	private int anzahl;
-	
+
 	public Artikel getArtikel() {
 		return artikel;
 	}
-	
+
 	public void setArtikel(Artikel artikel) {
 		this.artikel = artikel;
 	}
-	
+
 	public int getAnzahl() {
 		return anzahl;
 	}
-	
+
 	public void setAnzahl(int anzahl) {
 		this.anzahl = anzahl;
 	}
@@ -49,8 +49,7 @@ public class Posten {
 		if (artikel == null) {
 			if (other.artikel != null)
 				return false;
-		}
-		else if (!artikel.equals(other.artikel))
+		} else if (!artikel.equals(other.artikel))
 			return false;
 		return true;
 	}

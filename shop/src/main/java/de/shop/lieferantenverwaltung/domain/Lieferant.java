@@ -15,9 +15,6 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.hibernate.validator.constraints.Email;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 
-
-
-
 import de.shop.lieferantenbestellverwaltung.domain.Lieferantenbestellung;
 
 /*
@@ -30,7 +27,7 @@ import de.shop.lieferantenbestellverwaltung.domain.Lieferantenbestellung;
  */
 @XmlRootElement
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-public class Lieferant implements Serializable{
+public class Lieferant implements Serializable {
 
 	private static final long serialVersionUID = 1430771599450877428L;
 
@@ -49,7 +46,8 @@ public class Lieferant implements Serializable{
 	private Date seit;
 
 	@XmlTransient
-	// Bestellungsklasse mitbenutzen oder eigene Klasse für Lieferantenbestellungen?
+	// Bestellungsklasse mitbenutzen oder eigene Klasse für
+	// Lieferantenbestellungen?
 	private List<Lieferantenbestellung> bestellungen;
 
 	private URI bestellungenURI;
@@ -57,33 +55,35 @@ public class Lieferant implements Serializable{
 	public Long getId() {
 		return id;
 	}
-	
+
 	public void setId(Long id) {
 		this.id = id;
 	}
+
 	public String getFirma() {
 		return firma;
 	}
+
 	public void setFirma(String firma) {
 		this.firma = firma;
 	}
-	
+
 	public Lieferantenadresse getLieferantenadresse() {
 		return adresse;
 	}
-	
+
 	public void setLieferantenadresse(Lieferantenadresse adresse) {
 		this.adresse = adresse;
 	}
-	
+
 	public String getEmail() {
 		return email;
 	}
-	
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
+
 	public Date getSeit() {
 		return seit;
 	}
@@ -94,18 +94,22 @@ public class Lieferant implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Lieferant [id=" + id + ", firma=" + firma + ", email="
-				+ email + ", bestellungURI=" + bestellungenURI + "]";
+		return "Lieferant [id=" + id + ", firma=" + firma + ", email=" + email
+				+ ", bestellungURI=" + bestellungenURI + "]";
 	}
+
 	public URI getBestellungenURI() {
 		return bestellungenURI;
 	}
+
 	public void setBestellungenURI(URI bestellungenURI) {
 		this.bestellungenURI = bestellungenURI;
 	}
+
 	public List<Lieferantenbestellung> getBestellungen() {
 		return bestellungen;
 	}
+
 	public void setBestellungen(List<Lieferantenbestellung> _bestellungen) {
 		this.bestellungen = _bestellungen;
 	}
@@ -126,11 +130,12 @@ public class Lieferant implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Lieferant other = (Lieferant) obj;
+		final Lieferant other = (Lieferant) obj;
 		if (email == null) {
 			if (other.email != null)
 				return false;
-		} else if (!email.equals(other.email))
+		} 
+		else if (!email.equals(other.email))
 			return false;
 		return true;
 	}
