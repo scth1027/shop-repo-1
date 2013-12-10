@@ -33,13 +33,13 @@ public class LieferantenbestellungServiceImpl implements LieferantenbestellungSe
 	}
 
 	@Override
-	@NotNull(message = "bestellung.notFound.id")
+	@NotNull(message = "lieferantenbestellung.notFound.id")
 	public Lieferantenbestellung findLieferantenbestellungById(Long id) {
 		return Mock.findLieferantenbestellungById(id);
 	}
 
 	@Override
-	@NotNull(message = "bestellung.notFound.kunde")
+	@NotNull(message = "lieferantenbestellung.notFound.lieferant")
 	public List<Lieferantenbestellung> findLieferantenbestellungenByLieferant(Lieferant lieferant) {
 		return Mock.findBestellungenByLieferant(lieferant);
 	}

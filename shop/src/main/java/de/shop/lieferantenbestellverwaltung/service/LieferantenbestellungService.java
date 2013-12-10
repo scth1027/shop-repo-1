@@ -12,10 +12,10 @@ public interface LieferantenbestellungService {
 
 	Lieferantenbestellung createLieferantenbestellung(Lieferantenbestellung bestellung, Lieferant lieferant,Locale locale);
 
-	@NotNull(message = "bestellung.notFound.id")
+	@NotNull(message = "lieferantenbestellung.notFound.id")
 	Lieferantenbestellung findLieferantenbestellungById(Long id);
 
-	@NotNull(message = "Bestellung.notFound.Kunde")
+	@NotNull(message = "lieferantenbestellung.notFound.lieferant")
 	List<Lieferantenbestellung> findLieferantenbestellungenByLieferant(Lieferant lieferant);
 
 	List<Lieferantenbestellung> findAllLieferantenbestellungen();

@@ -22,7 +22,7 @@ public class Lieferantenbestellung {
 
 	private BigDecimal gesamtpreis;
 
-	@NotNull(message = "{lieferantenbestellung.bestellstatus.NotNull}")
+	@NotNull(message = "{lieferantenbestellung.lieferantenbestellstatus.NotNull}")
 	private LieferantenBestellstatus bestellstatus;
 
 	@NotNull(message = "{lieferantenbestellung.posten.NotNull}")
