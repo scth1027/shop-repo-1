@@ -16,6 +16,7 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -164,7 +165,7 @@ public class LieferantenResource {
 	@POST
 	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces
-	public Response createLieferant(Lieferant lieferant) {
+	public Response createLieferant(@Valid Lieferant lieferant) {
 		// TODO Anwendungskern statt Mock
 		System.out.println("Lieferant angekommen im Service");
 		lieferant = ls.createLieferant(lieferant);
@@ -175,7 +176,7 @@ public class LieferantenResource {
 	@PUT
 	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces
-	public void updateLieferant(Lieferant lieferant) {
+	public void updateLieferant(@Valid Lieferant lieferant) {
 		// TODO Anwendungskern statt Mock
 		ls.updateLieferant(lieferant);
 	}

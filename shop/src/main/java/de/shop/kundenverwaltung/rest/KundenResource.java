@@ -16,6 +16,7 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -162,7 +163,7 @@ public class KundenResource {
 	@POST
 	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces
-	public Response createKunde(Kunde kunde) {
+	public Response createKunde(@Valid Kunde kunde) {
 		// TODO Anwendungskern statt Mock
 		System.out.println("Kunde angekommen im Service");
 		kunde = ks.createKunde(kunde);
@@ -173,7 +174,7 @@ public class KundenResource {
 	@PUT
 	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces
-	public void updateKunde(Kunde kunde) {
+	public void updateKunde(@Valid Kunde kunde) {
 		// TODO Anwendungskern statt Mock
 		ks.updateKunde(kunde);
 	}
