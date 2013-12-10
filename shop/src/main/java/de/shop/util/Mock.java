@@ -399,10 +399,8 @@ public final class Mock {
 		return bestellungliste;
 	}
 
-	public static Lieferantenbestellung createLieferantenbestellung(
-			Lieferantenbestellung bestellung) {
-		final Lieferant lieferant = bestellung.getLieferant();
-		lieferant.setId(Long.valueOf(2));
+	public static Lieferantenbestellung createLieferantenbestellung(Lieferantenbestellung bestellung, Lieferant lieferant) {
+		bestellung.setLieferant(lieferant);
 		final BigDecimal gesamtpreis = bestellung.getGesamtpreis();
 		gesamtpreis.setScale(BD_SCALE);
 		return bestellung;

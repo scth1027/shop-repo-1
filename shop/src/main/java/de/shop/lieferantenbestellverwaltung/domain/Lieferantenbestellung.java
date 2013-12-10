@@ -4,18 +4,30 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
+import de.shop.lieferantenbestellverwaltung.domain.LieferantenBestellstatus;
+import de.shop.lieferantenbestellverwaltung.domain.PostenLB;
 import de.shop.lieferantenverwaltung.domain.Lieferant;
 
 @XmlRootElement
 public class Lieferantenbestellung {
 
 	private long id;
-	private Lieferant lieferant;
-	private BigDecimal gesamtpreis;
-	private Bestellstatus bestellstatus;
-	private List<PostenLB> posten;
 
+	@XmlTransient
+	private Lieferant lieferant;
+
+	private BigDecimal gesamtpreis;
+
+	@NotNull(message = "{lieferantenbestellung.bestellstatus.NotNull}")
+	private LieferantenBestellstatus bestellstatus;
+
+	@NotNull(message = "{lieferantenbestellung.posten.NotNull}")
+	private List<PostenLB> posten;
+	
 	private URI lieferantURI;
 
 	public URI getLieferantURI() {
@@ -42,11 +54,11 @@ public class Lieferantenbestellung {
 		this.lieferant = lieferant;
 	}
 
-	public Bestellstatus getBestellstatus() {
+	public LieferantenBestellstatus getBestellstatus() {
 		return bestellstatus;
 	}
 
-	public void setBestellstatus(Bestellstatus bestellstatus) {
+	public void setBestellstatus(LieferantenBestellstatus bestellstatus) {
 		this.bestellstatus = bestellstatus;
 	}
 
