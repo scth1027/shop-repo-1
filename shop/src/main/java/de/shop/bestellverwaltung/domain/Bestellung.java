@@ -4,6 +4,10 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.Index;
+import javax.persistence.Inheritance;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -11,6 +15,9 @@ import javax.xml.bind.annotation.XmlTransient;
 import de.shop.kundenverwaltung.domain.Kunde;
 
 @XmlRootElement
+@Entity
+@Table(name = "kunde", indexes = @Index(columnList = "nachname"))
+@Inheritance
 public class Bestellung {
 
 	private long id;

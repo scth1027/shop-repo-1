@@ -5,6 +5,11 @@ import java.net.URI;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Index;
+import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -13,8 +18,8 @@ import javax.validation.constraints.Pattern;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlTransient;
-import org.hibernate.validator.constraints.Email;
 
+import org.hibernate.validator.constraints.Email;
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonSubTypes.Type;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
@@ -34,6 +39,11 @@ import de.shop.bestellverwaltung.domain.Bestellung;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({ @Type(value = Privatkunde.class, name = Kunde.PRIVATKUNDE),
 		@Type(value = Firmenkunde.class, name = Kunde.FIRMENKUNDE) })
+@Entity
+// Zu email wird unten ein UNIQUE Index definiert
+@Table(name = "kunde", indexes = @Index(columnList = "nachname"))
+@Inheritance
+@DiscriminatorColumn(name = "art", length = 1)
 public abstract class Kunde implements Serializable {
 
 	private static final long serialVersionUID = 1430771599450877428L;
@@ -163,8 +173,7 @@ public abstract class Kunde implements Serializable {
 		if (email == null) {
 			if (other.email != null)
 				return false;
-		} 
-		else if (!email.equals(other.email))
+		} else if (!email.equals(other.email))
 			return false;
 		return true;
 	}

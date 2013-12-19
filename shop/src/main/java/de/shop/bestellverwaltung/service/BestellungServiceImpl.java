@@ -7,6 +7,7 @@ import java.util.Locale;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 
 import de.shop.bestellverwaltung.domain.Bestellung;
@@ -23,13 +24,19 @@ public class BestellungServiceImpl implements BestellungService, Serializable {
 	@Inject
 	@NeueBestellung
 	private transient Event<Bestellung> event;
+	
+	@Inject
+	private transient EntityManager em;
 
 	@Override
 	public Bestellung createBestellung(Bestellung bestellung, Kunde kunde,
 			Locale locale) {
+		/*
 		bestellung = Mock.createBestellung(bestellung, kunde);
 		event.fire(bestellung);
 		System.out.println("da");
+		*/
+		em.persist(bestellung);
 		return bestellung;
 	}
 

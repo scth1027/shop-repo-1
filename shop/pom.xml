@@ -31,9 +31,9 @@
 
 	<!-- scm = source code management = Versionsmanagement -->
 	<scm>
-		<connection>scm:git:https://github.com/juergenzimmermann/shop.git</connection>
-		<url>https://github.com/juergenzimmermann/shop.git</url>
-		<developerConnection>scm:git:https://github.com/juergenzimmermann/shop.git</developerConnection>
+		<connection>scm:git:https://github.com/sawi/shop-repo.git</connection>
+		<url>https://github.com/sawi/shop-repo.git</url>
+		<developerConnection>scm:git:https://github.com/sawi/shop-repo.git</developerConnection>
 	</scm>
 
 	<licenses>
@@ -158,36 +158,37 @@
 		<java.version>1.7</java.version>
 		<!-- Eclipse und das WTP-Plugin koennen noch nicht 1.8 -->
 		<!-- <java.version>1.8</java.version> -->
-		<java.minor.version>1.7.0-25</java.minor.version>
+		<java.minor.version>1.7.0-40</java.minor.version>
 		<windows.min.version>6.1</windows.min.version>
 		<os.family>windows</os.family>
 
-		<wildfly-spec-api.version>8.0.0.Beta1</wildfly-spec-api.version>
-		<resteasy-bom.version>3.0.4.Final</resteasy-bom.version>
+		<wildfly-spec-api.version>8.0.0.Beta2-SNAPSHOT</wildfly-spec-api.version>
+		<resteasy-bom.version>3.0.5.Final</resteasy-bom.version>
 		<hibernate-validator.version>5.1.0.Alpha1</hibernate-validator.version>
 		<hibernate-validator-annotation-processor.version>5.1.0.Alpha1</hibernate-validator-annotation-processor.version>
-		<hibernate-jpamodelgen.version>1.3.0.Final</hibernate-jpamodelgen.version>
+		<hibernate-jpamodelgen.version>4.3.0.CR1</hibernate-jpamodelgen.version>
 		<richfaces.version>5.0.0.Alpha1</richfaces.version>
 		<atmosphere.version>1.0.18</atmosphere.version>
 		<!-- <atmosphere.version>2.0.1</atmosphere.version> -->
-		<picketbox.version>4.0.19.Final</picketbox.version>
+		<picketbox.version>4.0.20.Beta2</picketbox.version>
 
 		<junit.version>4.11</junit.version>
 		<fest-assert-core.version>2.0M10</fest-assert-core.version>
 		<shrinkwrap-resolver-bom.version>2.1.0-alpha-1</shrinkwrap-resolver-bom.version>
 		<shrinkwrap-bom.version>1.2.0</shrinkwrap-bom.version>
-		<arquillian-bom.version>1.1.1.Final</arquillian-bom.version>
+		<arquillian-bom.version>1.1.2.Final</arquillian-bom.version>
 		<arquillian.managedOrRemote>remote</arquillian.managedOrRemote>
 		<!-- <arquillian.managedOrRemote>managed</arquillian.managedOrRemote> -->
-		<arquillian-drone-bom.version>1.2.0.CR1</arquillian-drone-bom.version>
-		<graphene-webdriver.version>2.0.0.CR1</graphene-webdriver.version>
+		<arquillian-drone-bom.version>1.2.0.Final</arquillian-drone-bom.version>
+		<graphene-webdriver.version>2.0.0.Final</graphene-webdriver.version>
+		<selenium.version>2.37.1</selenium.version>
 		<batik.version>1.7</batik.version>
 
 		<!-- Versionsnummern fuer Maven-Plugins -->
 		<lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
 		<maven-enforcer-plugin.version>1.3.1</maven-enforcer-plugin.version>
 		<maven-war-plugin.version>2.4</maven-war-plugin.version>
-		<jboss-as-maven-plugin.version>7.4.Final</jboss-as-maven-plugin.version>
+		<jboss-as-maven-plugin.version>7.5.Final</jboss-as-maven-plugin.version>
 		<maven-processor-plugin.version>2.2.4</maven-processor-plugin.version>
 		<maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
 		<maven-jxr-plugin.version>2.3</maven-jxr-plugin.version>
@@ -199,14 +200,14 @@
 		<maven-javadoc-plugin.version>2.9.1</maven-javadoc-plugin.version>
 		<findbugs-maven-plugin.version>2.5.2</findbugs-maven-plugin.version>
 		<maven-pmd-plugin.version>3.0.1</maven-pmd-plugin.version>
-		<maven-checkstyle-plugin.version>2.10</maven-checkstyle-plugin.version>
+		<maven-checkstyle-plugin.version>2.11</maven-checkstyle-plugin.version>
 		<versions-maven-plugin.version>2.1</versions-maven-plugin.version>
 		<maven-plugin-plugin.version>3.2</maven-plugin-plugin.version>
 
 		<maven-clean-plugin.version>2.5</maven-clean-plugin.version>
-		<maven-deploy-plugin.version>2.8</maven-deploy-plugin.version>
+		<maven-deploy-plugin.version>2.8.1</maven-deploy-plugin.version>
 		<maven-jar-plugin.version>2.4</maven-jar-plugin.version>
-		<maven-install-plugin.version>2.5</maven-install-plugin.version>
+		<maven-install-plugin.version>2.5.1</maven-install-plugin.version>
 		<maven-resources-plugin.version>2.6</maven-resources-plugin.version>
 		<maven-dependency-plugin.version>2.8</maven-dependency-plugin.version>
 	</properties>
@@ -228,11 +229,6 @@
 			<id>codehaus</id>
 			<name>Codehaus Maven 2 Repository</name>
 			<url>https://nexus.codehaus.org/content/repositories/releases</url>
-		</repository>
-		<repository>
-			<id>mvnrepository</id>
-			<name>MVN Repository</name>
-			<url>http://mvnrepository.com/</url>
 		</repository>
 	</repositories>
 
@@ -341,6 +337,15 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator-annotation-processor</artifactId>
 			<version>${hibernate-validator-annotation-processor.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- ========================================================================================= -->
+		<!-- E L -->
+		<!-- ========================================================================================= -->
+		<dependency>
+			<groupId>org.jboss.spec.javax.el</groupId>
+			<artifactId>jboss-el-api_3.0_spec</artifactId>
 			<scope>provided</scope>
 		</dependency>
 
@@ -523,12 +528,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.jboss.spec.javax.el</groupId>
-			<artifactId>jboss-el-api_2.2_spec</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
 			<groupId>org.richfaces</groupId>
 			<artifactId>richfaces</artifactId>
 			<version>${richfaces.version}</version>
@@ -553,7 +552,7 @@
 
 		<dependency>
 			<groupId>org.jboss.spec.javax.security.jacc</groupId>
-			<artifactId>jboss-jacc-api_1.4_spec</artifactId>
+			<artifactId>jboss-jacc-api_1.5_spec</artifactId>
 			<scope>provided</scope>
 		</dependency>
 
@@ -676,11 +675,68 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<version>${selenium.version}</version><!--$NO-MVN-MAN-VER$-->
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-server</artifactId>
+			<version>${selenium.version}</version><!--$NO-MVN-MAN-VER$-->
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
 			<groupId>org.jboss.arquillian.graphene</groupId>
 			<artifactId>graphene-webdriver</artifactId>
 			<version>${graphene-webdriver.version}</version>
 			<type>pom</type>
 			<scope>test</scope>
+			
+			<exclusions>
+				<exclusion>
+					<groupId>org.seleniumhq.selenium</groupId>
+					<artifactId>selenium-java</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.seleniumhq.selenium</groupId>
+					<artifactId>selenium-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.seleniumhq.selenium</groupId>
+					<artifactId>selenium-support</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.seleniumhq.selenium</groupId>
+					<artifactId>selenium-firefox-driver</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.seleniumhq.selenium</groupId>
+					<artifactId>selenium-chrome-driver</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.seleniumhq.selenium</groupId>
+					<artifactId>selenium-ie-driver</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.seleniumhq.selenium</groupId>
+					<artifactId>selenium-remote-driver</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.seleniumhq.selenium</groupId>
+					<artifactId>selenium-android-driver</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.seleniumhq.selenium</groupId>
+					<artifactId>selenium-iphone-driver</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.seleniumhq.selenium</groupId>
+					<artifactId>selenium-htmlunit-driver</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>batik</groupId>
@@ -784,7 +840,7 @@
 						<processor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</processor>
 					</processors>
 				</configuration>
-
+		
 				<executions>
 					<execution>
 						<id>generate-metamodel-classes</id>
@@ -794,7 +850,7 @@
 						</goals>
 					</execution>
 				</executions>
-
+				
 				<dependencies>
 					<dependency>
 						<groupId>org.hibernate</groupId>
@@ -803,12 +859,12 @@
 					</dependency>
 				</dependencies>
 			</plugin>
-
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${maven-compiler-plugin.version}</version>
-
+								
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
@@ -816,7 +872,9 @@
 					<showWarnings>true</showWarnings>
 					<!-- org.bsc.maven:maven-processor-plugin -->
 					<compilerArgument>-proc:none</compilerArgument>
-					<!-- <compilerArgument>-Xlint:all</compilerArgument> -->
+					<!--
+					<compilerArgument>-Xlint:all</compilerArgument>
+					-->
 					<encoding>${compiler.sourceEncoding}</encoding>
 				</configuration>
 
@@ -826,9 +884,52 @@
 				<!-- https://community.jboss.org/en/tools/blog/2012/05/20/annotation-processing-support-in-m2e-or-m2e-apt-100-is-out -->
 				<!-- http://relation.to/Bloggers/AMoreConciseWayToGenerateTheJPA2MetamodelInMaven -->
 				<!-- target/generated-sources/annotations -->
-				<!-- <dependencies> <dependency> <groupId>org.hibernate</groupId> <artifactId>hibernate-jpamodelgen</artifactId> 
-					<version>${hibernate-jpamodelgen.version}</version> <scope>compile</scope> 
-					</dependency> </dependencies> -->
+				<!--
+				<dependencies>
+					<dependency>
+						<groupId>org.hibernate</groupId>
+						<artifactId>hibernate-jpamodelgen</artifactId>
+						<version>${hibernate-jpamodelgen.version}</version>
+						<scope>compile</scope>
+					</dependency>
+				</dependencies>
+				-->
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-plugin.version}</version>
+								
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<showDeprecation>true</showDeprecation>
+					<showWarnings>true</showWarnings>
+					<!-- org.bsc.maven:maven-processor-plugin -->
+					<compilerArgument>-proc:none</compilerArgument>
+					<!--
+					<compilerArgument>-Xlint:all</compilerArgument>
+					-->
+					<encoding>${compiler.sourceEncoding}</encoding>
+				</configuration>
+
+				<!-- Generierung der Metamodel-Klassen fuer Criteria Queries -->
+				<!-- http://docs.jboss.org/hibernate/jpamodelgen/1.2/reference/en-US/html_single -->
+				<!-- http://in.relation.to/12805.lace -->
+				<!-- https://community.jboss.org/en/tools/blog/2012/05/20/annotation-processing-support-in-m2e-or-m2e-apt-100-is-out -->
+				<!-- http://relation.to/Bloggers/AMoreConciseWayToGenerateTheJPA2MetamodelInMaven -->
+				<!-- target/generated-sources/annotations -->
+				<!--
+				<dependencies>
+					<dependency>
+						<groupId>org.hibernate</groupId>
+						<artifactId>hibernate-jpamodelgen</artifactId>
+						<version>${hibernate-jpamodelgen.version}</version>
+						<scope>compile</scope>
+					</dependency>
+				</dependencies>
+				-->
 			</plugin>
 
 			<plugin>
@@ -845,13 +946,13 @@
 					</archive>
 				</configuration>
 			</plugin>
-
-			<!-- Durchfuehren der Tests mit Arquillian und JUnit -->
+			
+			<!-- Durchfuehren der Tests mit Arquillian und JUnit --> 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>${maven-surefire-plugin.version}</version>
-
+    			<artifactId>maven-surefire-plugin</artifactId>
+    			<version>${maven-surefire-plugin.version}</version>
+				
 				<configuration>
 					<argLine>${surefire.argLine}</argLine>
 					<systemProperties>
@@ -859,7 +960,9 @@
 						<java.awt.headless>true</java.awt.headless>
 						<webdriver.firefox.bin>${firefox.bin}</webdriver.firefox.bin>
 						<webdriver.chrome.driver>${chrome.bin}</webdriver.chrome.driver>
-						<!-- <arquillian.launch>${arquillian.launch}</arquillian.launch> -->
+						<!--
+						<arquillian.launch>${arquillian.launch}</arquillian.launch>
+						-->
 					</systemProperties>
 					<runOrder>alphabetical</runOrder>
 					<redirectTestOutputToFile>true</redirectTestOutputToFile>
@@ -1187,11 +1290,29 @@
 				<os.family>windows</os.family>
 			</properties>
 		</profile>
-		<!-- <profile> <id>arq-jbossas-remote</id> <activation> <activeByDefault>true</activeByDefault> 
-			</activation> </profile> <profile> <id>openshift</id> <build> <plugins> <plugin> 
-			<artifactId>maven-war-plugin</artifactId> <version>${maven-war-plugin.version}</version> 
-			<configuration> <outputDirectory>deployments</outputDirectory> <warName>ROOT</warName> 
-			<failOnMissingWebXml>false</failOnMissingWebXml> </configuration> </plugin> 
-			</plugins> </build> </profile> -->
+		<profile>
+			<id>arq-jbossas-remote</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+
+		<profile>
+			<id>openshift</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-war-plugin</artifactId>
+						<version>${maven-war-plugin.version}</version>
+						<configuration>
+							<outputDirectory>deployments</outputDirectory>
+							<warName>ROOT</warName>
+							<failOnMissingWebXml>false</failOnMissingWebXml>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 </project>

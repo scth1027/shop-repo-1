@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -14,6 +16,9 @@ import de.shop.util.interceptor.Log;
 @Dependent
 @Log
 public class KundeService implements Serializable {
+	
+	@Inject
+	private transient EntityManager em;
 
 	private static final long serialVersionUID = 4360325837484294309L;
 
@@ -42,6 +47,7 @@ public class KundeService implements Serializable {
 
 	public Kunde createKunde(Kunde kunde) {
 		if (kunde == null) {
+			em.persist(kunde);
 			return kunde;
 		}
 
