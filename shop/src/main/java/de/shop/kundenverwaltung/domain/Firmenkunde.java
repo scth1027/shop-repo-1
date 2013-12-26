@@ -12,9 +12,10 @@ import javax.xml.bind.annotation.XmlRootElement;
  * ---Sadrick---
  */
 @XmlRootElement
-public class Firmenkunde extends Kunde {
+public class Firmenkunde extends AbstractKunde {
 
 	private static final long serialVersionUID = -7720836132451815744L;
+	
 	@NotNull(message = "{kunde.firmenname.notNull}")
 	@Size(min = 2, max = 50, message = "{kunde.firmenname.length}")
 	private String firmenname;

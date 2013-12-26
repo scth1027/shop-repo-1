@@ -1,9 +1,26 @@
 package de.shop.kundenverwaltung.domain;
 
 import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import static de.shop.util.Constants.KEINE_ID;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.PostPersist;
+import javax.persistence.Table;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlTransient;
+
+import org.jboss.logging.Logger;
 
 /*
  * Klasse Adresse
@@ -12,18 +29,60 @@ import javax.xml.bind.annotation.XmlTransient;
  * alle 3 Object Methoden überschrieben
  * ---Sadrick---
  */
-@XmlRootElement
+@Entity
+@Table(indexes = @Index(columnList = "plz")) 
 public class Adresse implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private Long id;
+	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass());
+	
+	private static final int PLZ_LENGTH_MAX = 5;
+	private static final int ORT_LENGTH_MIN = 2;
+	private static final int ORT_LENGTH_MAX = 32;
+	private static final int STRASSE_LENGTH_MIN = 2;
+	private static final int STRASSE_LENGTH_MAX = 32;
+	private static final int HAUSNR_LENGTH_MAX = 4;
+	
+	@Id
+	@GeneratedValue
+	@Basic(optional = false)
+	private Long id = KEINE_ID;
+	
+	@NotNull(message="{adresse.ort.NotNull")
+	@Size(min=ORT_LENGTH_MIN, max=ORT_LENGTH_MAX, message="{adresse.ort.length}")
 	private String ort;
+	@NotNull(message="{adresse.plz.NotNull}")
+	@Pattern(regexp = "\\d{" + PLZ_LENGTH_MAX + "}", message = "{adresse.plz}")
+	@Column(length=PLZ_LENGTH_MAX)
 	private String plz;
+	@NotNull(message="{adresse.strasse.NotNull}")
+	@Size(min=STRASSE_LENGTH_MIN, max=STRASSE_LENGTH_MAX, message="{adresse.strasse.length}")
 	private String strasse;
-	private Integer hausnummer;
+	@Size(max=HAUSNR_LENGTH_MAX, message="{adresse.hausnummer.length}")
+	private String hausnummer;
 
+	@OneToOne
+	@JoinColumn(name = "kunde_fk", nullable = false, unique = true)
 	@XmlTransient
-	private Kunde kunde;
+	private AbstractKunde kunde;
+	
+	public Adresse() {
+		super();
+	}
+	
+	public Adresse(String plz, String ort, String strasse, String hausnr, AbstractKunde kunde) {
+		super();
+		this.plz = plz;
+		this.ort = ort;
+		this.strasse = strasse;
+		this.hausnummer = hausnr;
+		this.kunde = kunde;
+	}
+	
+	@PostPersist
+	private void postPersist() {
+		LOGGER.debugf("Neue Adresse mit ID=%s", id);
+	}
 
 	public Long getId() {
 		return id;
@@ -57,19 +116,19 @@ public class Adresse implements Serializable {
 		this.strasse = strasse;
 	}
 
-	public Integer getHausnummer() {
+	public String getHausnummer() {
 		return hausnummer;
 	}
 
-	public void setHausnummer(Integer hausnummer) {
+	public void setHausnummer(String hausnummer) {
 		this.hausnummer = hausnummer;
 	}
 
-	public Kunde getKunde() {
+	public AbstractKunde getKunde() {
 		return kunde;
 	}
 
-	public void setKunde(Kunde kunde) {
+	public void setKunde(AbstractKunde kunde) {
 		this.kunde = kunde;
 	}
 

@@ -1,36 +1,94 @@
 package de.shop.bestellverwaltung.domain;
 
+import java.lang.invoke.MethodHandles;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 
+import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.REMOVE;
+import static javax.persistence.FetchType.EAGER;
+
+import javax.persistence.Basic;
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.Index;
-import javax.persistence.Inheritance;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedEntityGraphs;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import de.shop.kundenverwaltung.domain.Kunde;
+import org.hibernate.validator.constraints.NotEmpty;
+import org.jboss.logging.Logger;
+
+import de.shop.kundenverwaltung.domain.AbstractKunde;
 
 @XmlRootElement
 @Entity
-@Table(name = "kunde", indexes = @Index(columnList = "nachname"))
-@Inheritance
+// TODO MySQL 5.7 kann einen Index nicht 2x anlegen
+@Table(indexes = {
+	@Index(columnList = "kunde_fk"),
+	//@Index(columnList = "erzeugt")
+})
+@NamedQueries({
+	@NamedQuery(name  = Bestellung.FIND_BESTELLUNGEN_BY_KUNDE,
+                query = "SELECT b"
+			            + " FROM   Bestellung b"
+						+ " WHERE  b.kunde = :" + Bestellung.PARAM_KUNDE),
+	@NamedQuery(name  = Bestellung.FIND_KUNDE_BY_ID,
+ 			    query = "SELECT b.kunde"
+                        + " FROM   Bestellung b"
+  			            + " WHERE  b.id = :" + Bestellung.PARAM_ID)
+})
+/*
+@NamedEntityGraphs({
+	@NamedEntityGraph(name = Bestellung.GRAPH_LIEFERUNGEN,
+					  attributeNodes = @NamedAttributeNode("lieferungen"))
+					  
+})
+*/
+@Cacheable
 public class Bestellung {
+	
+	private static final long serialVersionUID = 7560752199018702446L;
+	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass());
+	
+	private static final String PREFIX = "Bestellung.";
+	public static final String FIND_BESTELLUNGEN_BY_KUNDE = PREFIX + "findBestellungenByKunde";
+	public static final String FIND_KUNDE_BY_ID = PREFIX + "findBestellungKundeById";
+	
+	public static final String PARAM_KUNDE = "kunde";
+	public static final String PARAM_ID = "id";
+	
+	public static final String GRAPH_LIEFERUNGEN = PREFIX + "lieferungen";
 
+	@Id
+	@GeneratedValue
+	@Basic(optional = false)
 	private long id;
 
 	@XmlTransient
-	private Kunde kunde;
+	private AbstractKunde kunde;
 
 	private BigDecimal gesamtpreis;
 
 	@NotNull(message = "{bestellung.bestellstatus.NotNull}")
 	private Bestellstatus bestellstatus;
 
-	@NotNull(message = "{bestellung.posten.NotNull}")
+	@OneToMany(fetch = EAGER, cascade = { PERSIST, REMOVE })
+	@JoinColumn(name = "bestellung_fk", nullable = false)
+	@NotEmpty(message = "{bestellung.bestellpositionen.notEmpty}")
+	@Valid
 	private List<Posten> posten;
 
 	private URI kundeURI;
@@ -51,11 +109,11 @@ public class Bestellung {
 		this.id = id;
 	}
 
-	public Kunde getKunde() {
+	public AbstractKunde getKunde() {
 		return kunde;
 	}
 
-	public void setKunde(Kunde kunde) {
+	public void setKunde(AbstractKunde kunde) {
 		this.kunde = kunde;
 	}
 

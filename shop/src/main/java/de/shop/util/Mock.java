@@ -16,7 +16,7 @@ import de.shop.lieferantenbestellverwaltung.domain.PostenLB;
 import de.shop.kundenverwaltung.domain.Adresse;
 import de.shop.kundenverwaltung.domain.Firmenkunde;
 import de.shop.kundenverwaltung.domain.HobbyType;
-import de.shop.kundenverwaltung.domain.Kunde;
+import de.shop.kundenverwaltung.domain.AbstractKunde;
 import de.shop.kundenverwaltung.domain.Privatkunde;
 import de.shop.lieferantenverwaltung.domain.Lieferant;
 import de.shop.lieferantenverwaltung.domain.Lieferantenadresse;
@@ -35,12 +35,12 @@ public final class Mock {
 	private static final int BD_SCALE = 5;
 
 	// Kundenteil
-	public static Kunde findKundeById(Long id) {
+	public static AbstractKunde findKundeById(Long id) {
 		if (id > MAX_ID) {
 			return null;
 		}
 
-		final Kunde kunde = id % 2 == 1 ? new Privatkunde() : new Firmenkunde();
+		final AbstractKunde kunde = id % 2 == 1 ? new Privatkunde() : new Firmenkunde();
 		kunde.setId(id);
 		kunde.setNachname("Nachname" + id);
 		kunde.setVorname("Vorname" + id);
@@ -51,7 +51,7 @@ public final class Mock {
 		adresse.setPlz("12345");
 		adresse.setOrt("Testort");
 		adresse.setStrasse("Moltkestrasse");
-		adresse.setHausnummer(id.intValue() + 1);
+		adresse.setHausnummer(id.toString());
 		adresse.setKunde(kunde);
 		kunde.setAdresse(adresse);
 
@@ -66,33 +66,33 @@ public final class Mock {
 		return kunde;
 	}
 
-	public static List<Kunde> findAllKunden() {
+	public static List<AbstractKunde> findAllKunden() {
 		final int anzahl = MAX_KUNDEN;
-		final List<Kunde> kunden = new ArrayList<>(anzahl);
+		final List<AbstractKunde> kunden = new ArrayList<>(anzahl);
 		for (int i = 1; i <= anzahl; i++) {
-			final Kunde kunde = findKundeById(Long.valueOf(i));
+			final AbstractKunde kunde = findKundeById(Long.valueOf(i));
 			kunden.add(kunde);
 		}
 		return kunden;
 	}
 
-	public static List<Kunde> findKundenByNachname(String nachname) {
+	public static List<AbstractKunde> findKundenByNachname(String nachname) {
 		final int anzahl = nachname.length();
-		final List<Kunde> kunden = new ArrayList<>(anzahl);
+		final List<AbstractKunde> kunden = new ArrayList<>(anzahl);
 		for (int i = 1; i <= anzahl; i++) {
-			final Kunde kunde = findKundeById(Long.valueOf(i));
+			final AbstractKunde kunde = findKundeById(Long.valueOf(i));
 			kunde.setNachname(nachname);
 			kunden.add(kunde);
 		}
 		return kunden;
 	}
 
-	public static Kunde findKundeByEmail(String email) {
+	public static AbstractKunde findKundeByEmail(String email) {
 		if (email.startsWith("x")) {
 			return null;
 		}
 
-		final Kunde kunde = email.length() % 2 == 1 ? new Privatkunde()
+		final AbstractKunde kunde = email.length() % 2 == 1 ? new Privatkunde()
 				: new Firmenkunde();
 		kunde.setId(Long.valueOf(email.length()));
 		kunde.setNachname("Nachname");
@@ -120,7 +120,7 @@ public final class Mock {
 		return kunde;
 	}
 
-	public static List<Bestellung> findBestellungenByKunde(Kunde kunde) {
+	public static List<Bestellung> findBestellungenByKunde(AbstractKunde kunde) {
 		// Beziehungsgeflecht zwischen Kunde und Bestellungen aufbauen
 		final int anzahl = kunde.getId().intValue() % MAX_BESTELLUNGEN + 1; // 1,
 																			// 2,
@@ -144,7 +144,7 @@ public final class Mock {
 			return null;
 		}
 
-		final Kunde kunde = findKundeById(id + 1); // andere ID fuer den Kunden
+		final AbstractKunde kunde = findKundeById(id + 1); // andere ID fuer den Kunden
 		System.out.println("Kunde erhalten");
 		final Bestellung bestellung = new Bestellung();
 		bestellung.setId(id);
@@ -180,7 +180,7 @@ public final class Mock {
 		return bestellungliste;
 	}
 
-	public static Bestellung createBestellung(Bestellung bestellung, Kunde kunde) {
+	public static Bestellung createBestellung(Bestellung bestellung, AbstractKunde kunde) {
 		bestellung.setKunde(kunde);
 		final BigDecimal gesamtpreis = bestellung.getGesamtpreis();
 		gesamtpreis.setScale(BD_SCALE);
@@ -195,7 +195,7 @@ public final class Mock {
 		System.out.println("Bestellung mit ID=" + bestellungId + " geloescht");
 	}
 
-	public static Kunde createKunde(Kunde kunde) {
+	public static AbstractKunde createKunde(AbstractKunde kunde) {
 		// Neue IDs fuer Kunde und zugehoerige Adresse
 		// Ein neuer Kunde hat auch keine Bestellungen
 		final String nachname = kunde.getNachname();
@@ -208,7 +208,7 @@ public final class Mock {
 		return kunde;
 	}
 
-	public static void updateKunde(Kunde kunde) {
+	public static void updateKunde(AbstractKunde kunde) {
 		System.out.println("Aktualisierter Kunde: " + kunde);
 	}
 

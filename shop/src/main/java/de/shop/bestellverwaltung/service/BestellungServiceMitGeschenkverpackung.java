@@ -13,7 +13,7 @@ import javax.inject.Inject;
 import org.jboss.logging.Logger;
 
 import de.shop.bestellverwaltung.domain.Bestellung;
-import de.shop.kundenverwaltung.domain.Kunde;
+import de.shop.kundenverwaltung.domain.AbstractKunde;
 
 @Decorator
 @Dependent
@@ -33,7 +33,7 @@ public abstract class BestellungServiceMitGeschenkverpackung implements
 	}
 
 	@Override
-	public List<Bestellung> findBestellungenByKunde(Kunde kunde) {
+	public List<Bestellung> findBestellungenByKunde(AbstractKunde kunde) {
 		return bs.findBestellungenByKunde(kunde);
 	}
 
@@ -41,7 +41,7 @@ public abstract class BestellungServiceMitGeschenkverpackung implements
 	 * {inheritDoc}
 	 */
 	@Override
-	public Bestellung createBestellung(Bestellung bestellung, Kunde kunde,
+	public Bestellung createBestellung(Bestellung bestellung, AbstractKunde kunde,
 			Locale locale) {
 		LOGGER.warn("Geschenkverpackung noch nicht implementiert");
 

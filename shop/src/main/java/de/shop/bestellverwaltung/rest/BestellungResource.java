@@ -31,9 +31,10 @@ import javax.ws.rs.core.UriInfo;
 
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.bestellverwaltung.service.BestellungService;
-import de.shop.kundenverwaltung.domain.Kunde;
+import de.shop.kundenverwaltung.domain.AbstractKunde;
 import de.shop.kundenverwaltung.rest.KundenResource;
 import de.shop.kundenverwaltung.service.KundeService;
+import de.shop.kundenverwaltung.service.KundeService.FetchType;
 import de.shop.util.rest.UriHelper;
 
 @Path("/bestellungen")
@@ -118,9 +119,9 @@ public class BestellungResource {
 
 	public void setStructuralLinks(Bestellung bestellung, UriInfo uriInfo) {
 		// URI fuer Kunde setzen
-		final Kunde kunde = bestellung.getKunde();
+		final AbstractKunde kunde = bestellung.getKunde();
 		if (kunde != null) {
-			final URI kundeUri = kundeResource.getKundenURI(
+			final URI kundeUri = kundeResource.getUriKunde(
 					bestellung.getKunde(), uriInfo);
 			bestellung.setKundeURI(kundeUri);
 		}
@@ -145,7 +146,7 @@ public class BestellungResource {
 		// TODO Anwendungskern statt Mock
 		String kundenId = bestellung.getKundeURI().toString();
 		kundenId = kundenId.substring(kundenId.lastIndexOf("/") + 1);
-		final Kunde k = ks.findKundeById(Long.valueOf(kundenId).longValue());
+		final AbstractKunde k = ks.findKundeById(Long.valueOf(kundenId).longValue(), FetchType.NUR_KUNDE);
 		System.out.println("Bestellung angekommen im Service");
 		bestellung = bs.createBestellung(bestellung, k, headers.getLanguage());
 		System.out.println("Bestellung ist aus der Mock zurück");

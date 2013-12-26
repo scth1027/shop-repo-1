@@ -1,7 +1,7 @@
 package de.shop.kundenverwaltung.service;
 
 import javax.ejb.ApplicationException;
-import de.shop.kundenverwaltung.domain.Kunde;
+import de.shop.kundenverwaltung.domain.AbstractKunde;
 
 /**
  * Exception, die ausgel&ouml;st wird, wenn ein Kunde gel&ouml;scht werden soll,
@@ -16,7 +16,7 @@ public class KundeDeleteBestellungException extends
 	private final Long kundeId;
 	private final int anzahlBestellungen;
 
-	public KundeDeleteBestellungException(Kunde kunde) {
+	public KundeDeleteBestellungException(AbstractKunde kunde) {
 		super("Kunde mit ID=" + kunde.getId()
 				+ " kann nicht geloescht werden: "
 				+ kunde.getBestellungen().size() + " Bestellung(en)");
