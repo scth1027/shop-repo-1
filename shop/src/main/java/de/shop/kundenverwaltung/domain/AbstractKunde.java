@@ -60,9 +60,11 @@ import de.shop.bestellverwaltung.domain.Bestellung;
  * List von Bestellunen wird nicht über den RestService bereitgestellt dafuer gibt es eine URI --> bestellungenURI
  * ---Sadrick---
  */
+/*
 @ScriptAssert(lang = "javascript", script = "_this.password != null && !_this.password.equals(\"\")"
 		+ " && _this.password.equals(_this.passwordWdh)", message = "{kunde.password.notEqual}", groups = {
 		Default.class, PasswordGroup.class })
+		*/
 @XmlRootElement
 @XmlSeeAlso({ Firmenkunde.class, Privatkunde.class })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
