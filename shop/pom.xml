@@ -160,7 +160,7 @@
 		<!-- <java.version>1.8</java.version> -->
 		<java.minor.version>1.7.0-40</java.minor.version>
 		<windows.min.version>6.1</windows.min.version>
-		<os.family>windows</os.family>
+		<os.family>${os.family}</os.family>
 
 		<wildfly-spec-api.version>8.0.0.Beta2-SNAPSHOT</wildfly-spec-api.version>
 		<resteasy-bom.version>3.0.5.Final</resteasy-bom.version>
