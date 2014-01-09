@@ -17,7 +17,8 @@ import de.shop.util.interceptor.Log;
 
 @Dependent
 @Log
-public class BestellungServiceImpl implements BestellungService, Serializable {
+public class BestellungServiceImpl implements BestellungService, Serializable 
+{
 
 	private static final long serialVersionUID = 3222788597519982182L;
 
