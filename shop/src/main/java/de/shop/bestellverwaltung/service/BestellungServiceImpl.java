@@ -24,6 +24,9 @@ public class BestellungServiceImpl implements BestellungService, Serializable {
 	@Inject
 	@NeueBestellung
 	private transient Event<Bestellung> event;
+	
+	@Inject
+	private transient EntityManager em;
 
 	@Override
 	public Bestellung createBestellung(Bestellung bestellung, AbstractKunde kunde,
@@ -40,12 +43,21 @@ public class BestellungServiceImpl implements BestellungService, Serializable {
 	@Override
 	@NotNull(message = "bestellung.notFound.id")
 	public Bestellung findBestellungById(Long id) {
-		return Mock.findBestellungById(id);
+		
+		Bestellung bestellung;
+		bestellung = em.find(Bestellung.class, id);
+		
+		return bestellung;
 	}
 
 	@Override
 	@NotNull(message = "bestellung.notFound.kunde")
 	public List<Bestellung> findBestellungenByKunde(AbstractKunde kunde) {
+		
+		List<Bestellung> bestellungen;
+		
+		
+		
 		return Mock.findBestellungenByKunde(kunde);
 	}
 
