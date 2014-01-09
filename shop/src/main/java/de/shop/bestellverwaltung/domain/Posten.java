@@ -23,10 +23,9 @@ import org.jboss.logging.Logger;
 import de.shop.artikelverwaltung.domain.Artikel;
 
 @Entity
-// TODO MySQL 5.7 kann einen Index nicht 2x anlegen
-@Table(indexes = { @Index(columnList = "bestellung_fk")
-		//@Index(columnList = "artikel_fk") })
-})
+// TODO MySQL 5.7 kann einen Index nicht 2x anlegen --> War der Fehler das Komma vergessen?
+@Table(indexes = { @Index(columnList = "bestellung_fk"),
+				   @Index(columnList = "artikel_fk") })
 /*
 @NamedQueries({ @NamedQuery(name = Posten.FIND_LADENHUETER, query = "SELECT a"
 		+ " FROM   Artikel a"
@@ -46,8 +45,8 @@ public class Posten {
 	@Basic(optional = false)
 	private Long id;
 
-	//@ManyToOne(optional = false)
-	//@JoinColumn(name = "artikel_fk", nullable = false)
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "artikel_fk", nullable = false)
 	@XmlTransient
 	private Artikel artikel;
 	
