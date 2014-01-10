@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
@@ -25,11 +27,43 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
  */
 @XmlRootElement
 @Entity
-@Table(indexes = @Index(columnList = "bezeichnung"))
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@Table(indexes = @Index(columnList = "bezeichnung"))
+@NamedQueries({
+	@NamedQuery(name  = Artikel.FIND_ARTIKEL_BY_ID,
+        	query = "SELECT      a"
+                    + " FROM     Artikel a"
+					+ " WHERE    a.id = :" + Artikel.PARAM_ID
+		 	        + " ORDER BY a.id ASC"),
+	@NamedQuery(name  = Artikel.FIND_ARTIKEL_BY_BEZEICHNUNG,
+            	query = "SELECT      a"
+                        + " FROM     Artikel a"
+						+ " WHERE    a.bezeichnung LIKE :" + Artikel.PARAM_BEZEICHNUNG
+			 	        + " ORDER BY a.id ASC"),
+	@NamedQuery(name  = Artikel.FIND_ALL_ARTIKEL,
+            	query = "SELECT      a"
+            	        + " FROM     Artikel a"
+                        + " ORDER BY a.id ASC")
+//   	@NamedQuery(name  = Artikel.FIND_ARTIKEL_MAX_PREIS,
+//            	query = "SELECT      a"
+//                        + " FROM     Artikel a"
+//						+ " WHERE    a.preis < :" + Artikel.PARAM_PREIS
+//			 	        + " ORDER BY a.id ASC")
+})
 public class Artikel implements Serializable {
 	
 	private static final long serialVersionUID = -7855084950143201920L;
+	
+	private static final String PREFIX = "Artikel.";
+
+	public static final String FIND_ARTIKEL_BY_ID = PREFIX + "findArtikelById";
+	public static final String FIND_ARTIKEL_BY_BEZEICHNUNG = PREFIX + "findArtikelByBezeichnung";
+	public static final String FIND_ALL_ARTIKEL = PREFIX + "findAllArtikel";
+//	public static final String FIND_ARTIKEL_MAX_PREIS = PREFIX + "findArtikelByMaxPreis";
+
+	public static final String PARAM_ID = "id";
+	public static final String PARAM_BEZEICHNUNG = "bezeichnung";
+//	public static final String PARAM_PREIS = "preis";
 	
 	@Id
 	@GeneratedValue
