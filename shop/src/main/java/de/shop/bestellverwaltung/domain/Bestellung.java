@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 
+import static de.shop.util.Constants.KEINE_ID;
+
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.EAGER;
@@ -16,6 +18,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
@@ -23,6 +26,7 @@ import javax.persistence.NamedEntityGraphs;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -75,8 +79,10 @@ public class Bestellung {
 	@Id
 	@GeneratedValue
 	@Basic(optional = false)
-	private long id;
+	private long id = KEINE_ID;
 
+	@ManyToOne
+	@JoinColumn(name = "kunde_fk", nullable = false, insertable = false, updatable = false)
 	@XmlTransient
 	private AbstractKunde kunde;
 
@@ -91,6 +97,7 @@ public class Bestellung {
 	@Valid
 	private List<Posten> posten;
 
+	@Transient
 	private URI kundeURI;
 
 	public URI getKundeURI() {
