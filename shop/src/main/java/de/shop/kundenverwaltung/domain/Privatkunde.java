@@ -32,10 +32,8 @@ public class Privatkunde extends AbstractKunde {
 	private static final long serialVersionUID = 870262362508397649L;
 
 	@ElementCollection(fetch = EAGER)
-	@CollectionTable(name = "kunde_hobby",
-	                 joinColumns = @JoinColumn(name = "kunde_fk", nullable = false),
-	                 uniqueConstraints =  @UniqueConstraint(columnNames = { "kunde_fk", "hobby" }),
-	                 indexes = @Index(columnList = "kunde_fk"))
+	@CollectionTable(name = "kunde_hobby", joinColumns = @JoinColumn(name = "kunde_fk", nullable = false), uniqueConstraints = @UniqueConstraint(columnNames = {
+			"kunde_fk", "hobby" }), indexes = @Index(columnList = "kunde_fk"))
 	@Column(table = "kunde_hobby", name = "hobby", length = 2, nullable = false)
 	private Set<HobbyType> hobbies;
 

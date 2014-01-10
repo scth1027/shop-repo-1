@@ -1,5 +1,7 @@
 package de.shop.bestellverwaltung.domain;
 
+import static de.shop.util.Constants.KEINE_ID;
+
 import java.lang.invoke.MethodHandles;
 import java.net.URI;
 
@@ -43,7 +45,7 @@ public class Posten {
 	@Id
 	@GeneratedValue
 	@Basic(optional = false)
-	private Long id;
+	private Long id = KEINE_ID;
 
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "artikel_fk", nullable = false)

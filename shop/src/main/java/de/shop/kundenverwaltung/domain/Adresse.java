@@ -30,47 +30,49 @@ import org.jboss.logging.Logger;
  * ---Sadrick---
  */
 @Entity
-@Table(indexes = @Index(columnList = "plz")) 
+@Table(indexes = @Index(columnList = "plz"))
 public class Adresse implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass());
-	
+	private static final Logger LOGGER = Logger.getLogger(MethodHandles
+			.lookup().lookupClass());
+
 	private static final int PLZ_LENGTH_MAX = 5;
 	private static final int ORT_LENGTH_MIN = 2;
 	private static final int ORT_LENGTH_MAX = 32;
 	private static final int STRASSE_LENGTH_MIN = 2;
 	private static final int STRASSE_LENGTH_MAX = 32;
 	private static final int HAUSNR_LENGTH_MAX = 4;
-	
+
 	@Id
 	@GeneratedValue
 	@Basic(optional = false)
 	private Long id = KEINE_ID;
-	
-	@NotNull(message="{adresse.ort.NotNull")
-	@Size(min=ORT_LENGTH_MIN, max=ORT_LENGTH_MAX, message="{adresse.ort.length}")
+
+	@NotNull(message = "{adresse.ort.NotNull")
+	@Size(min = ORT_LENGTH_MIN, max = ORT_LENGTH_MAX, message = "{adresse.ort.length}")
 	private String ort;
-	@NotNull(message="{adresse.plz.NotNull}")
+	@NotNull(message = "{adresse.plz.NotNull}")
 	@Pattern(regexp = "\\d{" + PLZ_LENGTH_MAX + "}", message = "{adresse.plz}")
-	@Column(length=PLZ_LENGTH_MAX)
+	@Column(length = PLZ_LENGTH_MAX)
 	private String plz;
-	@NotNull(message="{adresse.strasse.NotNull}")
-	@Size(min=STRASSE_LENGTH_MIN, max=STRASSE_LENGTH_MAX, message="{adresse.strasse.length}")
+	@NotNull(message = "{adresse.strasse.NotNull}")
+	@Size(min = STRASSE_LENGTH_MIN, max = STRASSE_LENGTH_MAX, message = "{adresse.strasse.length}")
 	private String strasse;
-	@Size(max=HAUSNR_LENGTH_MAX, message="{adresse.hausnummer.length}")
+	@Size(max = HAUSNR_LENGTH_MAX, message = "{adresse.hausnummer.length}")
 	private String hausnummer;
 
 	@OneToOne
 	@JoinColumn(name = "kunde_fk", nullable = false, unique = true)
 	@XmlTransient
 	private AbstractKunde kunde;
-	
+
 	public Adresse() {
 		super();
 	}
-	
-	public Adresse(String plz, String ort, String strasse, String hausnr, AbstractKunde kunde) {
+
+	public Adresse(String plz, String ort, String strasse, String hausnr,
+			AbstractKunde kunde) {
 		super();
 		this.plz = plz;
 		this.ort = ort;
@@ -78,7 +80,7 @@ public class Adresse implements Serializable {
 		this.hausnummer = hausnr;
 		this.kunde = kunde;
 	}
-	
+
 	@PostPersist
 	private void postPersist() {
 		LOGGER.debugf("Neue Adresse mit ID=%s", id);

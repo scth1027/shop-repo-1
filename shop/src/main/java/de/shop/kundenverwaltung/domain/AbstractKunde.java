@@ -61,14 +61,15 @@ import de.shop.bestellverwaltung.domain.Bestellung;
  * ---Sadrick---
  */
 /*
-@ScriptAssert(lang = "javascript", script = "_this.password != null && !_this.password.equals(\"\")"
-		+ " && _this.password.equals(_this.passwordWdh)", message = "{kunde.password.notEqual}", groups = {
-		Default.class, PasswordGroup.class })
-		*/
+ @ScriptAssert(lang = "javascript", script = "_this.password != null && !_this.password.equals(\"\")"
+ + " && _this.password.equals(_this.passwordWdh)", message = "{kunde.password.notEqual}", groups = {
+ Default.class, PasswordGroup.class })
+ */
 @XmlRootElement
 @XmlSeeAlso({ Firmenkunde.class, Privatkunde.class })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonSubTypes({ @Type(value = Privatkunde.class, name = AbstractKunde.PRIVATKUNDE),
+@JsonSubTypes({
+		@Type(value = Privatkunde.class, name = AbstractKunde.PRIVATKUNDE),
 		@Type(value = Firmenkunde.class, name = AbstractKunde.FIRMENKUNDE) })
 @Entity
 // Zu email wird unten ein UNIQUE Index definiert
@@ -81,7 +82,8 @@ import de.shop.bestellverwaltung.domain.Bestellung;
 		@NamedQuery(name = AbstractKunde.FIND_KUNDEN_ORDER_BY_ID, query = "SELECT   k"
 				+ " FROM  AbstractKunde k" + " ORDER BY k.id"),
 		@NamedQuery(name = AbstractKunde.FIND_IDS_BY_PREFIX, query = "SELECT   k.id"
-				+ " FROM  AbstractKunde k" + " WHERE CONCAT('', k.id) LIKE :"
+				+ " FROM  AbstractKunde k"
+				+ " WHERE CONCAT('', k.id) LIKE :"
 				+ AbstractKunde.PARAM_KUNDE_ID_PREFIX + " ORDER BY k.id"),
 		@NamedQuery(name = AbstractKunde.FIND_KUNDEN_BY_NACHNAME, query = "SELECT k"
 				+ " FROM   AbstractKunde k"
@@ -99,7 +101,8 @@ import de.shop.bestellverwaltung.domain.Bestellung;
 				+ " FROM  AbstractKunde k" + " WHERE k.adresse.plz = :"
 				+ AbstractKunde.PARAM_KUNDE_ADRESSE_PLZ),
 		@NamedQuery(name = AbstractKunde.FIND_KUNDEN_BY_DATE, query = "SELECT k"
-				+ " FROM  AbstractKunde k" + " WHERE k.seit = :"
+				+ " FROM  AbstractKunde k"
+				+ " WHERE k.seit = :"
 				+ AbstractKunde.PARAM_KUNDE_SEIT),
 		@NamedQuery(name = AbstractKunde.FIND_PRIVATKUNDEN_FIRMENKUNDEN, query = "SELECT k"
 				+ " FROM  AbstractKunde k"

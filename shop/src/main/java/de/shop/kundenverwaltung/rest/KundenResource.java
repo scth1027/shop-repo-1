@@ -84,7 +84,7 @@ public class KundenResource {
 
 	@Inject
 	private UriHelper uriHelper;
-	
+
 	@Inject
 	private BestellungResource bestellungResource;
 
@@ -115,9 +115,8 @@ public class KundenResource {
 		for (AbstractKunde kunde : all) {
 			setStructuralLinks(kunde, uriInfo);
 		}
-		return Response.ok(new GenericEntity<List<AbstractKunde>>(all) {})
-				.links(getTransitionalLinksKunden(all, uriInfo))
-				.build();
+		return Response.ok(new GenericEntity<List<AbstractKunde>>(all) {
+		}).links(getTransitionalLinksKunden(all, uriInfo)).build();
 	}
 
 	// Kunde mit ID finden
@@ -145,9 +144,11 @@ public class KundenResource {
 		// TODO Mehrere Query-Parameter koennen angegeben sein
 		if (!Strings.isNullOrEmpty(nachname)) {
 			kunden = ks.findKundenByNachname(nachname, FetchType.NUR_KUNDE);
-		} else if (!Strings.isNullOrEmpty(plz)) {
+		} 
+		else if (!Strings.isNullOrEmpty(plz)) {
 			kunden = ks.findKundenByPLZ(plz);
-		} else if (!Strings.isNullOrEmpty(email)) {
+		}
+		else if (!Strings.isNullOrEmpty(email)) {
 			kunde = ks.findKundeByEmail(email);
 		} else {
 			kunden = ks.findAllKunden(FetchType.NUR_KUNDE, OrderType.ID);
@@ -162,8 +163,7 @@ public class KundenResource {
 			// FIXME JDK 8 hat Lambda-Ausdruecke
 			// kunden.parallelStream()
 			// .forEach(k -> setStructuralLinks(k, uriInfo));
-			entity = new GenericEntity<List<? extends AbstractKunde>>(kunden) {
-			};
+			entity = new GenericEntity<List<? extends AbstractKunde>>(kunden) {};
 			links = getTransitionalLinksKunden(kunden, uriInfo);
 		} else if (kunde != null) {
 			entity = kunde;
@@ -172,10 +172,12 @@ public class KundenResource {
 
 		return Response.ok(entity).links(links).build();
 	}
-	
+
 	/**
 	 * IDs mit gleichem Praefix suchen
-	 * @param idPrefix Der gemeinsame Praefix
+	 * 
+	 * @param idPrefix
+	 *            Der gemeinsame Praefix
 	 * @return Collection der IDs mit gleichem Praefix
 	 */
 	@GET
@@ -184,17 +186,21 @@ public class KundenResource {
 		final Collection<Long> ids = ks.findIdsByPrefix(idPrefix);
 		return ids;
 	}
-	
+
 	/**
 	 * Nachnamen mit gleichem Praefix suchen
-	 * @param nachnamePrefix Der gemeinsame Praefix
+	 * 
+	 * @param nachnamePrefix
+	 *            Der gemeinsame Praefix
 	 * @return Collection der Nachnamen mit gleichem Praefix
 	 */
 	@GET
 	@Path("/prefix/nachname/{nachname}")
 	@Produces({ APPLICATION_JSON, TEXT_PLAIN + ";qs=0.75" })
-	public Collection<String> findNachnamenByPrefix(@PathParam("nachname") String nachnamePrefix) {
-		final Collection<String> nachnamen = ks.findNachnamenByPrefix(nachnamePrefix);
+	public Collection<String> findNachnamenByPrefix(
+			@PathParam("nachname") String nachnamePrefix) {
+		final Collection<String> nachnamen = ks
+				.findNachnamenByPrefix(nachnamePrefix);
 		return nachnamen;
 	}
 
@@ -232,7 +238,8 @@ public class KundenResource {
 	public Response findBestellungenByKundeId(
 			@PathParam(KUNDEN_ID_PATH_PARAM) Long kundeId) {
 		// TODO Anwendungskern statt Mock
-		final AbstractKunde kunde = ks.findKundeById(kundeId, FetchType.NUR_KUNDE);
+		final AbstractKunde kunde = ks.findKundeById(kundeId,
+				FetchType.NUR_KUNDE);
 		final List<Bestellung> bestellungen = Mock
 				.findBestellungenByKunde(kunde);
 		if (bestellungen.isEmpty()) {
@@ -252,49 +259,54 @@ public class KundenResource {
 				.links(getTransitionalLinksBestellungen(bestellungen, kunde,
 						uriInfo)).build();
 	}
-	
+
 	/**
 	 * Bestellung-IDs zu einem Kunden suchen
-	 * @param kundeId ID des Kunden
+	 * 
+	 * @param kundeId
+	 *            ID des Kunden
 	 * @return Liste der Bestellung-IDs
 	 */
 	@GET
 	@Path("{id:[1-9][0-9]*}/bestellungenIds")
-	@Produces({ APPLICATION_JSON, TEXT_PLAIN + ";qs=0.75", APPLICATION_XML + ";qs=0.5" })
+	@Produces({ APPLICATION_JSON, TEXT_PLAIN + ";qs=0.75",
+			APPLICATION_XML + ";qs=0.5" })
 	public Response findBestellungenIdsByKundeId(@PathParam("id") Long kundeId) {
-		final AbstractKunde kunde = ks.findKundeById(kundeId, FetchType.MIT_BESTELLUNGEN);
+		final AbstractKunde kunde = ks.findKundeById(kundeId,
+				FetchType.MIT_BESTELLUNGEN);
 
-		final Collection<Bestellung> bestellungen = bs.findBestellungenByKunde(kunde);		
+		final Collection<Bestellung> bestellungen = bs
+				.findBestellungenByKunde(kunde);
 		final int anzahl = bestellungen.size();
 		final Collection<Long> bestellungenIds = new ArrayList<>(anzahl);
 		for (Bestellung bestellung : bestellungen) {
 			bestellungenIds.add(bestellung.getId());
 		}
 		// FIXME JDK 8 hat Lambda-Ausdruecke
-		//bestellungen.parallelStream()
-		//            .map(Bestellung::getId)
-		//            .forEach(id -> bestellungenIds.add(id));
-		
-		return Response.ok(new GenericEntity<Collection<Long>>(bestellungenIds) {})
-				       .build();
+		// bestellungen.parallelStream()
+		// .map(Bestellung::getId)
+		// .forEach(id -> bestellungenIds.add(id));
+
+		return Response.ok(
+				new GenericEntity<Collection<Long>>(bestellungenIds) {
+				}).build();
 	}
 
 	@POST
-	@Consumes({APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
+	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces
 	public Response createKunde(@Valid AbstractKunde kunde) {
 		kunde.setId(KEINE_ID);
-		
+
 		final Adresse adresse = kunde.getAdresse();
 		if (adresse != null) {
 			adresse.setKunde(kunde);
 		}
-		
+
 		kunde = ks.createKunde(kunde);
 		LOGGER.tracef("Kunde: %s", kunde);
-		
-		return Response.created(getUriKunde(kunde, uriInfo))
-				       .build();
+
+		return Response.created(getUriKunde(kunde, uriInfo)).build();
 	}
 
 	@PUT
@@ -302,13 +314,14 @@ public class KundenResource {
 	@Produces
 	public void updateKunde(@Valid AbstractKunde kunde) {
 		// Vorhandenen Kunden ermitteln
-		final AbstractKunde origKunde = ks.findKundeById(kunde.getId(), FetchType.NUR_KUNDE);
+		final AbstractKunde origKunde = ks.findKundeById(kunde.getId(),
+				FetchType.NUR_KUNDE);
 		LOGGER.tracef("Kunde vorher: %s", origKunde);
-	
+
 		// Daten des vorhandenen Kunden ueberschreiben
 		origKunde.setValues(kunde);
 		LOGGER.tracef("Kunde nachher: %s", origKunde);
-		
+
 		// Update durchfuehren
 		ks.updateKunde(origKunde);
 	}
@@ -317,7 +330,8 @@ public class KundenResource {
 	@DELETE
 	@Produces
 	public void deleteKunde(@PathParam("id") Long kundeId) {
-		final AbstractKunde kunde = ks.findKundeById(kundeId, FetchType.NUR_KUNDE);
+		final AbstractKunde kunde = ks.findKundeById(kundeId,
+				FetchType.NUR_KUNDE);
 		ks.deleteKunde(kunde);
 	}
 
