@@ -41,13 +41,13 @@ import de.shop.util.persistence.AbstractAuditable;
 @Table(indexes = { @Index(columnList = "lieferant_fk"),
 		@Index(columnList = "erzeugt") })
 @NamedQueries({
-		@NamedQuery(name = Lieferantenbestellung.FIND_BESTELLUNGEN_BY_KUNDE, query = "SELECT b"
-				+ " FROM   Lieferantenbestellung b"
-				+ " WHERE  b.lieferant = :"
-				+ Lieferantenbestellung.PARAM_KUNDE),
-		@NamedQuery(name = Lieferantenbestellung.FIND_KUNDE_BY_ID, query = "SELECT b.lieferant"
-				+ " FROM   Lieferantenbestellung b"
-				+ " WHERE  b.id = :"
+		@NamedQuery(name = Lieferantenbestellung.FIND_BESTELLUNGEN_BY_LIEFERANT, query = "SELECT l"
+				+ " FROM   Lieferantenbestellung l"
+				+ " WHERE  l.lieferant = :"
+				+ Lieferantenbestellung.PARAM_LIEFERANT),
+		@NamedQuery(name = Lieferantenbestellung.FIND_LIEFERANT_BY_ID, query = "SELECT l.lieferant"
+				+ " FROM   Lieferantenbestellung l"
+				+ " WHERE  l.id = :"
 				+ Lieferantenbestellung.PARAM_ID) })
 /*
  * @NamedEntityGraphs({
@@ -67,12 +67,12 @@ public class Lieferantenbestellung extends AbstractAuditable {
 			.lookup().lookupClass());
 
 	private static final String PREFIX = "Lieferantenbestellung.";
-	public static final String FIND_BESTELLUNGEN_BY_KUNDE = PREFIX
+	public static final String FIND_BESTELLUNGEN_BY_LIEFERANT = PREFIX
 			+ "findLieferantenbestellungenByLieferant";
-	public static final String FIND_KUNDE_BY_ID = PREFIX
+	public static final String FIND_LIEFERANT_BY_ID = PREFIX
 			+ "findLieferantenbestellungLieferantById";
 
-	public static final String PARAM_KUNDE = "lieferant";
+	public static final String PARAM_LIEFERANT = "lieferant";
 	public static final String PARAM_ID = "id";
 
 	public static final String GRAPH_LIEFERUNGEN = PREFIX + "lieferungen";
@@ -94,7 +94,7 @@ public class Lieferantenbestellung extends AbstractAuditable {
 	private BestellstatusLB bestellstatusLB;
 
 	@OneToMany(fetch = EAGER, cascade = { PERSIST, REMOVE })
-	@JoinColumn(name = "bestellung_fk", nullable = false)
+	@JoinColumn(name = "lieferantenbestellung_fk", nullable = false)
 	@NotEmpty(message = "{lieferantenbestellung.bestellpositionen.notEmpty}")
 	@Valid
 	private List<PostenLB> postenLB;
