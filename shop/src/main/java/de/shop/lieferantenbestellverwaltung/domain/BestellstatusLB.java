@@ -1,5 +1,5 @@
 package de.shop.lieferantenbestellverwaltung.domain;
 
-public enum LieferantenBestellstatus {
+public enum BestellstatusLB {
 	angenommen, versendet, storniert, bezahlt
 }

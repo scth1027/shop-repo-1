@@ -10,7 +10,7 @@ import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
 
 import de.shop.lieferantenbestellverwaltung.domain.Lieferantenbestellung;
-import de.shop.lieferantenverwaltung.domain.Lieferant;
+import de.shop.lieferantenverwaltung.domain.AbstractLieferant;
 import de.shop.util.Mock;
 import de.shop.util.interceptor.Log;
 
@@ -25,7 +25,7 @@ public class LieferantenbestellungServiceImpl implements LieferantenbestellungSe
 	private transient Event<Lieferantenbestellung> event;
 
 	@Override
-	public Lieferantenbestellung createLieferantenbestellung(Lieferantenbestellung bestellung, Lieferant lieferant, Locale locale) {
+	public Lieferantenbestellung createLieferantenbestellung(Lieferantenbestellung bestellung, AbstractLieferant lieferant, Locale locale) {
 		bestellung = Mock.createLieferantenbestellung(bestellung, lieferant);
 		event.fire(bestellung);
 		System.out.println("da");
@@ -40,7 +40,7 @@ public class LieferantenbestellungServiceImpl implements LieferantenbestellungSe
 
 	@Override
 	@NotNull(message = "lieferantenbestellung.notFound.lieferant")
-	public List<Lieferantenbestellung> findLieferantenbestellungenByLieferant(Lieferant lieferant) {
+	public List<Lieferantenbestellung> findLieferantenbestellungenByLieferant(AbstractLieferant lieferant) {
 		return Mock.findBestellungenByLieferant(lieferant);
 	}
 

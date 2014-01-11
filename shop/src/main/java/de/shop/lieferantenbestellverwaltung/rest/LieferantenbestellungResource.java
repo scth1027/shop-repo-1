@@ -31,9 +31,10 @@ import javax.ws.rs.core.UriInfo;
 
 import de.shop.lieferantenbestellverwaltung.domain.Lieferantenbestellung;
 import de.shop.lieferantenbestellverwaltung.service.LieferantenbestellungService;
-import de.shop.lieferantenverwaltung.service.LieferantService;
-import de.shop.lieferantenverwaltung.domain.Lieferant;
+import de.shop.lieferantenverwaltung.domain.AbstractLieferant;
 import de.shop.lieferantenverwaltung.rest.LieferantenResource;
+import de.shop.lieferantenverwaltung.service.LieferantService;
+import de.shop.lieferantenverwaltung.service.LieferantService.FetchType;
 import de.shop.util.rest.UriHelper;
 
 @Path("/lieferantenbestellungen")
@@ -53,26 +54,26 @@ public class LieferantenbestellungResource {
 
 	@Inject
 	private LieferantenResource lieferantResource;
-	
+
 	@Inject
 	private LieferantenbestellungService lbs;
 
 	@GET
 	@Path("{id:[1-9][0-9]*}")
-	public Response findLieferantenbestellungById(@PathParam("id") Long id) {
-		// TODO Anwendungskern statt Mock
+	public Response findBestellungById(@PathParam("id") Long id) {
+		// TODO Anwendungskern statt Mock, Verwendung von Locale
 		System.out.println("IN Methode");
-		final Lieferantenbestellung bestellung = lbs.findLieferantenbestellungById(id);
-		if (bestellung == null) {
-			throw new NotFoundException("Keine Bestellung mit der ID " + id
+		final Lieferantenbestellung lieferantenbestellung = lbs.findLieferantenbestellungById(id);
+		if (lieferantenbestellung == null) {
+			throw new NotFoundException("Keine Lieferantenbestellung mit der ID " + id
 					+ " gefunden.");
 		}
 
-		setStructuralLinks(bestellung, uriInfo);
+		setStructuralLinks(lieferantenbestellung, uriInfo);
 
 		// Link-Header setzen
-		final Response response = Response.ok(bestellung)
-				.links(getTransitionalLinks(bestellung, uriInfo)).build();
+		final Response response = Response.ok(lieferantenbestellung)
+				.links(getTransitionalLinks(lieferantenbestellung, uriInfo)).build();
 
 		return response;
 	}
@@ -81,20 +82,19 @@ public class LieferantenbestellungResource {
 	public Response findAllBestellungen() {
 		// Aufruf der Mock zur Erzeugung der Bestellungen
 		final List<Lieferantenbestellung> all = lbs.findAllLieferantenbestellungen();
-		// Plausibilitätsprüfung
+		// Plausibilitäsprüfung
 		if (all.isEmpty())
 			throw new NotFoundException(
 					"Es konnten keine Lieferanten gefunden werden!");
-		// Erstellen der Links für die jeweiligen Bestellungen
-		for (Lieferantenbestellung bestellung : all) {
-			setStructuralLinks(bestellung, uriInfo);
+		// Erstellen der Links für die jeweilign Bestellungen
+		for (Lieferantenbestellung lieferantenbestellung : all) {
+			setStructuralLinks(lieferantenbestellung, uriInfo);
 		}
 		return Response.ok(new GenericEntity<List<Lieferantenbestellung>>(all) {
-		}).links(setTransitionalLinksLieferantenbestellungen(all, uriInfo))
-				.build();
+		}).links(setTransitionalLinksBestellungen(all, uriInfo)).build();
 	}
 
-	private Link[] setTransitionalLinksLieferantenbestellungen(
+	private Link[] setTransitionalLinksBestellungen(
 			List<Lieferantenbestellung> bestellungen, UriInfo uriInfo) {
 		if (bestellungen == null || bestellungen.isEmpty()) {
 			return null;
@@ -108,64 +108,65 @@ public class LieferantenbestellungResource {
 				.fromUri(getBestellungenURI(bestellungen.get(lastPos), uriInfo))
 				.rel(LAST_LINK).build();
 
-		return new Link[] { first, last };
+		return new Link[] {first, last};
 	}
 
-	private URI getBestellungenURI(Lieferantenbestellung bestellung, UriInfo uriInfo2) {
-		return uriHelper.getUri(LieferantenbestellungResource.class,"findLieferantenbestellungById",
-				bestellung.getId(), uriInfo);
+	private URI getBestellungenURI(Lieferantenbestellung lieferantenbestellung, UriInfo uriInfo2) {
+		return uriHelper.getUri(LieferantenbestellungResource.class, "findLieferantenbestellungById",
+				lieferantenbestellung.getId(), uriInfo);
 
 	}
 
-	public void setStructuralLinks(Lieferantenbestellung bestellung, UriInfo uriInfo) {
-		// URI fuer Kunde setzen
-		final Lieferant lieferant = bestellung.getLieferant();
+	public void setStructuralLinks(Lieferantenbestellung lieferantenbestellung, UriInfo uriInfo) {
+		// URI fuer Lieferant setzen
+		final AbstractLieferant lieferant = lieferantenbestellung.getLieferant();
 		if (lieferant != null) {
-			final URI lieferantUri = lieferantResource.getLieferantenURI(
-					bestellung.getLieferant(), uriInfo);
-			bestellung.setLieferantURI(lieferantUri);
+			final URI lieferantUri = lieferantResource.getUriLieferant(
+					lieferantenbestellung.getLieferant(), uriInfo);
+			lieferantenbestellung.setLieferantURI(lieferantUri);
 		}
 	}
 
-	private Link[] getTransitionalLinks(Lieferantenbestellung bestellung, UriInfo uriInfo) {
-		final Link self = Link.fromUri(getUriLieferantenbestellung(bestellung, uriInfo))
+	private Link[] getTransitionalLinks(Lieferantenbestellung lieferantenbestellung, UriInfo uriInfo) {
+		final Link self = Link.fromUri(getUriLieferantenbestellung(lieferantenbestellung, uriInfo))
 				.rel(SELF_LINK).build();
-		return new Link[] { self };
+		return new Link[] {self};
 	}
 
-	public URI getUriLieferantenbestellung(Lieferantenbestellung bestellung, UriInfo uriInfo) {
+	public URI getUriLieferantenbestellung(Lieferantenbestellung lieferantenbestellung, UriInfo uriInfo) {
 		return uriHelper.getUri(LieferantenbestellungResource.class, "findLieferantenbestellungById",
-				bestellung.getId(), uriInfo);
+				lieferantenbestellung.getId(), uriInfo);
 	}
 
 	@POST
 	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces
-	public Response createBestellung(@Valid Lieferantenbestellung bestellung,
+	public Response createBestellung(@Valid Lieferantenbestellung lieferantenbestellung,
 			@Context HttpHeaders headers) {
 		// TODO Anwendungskern statt Mock
-		String lieferantenId = bestellung.getLieferantURI().toString();
+		String lieferantenId = lieferantenbestellung.getLieferantURI().toString();
 		lieferantenId = lieferantenId.substring(lieferantenId.lastIndexOf("/") + 1);
-		final Lieferant l = ls.findLieferantById(Long.valueOf(lieferantenId).longValue());
-		System.out.println("Bestellung angekommen im Service");
-		bestellung = lbs.createLieferantenbestellung(bestellung, l, headers.getLanguage());
-		System.out.println("Bestellung ist aus der Mock zurück");
-		return Response.created(getUriLieferantenbestellung(bestellung, uriInfo)).build();
+		final AbstractLieferant l = ls.findLieferantById(Long.valueOf(lieferantenId).longValue(), FetchType.NUR_LIEFERANT);
+		System.out.println("Lieferantenbestellung angekommen im Service");
+		lieferantenbestellung = lbs.createLieferantenbestellung(lieferantenbestellung, l, headers.getLanguage());
+		System.out.println("Lieferantenbestellung ist aus der Mock zurück");
+		return Response.created(getUriLieferantenbestellung(lieferantenbestellung, uriInfo)).build();
 	}
 
 	@DELETE
 	@Path("{id:[1-9][0-9]*}")
 	@Produces
-	public void deleteLieferantenbestellung(@PathParam("id") Long bestellungId) {
+	public void deleteBestellung(@PathParam("id") Long bestellungId) {
 		lbs.deleteLieferantenbestellung(bestellungId);
 	}
 
 	@PUT
 	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces
-	public void updateBestellung(@Valid Lieferantenbestellung bestellung) {
+	public void updateBestellung(@Valid Lieferantenbestellung lieferantenbestellung) {
 		// TODO Anwendungskern statt Mock
-		lbs.updateLieferantenbestellung(bestellung);
+		lbs.updateLieferantenbestellung(lieferantenbestellung);
 	}
 
 }
+

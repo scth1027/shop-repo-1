@@ -18,7 +18,7 @@ import javax.mail.internet.MimeMessage;
 import org.jboss.logging.Logger;
 
 import de.shop.lieferantenbestellverwaltung.domain.Lieferantenbestellung;
-import de.shop.lieferantenverwaltung.domain.Lieferant;
+import de.shop.lieferantenverwaltung.domain.AbstractLieferant;
 import de.shop.util.interceptor.Log;
 import de.shop.util.mail.AbsenderMail;
 import de.shop.util.mail.AbsenderName;
@@ -51,7 +51,7 @@ public class LieferantenbestellungObserver implements Serializable {
 
 	public void onCreateBestellung(
 			@Observes @NeueLieferantenbestellung Lieferantenbestellung bestellung) {
-		final Lieferant lieferant = bestellung.getLieferant();
+		final AbstractLieferant lieferant = bestellung.getLieferant();
 		final String empfaengerMail = lieferant.getEmail();
 		if (absenderMail == null || empfaengerMail == null) {
 			return;

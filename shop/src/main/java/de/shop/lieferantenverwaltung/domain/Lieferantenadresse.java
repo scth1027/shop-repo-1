@@ -1,9 +1,26 @@
 package de.shop.lieferantenverwaltung.domain;
 
 import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import static de.shop.util.Constants.KEINE_ID;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.PostPersist;
+import javax.persistence.Table;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlTransient;
+
+import org.jboss.logging.Logger;
 
 /*
  * Klasse Lieferantenadresse
@@ -12,18 +29,62 @@ import javax.xml.bind.annotation.XmlTransient;
  * alle 3 Object Methoden überschrieben
  * ---Tim---
  */
-@XmlRootElement
+@Entity
+@Table(indexes = @Index(columnList = "plz"))
 public class Lieferantenadresse implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private Long id;
-	private String ort;
-	private String plz;
-	private String strasse;
-	private Integer hausnummer;
+	private static final Logger LOGGER = Logger.getLogger(MethodHandles
+			.lookup().lookupClass());
 
+	private static final int PLZ_LENGTH_MAX = 5;
+	private static final int ORT_LENGTH_MIN = 2;
+	private static final int ORT_LENGTH_MAX = 32;
+	private static final int STRASSE_LENGTH_MIN = 2;
+	private static final int STRASSE_LENGTH_MAX = 32;
+	private static final int HAUSNR_LENGTH_MAX = 4;
+
+	@Id
+	@GeneratedValue
+	@Basic(optional = false)
+	private Long id = KEINE_ID;
+
+	@NotNull(message = "{lieferantenadresse.ort.NotNull")
+	@Size(min = ORT_LENGTH_MIN, max = ORT_LENGTH_MAX, message = "{lieferantenadresse.ort.length}")
+	private String ort;
+	@NotNull(message = "{lieferantenadresse.plz.NotNull}")
+	@Pattern(regexp = "\\d{" + PLZ_LENGTH_MAX + "}", message = "{lieferantenadresse.plz}")
+	@Column(length = PLZ_LENGTH_MAX)
+	private String plz;
+	@NotNull(message = "{lieferantenadresse.strasse.NotNull}")
+	@Size(min = STRASSE_LENGTH_MIN, max = STRASSE_LENGTH_MAX, message = "{lieferantenadresse.strasse.length}")
+	private String strasse;
+	@Size(max = HAUSNR_LENGTH_MAX, message = "{lieferantenadresse.hausnummer.length}")
+	private String hausnummer;
+
+	@OneToOne
+	@JoinColumn(name = "lieferant_fk", nullable = false, unique = true)
 	@XmlTransient
-	private Lieferant lieferant;
+	private AbstractLieferant lieferant;
+
+	public Lieferantenadresse() {
+		super();
+	}
+
+	public Lieferantenadresse(String plz, String ort, String strasse, String hausnr,
+			AbstractLieferant lieferant) {
+		super();
+		this.plz = plz;
+		this.ort = ort;
+		this.strasse = strasse;
+		this.hausnummer = hausnr;
+		this.lieferant = lieferant;
+	}
+
+	@PostPersist
+	private void postPersist() {
+		LOGGER.debugf("Neue Lieferantenadresse mit ID=%s", id);
+	}
 
 	public Long getId() {
 		return id;
@@ -57,19 +118,19 @@ public class Lieferantenadresse implements Serializable {
 		this.strasse = strasse;
 	}
 
-	public Integer getHausnummer() {
+	public String getHausnummer() {
 		return hausnummer;
 	}
 
-	public void setHausnummer(Integer hausnummer) {
+	public void setHausnummer(String hausnummer) {
 		this.hausnummer = hausnummer;
 	}
 
-	public Lieferant getLieferant() {
+	public AbstractLieferant getLieferant() {
 		return lieferant;
 	}
 
-	public void setLieferant(Lieferant lieferant) {
+	public void setLieferant(AbstractLieferant lieferant) {
 		this.lieferant = lieferant;
 	}
 
@@ -130,7 +191,7 @@ public class Lieferantenadresse implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Adresse [id=" + id + ", ort=" + ort + ", plz=" + plz
+		return "Lieferantenadresse [id=" + id + ", ort=" + ort + ", plz=" + plz
 				+ ", straße=" + strasse + ", hausnummer=" + hausnummer
 				+ ", lieferant=" + lieferant + "]";
 	}
