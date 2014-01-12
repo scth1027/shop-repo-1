@@ -1,4 +1,4 @@
-package de.shop.lieferantenbestellverwaltung.domain;
+package de.shop.einkaufverwaltung.domain;
 
 import static de.shop.util.Constants.KEINE_ID;
 import static javax.persistence.CascadeType.PERSIST;
@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.logging.Logger;
 
-import de.shop.lieferantenverwaltung.domain.AbstractLieferant;
+import de.shop.lieferantenverwaltung.domain.Lieferant;
 import de.shop.util.persistence.AbstractAuditable;
 
 @XmlRootElement
@@ -41,36 +41,36 @@ import de.shop.util.persistence.AbstractAuditable;
 @Table(indexes = { @Index(columnList = "lieferant_fk"),
 		@Index(columnList = "erzeugt") })
 @NamedQueries({
-		@NamedQuery(name = Lieferantenbestellung.FIND_BESTELLUNGEN_BY_LIEFERANT, query = "SELECT l"
-				+ " FROM   Lieferantenbestellung l"
+		@NamedQuery(name = Einkauf.FIND_EINKAEUFE_BY_LIEFERANT, query = "SELECT l"
+				+ " FROM   Einkauf l"
 				+ " WHERE  l.lieferant = :"
-				+ Lieferantenbestellung.PARAM_LIEFERANT),
-		@NamedQuery(name = Lieferantenbestellung.FIND_LIEFERANT_BY_ID, query = "SELECT l.lieferant"
-				+ " FROM   Lieferantenbestellung l"
+				+ Einkauf.PARAM_LIEFERANT),
+		@NamedQuery(name = Einkauf.FIND_LIEFERANT_BY_ID, query = "SELECT l.lieferant"
+				+ " FROM   Einkauf l"
 				+ " WHERE  l.id = :"
-				+ Lieferantenbestellung.PARAM_ID) })
+				+ Einkauf.PARAM_ID) })
 /*
  * @NamedEntityGraphs({
  * 
- * @NamedEntityGraph(name = Lieferantenbestellung.GRAPH_LIEFERUNGEN, attributeNodes =
+ * @NamedEntityGraph(name = Einkauf.GRAPH_LIEFERUNGEN, attributeNodes =
  * 
  * @NamedAttributeNode("lieferungen"))
  * 
  * })
  */
 @Cacheable
-public class Lieferantenbestellung extends AbstractAuditable {
+public class Einkauf extends AbstractAuditable {
 
 	private static final long serialVersionUID = -9110571232439282099L;
 
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles
 			.lookup().lookupClass());
 
-	private static final String PREFIX = "Lieferantenbestellung.";
-	public static final String FIND_BESTELLUNGEN_BY_LIEFERANT = PREFIX
-			+ "findLieferantenbestellungenByLieferant";
+	private static final String PREFIX = "Einkauf.";
+	public static final String FIND_EINKAEUFE_BY_LIEFERANT = PREFIX
+			+ "findEinkaufenByLieferant";
 	public static final String FIND_LIEFERANT_BY_ID = PREFIX
-			+ "findLieferantenbestellungLieferantById";
+			+ "findEinkaufLieferantById";
 
 	public static final String PARAM_LIEFERANT = "lieferant";
 	public static final String PARAM_ID = "id";
@@ -85,19 +85,19 @@ public class Lieferantenbestellung extends AbstractAuditable {
 	@ManyToOne
 	@JoinColumn(name = "lieferant_fk", nullable = false, insertable = false, updatable = false)
 	@XmlTransient
-	private AbstractLieferant lieferant;
+	private Lieferant lieferant;
 
-	@Digits(integer = 10, fraction = 2, message = "{lieferantenbestellung.preis.digits}")
+	@Digits(integer = 10, fraction = 2, message = "{einkauf.preis.digits}")
 	private BigDecimal gesamtpreis;
 
-	@NotNull(message = "{lieferantenbestellung.bestellstatusLB.NotNull}")
-	private BestellstatusLB bestellstatusLB;
+	@NotNull(message = "{einkauf.einkaufstatus.NotNull}")
+	private Einkaufstatus einkaufstatus;
 
 	@OneToMany(fetch = EAGER, cascade = { PERSIST, REMOVE })
-	@JoinColumn(name = "lieferantenbestellung_fk", nullable = false)
-	@NotEmpty(message = "{lieferantenbestellung.bestellpositionen.notEmpty}")
+	@JoinColumn(name = "einkauf_fk", nullable = false)
+	@NotEmpty(message = "{einkauf.einkaufpositionen.notEmpty}")
 	@Valid
-	private List<PostenLB> postenLB;
+	private List<Einkaufposten> einkaufposten;
 
 	@Transient
 	private URI lieferantURI;
@@ -118,28 +118,28 @@ public class Lieferantenbestellung extends AbstractAuditable {
 		this.id = id;
 	}
 
-	public AbstractLieferant getLieferant() {
+	public Lieferant getLieferant() {
 		return lieferant;
 	}
 
-	public void setLieferant(AbstractLieferant lieferant) {
+	public void setLieferant(Lieferant lieferant) {
 		this.lieferant = lieferant;
 	}
 
-	public BestellstatusLB getBestellstatusLB() {
-		return bestellstatusLB;
+	public Einkaufstatus getEinkaufstatus() {
+		return einkaufstatus;
 	}
 
-	public void setBestellstatusLB(BestellstatusLB bestellstatusLB) {
-		this.bestellstatusLB = bestellstatusLB;
+	public void setEinkaufstatus(Einkaufstatus einkaufstatus) {
+		this.einkaufstatus = einkaufstatus;
 	}
 
-	public List<PostenLB> getPostenLB() {
-		return postenLB;
+	public List<Einkaufposten> getEinkaufposten() {
+		return einkaufposten;
 	}
 
-	public void setPostenLB(List<PostenLB> postenLB) {
-		this.postenLB = postenLB;
+	public void setEinkaufposten(List<Einkaufposten> einkaufposten) {
+		this.einkaufposten = einkaufposten;
 	}
 
 	public BigDecimal getGesamtpreis() {
@@ -155,14 +155,14 @@ public class Lieferantenbestellung extends AbstractAuditable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((bestellstatusLB == null) ? 0 : bestellstatusLB.hashCode());
+				+ ((einkaufstatus == null) ? 0 : einkaufstatus.hashCode());
 		result = prime * result
 				+ ((gesamtpreis == null) ? 0 : gesamtpreis.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((lieferant == null) ? 0 : lieferant.hashCode());
 		result = prime * result
 				+ ((lieferantURI == null) ? 0 : lieferantURI.hashCode());
-		result = prime * result + ((postenLB == null) ? 0 : postenLB.hashCode());
+		result = prime * result + ((einkaufposten == null) ? 0 : einkaufposten.hashCode());
 		return result;
 	}
 
@@ -174,8 +174,8 @@ public class Lieferantenbestellung extends AbstractAuditable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		final Lieferantenbestellung other = (Lieferantenbestellung) obj;
-		if (bestellstatusLB != other.bestellstatusLB)
+		final Einkauf other = (Einkauf) obj;
+		if (einkaufstatus != other.einkaufstatus)
 			return false;
 		if (gesamtpreis == null) {
 			if (other.gesamtpreis != null)
@@ -194,18 +194,18 @@ public class Lieferantenbestellung extends AbstractAuditable {
 				return false;
 		} else if (!lieferantURI.equals(other.lieferantURI))
 			return false;
-		if (postenLB == null) {
-			if (other.postenLB != null)
+		if (einkaufposten == null) {
+			if (other.einkaufposten != null)
 				return false;
-		} else if (!postenLB.equals(other.postenLB))
+		} else if (!einkaufposten.equals(other.einkaufposten))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Lieferantenbestellung [id=" + id + ", lieferant=" + lieferant + ", gesamtpreis="
-				+ gesamtpreis + ", bestellstatusLB=" + bestellstatusLB
-				+ ", postenLB=" + postenLB + ", lieferantURI=" + lieferantURI + "]";
+		return "Einkauf [id=" + id + ", lieferant=" + lieferant + ", gesamtpreis="
+				+ gesamtpreis + ", einkaufstatus=" + einkaufstatus
+				+ ", einkaufposten=" + einkaufposten + ", lieferantURI=" + lieferantURI + "]";
 	}
 }

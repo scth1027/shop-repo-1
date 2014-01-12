@@ -65,14 +65,14 @@ public class Lieferantenadresse implements Serializable {
 	@OneToOne
 	@JoinColumn(name = "lieferant_fk", nullable = false, unique = true)
 	@XmlTransient
-	private AbstractLieferant lieferant;
+	private Lieferant lieferant;
 
 	public Lieferantenadresse() {
 		super();
 	}
 
 	public Lieferantenadresse(String plz, String ort, String strasse, String hausnr,
-			AbstractLieferant lieferant) {
+			Lieferant lieferant) {
 		super();
 		this.plz = plz;
 		this.ort = ort;
@@ -126,11 +126,11 @@ public class Lieferantenadresse implements Serializable {
 		this.hausnummer = hausnummer;
 	}
 
-	public AbstractLieferant getLieferant() {
+	public Lieferant getLieferant() {
 		return lieferant;
 	}
 
-	public void setLieferant(AbstractLieferant lieferant) {
+	public void setLieferant(Lieferant lieferant) {
 		this.lieferant = lieferant;
 	}
 

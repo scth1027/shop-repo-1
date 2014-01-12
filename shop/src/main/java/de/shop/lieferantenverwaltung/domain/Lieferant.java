@@ -45,13 +45,13 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.hibernate.validator.constraints.Email;
 import org.jboss.logging.Logger;
 
-import de.shop.lieferantenbestellverwaltung.domain.Lieferantenbestellung;
+import de.shop.einkaufverwaltung.domain.Einkauf;
 
 /*
- * Abstrakte Lieferanten Klasse
- * enthält id, nachname, vorname, lieferantenadresse(Lieferantenadresse), email, List von Lieferantenbestellungen und zugehörige URI
+ * Lieferanten Klasse
+ * enthält id, nachname, vorname, lieferantenadresse(Lieferantenadresse), email, List von Einkaeufe und zugehörige URI
  * ist Serializiable aufgrund des Mappings notwendig
- * List von Bestellunen wird nicht über den RestService bereitgestellt dafuer gibt es eine URI --> lieferantenbestellungenURI
+ * List von Einkäufen wird nicht über den RestService bereitgestellt dafuer gibt es eine URI --> einkaeufeURI
  * ---Tim---
  */
 /*
@@ -65,35 +65,35 @@ import de.shop.lieferantenbestellverwaltung.domain.Lieferantenbestellung;
 @Inheritance
 @DiscriminatorColumn(name = "art", length = 1)
 @NamedQueries({
-		@NamedQuery(name = AbstractLieferant.FIND_LIEFERANTEN, query = "SELECT l"
-				+ " FROM   AbstractLieferant l"),
-		@NamedQuery(name = AbstractLieferant.FIND_LIEFERANTEN_ORDER_BY_ID, query = "SELECT   l"
-				+ " FROM  AbstractLieferant l" + " ORDER BY l.id"),
-		@NamedQuery(name = AbstractLieferant.FIND_IDS_BY_PREFIX, query = "SELECT   l.id"
-				+ " FROM  AbstractLieferant l"
+		@NamedQuery(name = Lieferant.FIND_LIEFERANTEN, query = "SELECT l"
+				+ " FROM   Lieferant l"),
+		@NamedQuery(name = Lieferant.FIND_LIEFERANTEN_ORDER_BY_ID, query = "SELECT   l"
+				+ " FROM  Lieferant l" + " ORDER BY l.id"),
+		@NamedQuery(name = Lieferant.FIND_IDS_BY_PREFIX, query = "SELECT   l.id"
+				+ " FROM  Lieferant l"
 				+ " WHERE CONCAT('', l.id) LIKE :"
-				+ AbstractLieferant.PARAM_LIEFERANT_ID_PREFIX + " ORDER BY l.id"),
-		@NamedQuery(name = AbstractLieferant.FIND_LIEFERANTEN_BY_FIRMA, query = "SELECT l"
-				+ " FROM   AbstractLieferant l"
+				+ Lieferant.PARAM_LIEFERANT_ID_PREFIX + " ORDER BY l.id"),
+		@NamedQuery(name = Lieferant.FIND_LIEFERANTEN_BY_FIRMA, query = "SELECT l"
+				+ " FROM   Lieferant l"
 				+ " WHERE  UPPER(l.firma) = UPPER(:"
-				+ AbstractLieferant.PARAM_LIEFERANT_FIRMA + ")"),
-		@NamedQuery(name = AbstractLieferant.FIND_FIRMA_BY_PREFIX, query = "SELECT   DISTINCT l.firma"
-				+ " FROM  AbstractLieferant l "
+				+ Lieferant.PARAM_LIEFERANT_FIRMA + ")"),
+		@NamedQuery(name = Lieferant.FIND_FIRMA_BY_PREFIX, query = "SELECT   DISTINCT l.firma"
+				+ " FROM  Lieferant l "
 				+ " WHERE UPPER(l.firma) LIKE UPPER(:"
-				+ AbstractLieferant.PARAM_LIEFERANT_FIRMA_PREFIX + ")"),
-		@NamedQuery(name = AbstractLieferant.FIND_LIEFERANT_BY_EMAIL, query = "SELECT DISTINCT l"
-				+ " FROM   AbstractLieferant l"
+				+ Lieferant.PARAM_LIEFERANT_FIRMA_PREFIX + ")"),
+		@NamedQuery(name = Lieferant.FIND_LIEFERANT_BY_EMAIL, query = "SELECT DISTINCT l"
+				+ " FROM   Lieferant l"
 				+ " WHERE  l.email = :"
-				+ AbstractLieferant.PARAM_LIEFERANT_EMAIL),
-		@NamedQuery(name = AbstractLieferant.FIND_LIEFERANTEN_BY_PLZ, query = "SELECT l"
-				+ " FROM  AbstractLieferant l" + " WHERE l.lieferantenadresse.plz = :"
-				+ AbstractLieferant.PARAM_LIEFERANT_LIEFERANTENADRESSE_PLZ),
-		@NamedQuery(name = AbstractLieferant.FIND_LIEFERANTEN_BY_DATE, query = "SELECT l"
-				+ " FROM  AbstractLieferant l"
+				+ Lieferant.PARAM_LIEFERANT_EMAIL),
+		@NamedQuery(name = Lieferant.FIND_LIEFERANTEN_BY_PLZ, query = "SELECT l"
+				+ " FROM  Lieferant l" + " WHERE l.lieferantenadresse.plz = :"
+				+ Lieferant.PARAM_LIEFERANT_LIEFERANTENADRESSE_PLZ),
+		@NamedQuery(name = Lieferant.FIND_LIEFERANTEN_BY_DATE, query = "SELECT l"
+				+ " FROM  Lieferant l"
 				+ " WHERE l.seit = :"
-				+ AbstractLieferant.PARAM_LIEFERANT_SEIT) })
-@NamedEntityGraphs({ @NamedEntityGraph(name = AbstractLieferant.GRAPH_LIEFERANTENBESTELLUNGEN, attributeNodes = @NamedAttributeNode("lieferantenbestellungen")) })
-public class AbstractLieferant implements Serializable {
+				+ Lieferant.PARAM_LIEFERANT_SEIT) })
+@NamedEntityGraphs({ @NamedEntityGraph(name = Lieferant.GRAPH_EINKAEUFE, attributeNodes = @NamedAttributeNode("einkaeufe")) })
+public class Lieferant implements Serializable {
 
 	private static final long serialVersionUID = 1430771599450877428L;
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles
@@ -122,7 +122,7 @@ public class AbstractLieferant implements Serializable {
 	public static final String PARAM_LIEFERANT_SEIT = "seit";
 	public static final String PARAM_LIEFERANT_EMAIL = "email";
 
-	public static final String GRAPH_LIEFERANTENBESTELLUNGEN = PREFIX + "lieferantenbestellungen";
+	public static final String GRAPH_EINKAEUFE = PREFIX + "einkaeufe";
 
 	private static final String FIRMA_PATTERN = "[A-Z\u00C4\u00D6\u00DC][a-z\u00E4\u00F6\u00FC\u00DF]+";
 	public static final String FIRMA_PATTERN_PUB = FIRMA_PATTERN;
@@ -167,10 +167,10 @@ public class AbstractLieferant implements Serializable {
 	@JoinColumn(name = "lieferant_fk", nullable = false)
 	@OrderColumn(name = "idx", nullable = false)
 	@XmlTransient
-	private List<Lieferantenbestellung> lieferantenbestellungen;
+	private List<Einkauf> einkaeufe;
 
 	@Transient
-	private URI lieferantenbestellungenURI;
+	private URI einkaeufeURI;
 
 	@PostPersist
 	protected void postPersist() {
@@ -182,7 +182,7 @@ public class AbstractLieferant implements Serializable {
 		passwordWdh = password;
 	}
 
-	public void setValues(AbstractLieferant l) {
+	public void setValues(Lieferant l) {
 		firma = l.firma;
 		seit = l.seit;
 		email = l.email;
@@ -227,20 +227,20 @@ public class AbstractLieferant implements Serializable {
 		return "Lieferant [id=" + id + ", firma=" + firma + ", email=" + email + ", seit=" + seit + "]";
 	}
 
-	public URI getLieferantenbestellungenURI() {
-		return lieferantenbestellungenURI;
+	public URI getEinkaeufeURI() {
+		return einkaeufeURI;
 	}
 
-	public void setLieferantenbestellungenURI(URI lieferantenbestellungenURI) {
-		this.lieferantenbestellungenURI = lieferantenbestellungenURI;
+	public void setEinkaeufeURI(URI einkaeufeURI) {
+		this.einkaeufeURI = einkaeufeURI;
 	}
 
-	public List<Lieferantenbestellung> getLieferantenbestellungen() {
-		return lieferantenbestellungen;
+	public List<Einkauf> getEinkaeufe() {
+		return einkaeufe;
 	}
 
-	public void setLieferantenbestellungen(List<Lieferantenbestellung> lieferantenbestellungen) {
-		this.lieferantenbestellungen = lieferantenbestellungen;
+	public void setEinkaeufe(List<Einkauf> einkaeufe) {
+		this.einkaeufe = einkaeufe;
 	}
 
 	public Date getSeit() {
@@ -267,7 +267,7 @@ public class AbstractLieferant implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		final AbstractLieferant other = (AbstractLieferant) obj;
+		final Lieferant other = (Lieferant) obj;
 		if (email == null) {
 			if (other.email != null)
 				return false;

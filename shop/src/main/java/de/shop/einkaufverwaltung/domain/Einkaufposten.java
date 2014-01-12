@@ -1,4 +1,4 @@
-package de.shop.lieferantenbestellverwaltung.domain;
+package de.shop.einkaufverwaltung.domain;
 
 import static de.shop.util.Constants.KEINE_ID;
 
@@ -26,19 +26,19 @@ import de.shop.artikelverwaltung.domain.Artikel;
 
 @Entity
 // TODO MySQL 5.7 kann einen Index nicht 2x anlegen --> War der Fehler das Komma vergessen?
-@Table(indexes = { @Index(columnList = "lieferantenbestellung_fk"),
+@Table(indexes = { @Index(columnList = "einkauf_fk"),
 				   @Index(columnList = "artikel_fk") })
 /*
 @NamedQueries({ @NamedQuery(name = Posten.FIND_LADENHUETER, query = "SELECT a"
 		+ " FROM   Artikel a"
-		+ " WHERE  a NOT IN (SELECT bp.artikel FROM Bestellposition bp)") })
+		+ " WHERE  a NOT IN (SELECT bp.artikel FROM Einkaufposition ep)") })
 		*/
-public class PostenLB {
+public class Einkaufposten {
 
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles
 			.lookup().lookupClass());
 
-	private static final String PREFIX = "Bestellposition.";
+	private static final String PREFIX = "Einkaufposition.";
 	public static final String FIND_LADENHUETER = PREFIX + "findLadenhueter";
 	private static final int ANZAHL_MIN = 1;
 	
@@ -55,7 +55,7 @@ public class PostenLB {
 	@Transient
 	private URI artikelUri;
 	
-	@Min(value = ANZAHL_MIN, message = "{bestellposition.anzahl.min}")
+	@Min(value = ANZAHL_MIN, message = "{einkaufposition.anzahl.min}")
 	@Basic(optional = false)
 	private int anzahl;
 
@@ -92,7 +92,7 @@ public class PostenLB {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		final PostenLB other = (PostenLB) obj;
+		final Einkaufposten other = (Einkaufposten) obj;
 		if (anzahl != other.anzahl)
 			return false;
 		if (artikel == null) {

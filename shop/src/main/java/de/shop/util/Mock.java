@@ -11,14 +11,14 @@ import java.util.Set;
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.bestellverwaltung.domain.Posten;
-import de.shop.lieferantenbestellverwaltung.domain.Lieferantenbestellung;
-import de.shop.lieferantenbestellverwaltung.domain.PostenLB;
+import de.shop.einkaufverwaltung.domain.Einkauf;
+import de.shop.einkaufverwaltung.domain.Einkaufposten;
 import de.shop.kundenverwaltung.domain.Adresse;
 import de.shop.kundenverwaltung.domain.Firmenkunde;
 import de.shop.kundenverwaltung.domain.HobbyType;
 import de.shop.kundenverwaltung.domain.AbstractKunde;
 import de.shop.kundenverwaltung.domain.Privatkunde;
-import de.shop.lieferantenverwaltung.domain.AbstractLieferant;
+import de.shop.lieferantenverwaltung.domain.Lieferant;
 import de.shop.lieferantenverwaltung.domain.Lieferantenadresse;
 
 /**
@@ -28,6 +28,7 @@ public final class Mock {
 	private static final int MAX_ID = 99;
 	private static final int MAX_KUNDEN = 8;
 	private static final int MAX_BESTELLUNGEN = 4;
+	private static final int MAX_EINKAEUFE = 4;
 	private static final int JAHR = 2000;
 	private static final int MONAT = 0;
 	private static final int TAG = 1;
@@ -149,7 +150,7 @@ public final class Mock {
 		final Bestellung bestellung = new Bestellung();
 		bestellung.setId(id);
 		System.out.println("Bestellung erzeugt");
-		final AbstractLieferant lieferant = new AbstractLieferant();
+		final Lieferant lieferant = new Lieferant();
 		lieferant.setId(id);
 		System.out.println("Lieferant erzeugt");
 
@@ -269,12 +270,12 @@ public final class Mock {
 	}
 
 	// Lieferantenteil
-	public static AbstractLieferant findLieferantById(Long id) {
+	public static Lieferant findLieferantById(Long id) {
 		if (id > MAX_ID) {
 			return null;
 		}
 
-		final AbstractLieferant lieferant = new AbstractLieferant();
+		final Lieferant lieferant = new Lieferant();
 		lieferant.setId(id);
 		lieferant.setFirma("Firma" + id);
 		lieferant.setEmail("" + id + "@hska.de");
@@ -291,33 +292,33 @@ public final class Mock {
 		return lieferant;
 	}
 
-	public static List<AbstractLieferant> findAllLieferanten() {
+	public static List<Lieferant> findAllLieferanten() {
 		final int anzahl = MAX_KUNDEN;
-		final List<AbstractLieferant> lieferanten = new ArrayList<>(anzahl);
+		final List<Lieferant> lieferanten = new ArrayList<>(anzahl);
 		for (int i = 1; i <= anzahl; i++) {
-			final AbstractLieferant lieferant = findLieferantById(Long.valueOf(i));
+			final Lieferant lieferant = findLieferantById(Long.valueOf(i));
 			lieferanten.add(lieferant);
 		}
 		return lieferanten;
 	}
 
-	public static List<AbstractLieferant> findLieferantenByFirma(String firma) {
+	public static List<Lieferant> findLieferantenByFirma(String firma) {
 		final int anzahl = firma.length();
-		final List<AbstractLieferant> lieferanten = new ArrayList<>(anzahl);
+		final List<Lieferant> lieferanten = new ArrayList<>(anzahl);
 		for (int i = 1; i <= anzahl; i++) {
-			final AbstractLieferant lieferant = findLieferantById(Long.valueOf(i));
+			final Lieferant lieferant = findLieferantById(Long.valueOf(i));
 			lieferant.setFirma(firma);
 			lieferanten.add(lieferant);
 		}
 		return lieferanten;
 	}
 
-	public static AbstractLieferant findLieferantByEmail(String email) {
+	public static Lieferant findLieferantByEmail(String email) {
 		if (email.startsWith("x")) {
 			return null;
 		}
 
-		final AbstractLieferant lieferant = new AbstractLieferant();
+		final Lieferant lieferant = new Lieferant();
 		lieferant.setId(Long.valueOf(email.length()));
 		lieferant.setFirma("Firma");
 		lieferant.setEmail(email);
@@ -336,104 +337,103 @@ public final class Mock {
 		return lieferant;
 	}
 
-	//TODO:Warum ist eine solche Suche sinnvoll?
-	public static List<Lieferantenbestellung> findBestellungenByLieferant(
-			AbstractLieferant lieferant) {
-		// Beziehungsgeflecht zwischen Lieferant und Bestellungen aufbauen
+	public static List<Einkauf> findEinkaeufeByLieferant(
+			Lieferant lieferant) {
+		// Beziehungsgeflecht zwischen Lieferant und Einkaeufen aufbauen
 		final int anzahl = lieferant.getId().intValue() % MAX_BESTELLUNGEN + 1; // 1,
 																				// 2,
 																				// 3
 																				// oder
 																				// 4
-																				// Bestellungen
-		final List<Lieferantenbestellung> bestellungen = new ArrayList<>(anzahl);
+																				// Einkaeufe
+		final List<Einkauf> einkaeufe = new ArrayList<>(anzahl);
 		for (int i = 1; i <= anzahl; i++) {
-			final Lieferantenbestellung bestellung = findLieferantenbestellungById(Long
+			final Einkauf einkauf = findEinkaufById(Long
 					.valueOf(i));
-			bestellung.setLieferant(lieferant);
-			bestellungen.add(bestellung);
+			einkauf.setLieferant(lieferant);
+			einkaeufe.add(einkauf);
 		}
 		//FIXME:Verursachte fehler in Maven-Site
-//		lieferant.setBestellungen(bestellungen);
+//		lieferant.setEinkaeufe(einkaeufe);
 
-		return bestellungen;
+		return einkaeufe;
 	}
 
-	public static Lieferantenbestellung findLieferantenbestellungById(Long id) {
+	public static Einkauf findEinkaufById(Long id) {
 		if (id > MAX_ID) {
 			return null;
 		}
 
-		final AbstractLieferant lieferant = findLieferantById(id + 1); // andere ID fuer
+		final Lieferant lieferant = findLieferantById(id + 1); // andere ID fuer
 																// den
 																// Lieferanten
-		System.out.println("AbstractLieferant erhalten");
-		final Lieferantenbestellung bestellung = new Lieferantenbestellung();
-		bestellung.setId(id);
-		System.out.println("Bestellung erzeugt");
+		System.out.println("Lieferant erhalten");
+		final Einkauf einkauf = new Einkauf();
+		einkauf.setId(id);
+		System.out.println("Einkauf erzeugt");
 
-		bestellung.setGesamtpreis(new BigDecimal("112.43"));
+		einkauf.setGesamtpreis(new BigDecimal("112.43"));
 		System.out.print("Gesamtpreis gesetzt");
-		final PostenLB p = new PostenLB();
-		p.setAnzahl(id.intValue() + 1);
-		System.out.println("Posten: " + p.toString());
-		p.setArtikel(new Artikel(Long.valueOf(1), "Posten1", new BigDecimal(
+		final Einkaufposten e = new Einkaufposten();
+		e.setAnzahl(id.intValue() + 1);
+		System.out.println("Einkaufposten: " + e.toString());
+		e.setArtikel(new Artikel(Long.valueOf(1), "Einkaufposten1", new BigDecimal(
 				"13.0")));
-		System.out.println("Posten: " + p.toString());
-		final List<PostenLB> posten = new ArrayList<>();
-		posten.add(p);
-		bestellung.setPostenLB(posten);
-		System.out.println("Posten in Bestellung");
-		bestellung.setLieferant(lieferant);
+		System.out.println("Einkaufposten: " + e.toString());
+		final List<Einkaufposten> einkaufposten = new ArrayList<>();
+		einkaufposten.add(e);
+		einkauf.setEinkaufposten(einkaufposten);
+		System.out.println("Einkaufposten in Einkauf");
+		einkauf.setLieferant(lieferant);
 
-		return bestellung;
+		return einkauf;
 	}
 
-	public static List<Lieferantenbestellung> findAllLieferantenbestellungen() {
-		final int anzahl = MAX_BESTELLUNGEN;
-		final List<Lieferantenbestellung> bestellungliste = new ArrayList<>(
+	public static List<Einkauf> findAllEinkaeufe() {
+		final int anzahl = MAX_EINKAEUFE;
+		final List<Einkauf> einkaufliste = new ArrayList<>(
 				anzahl);
 		for (int i = 1; i <= anzahl; i++) {
-			final Lieferantenbestellung bestellung = findLieferantenbestellungById(Long
+			final Einkauf einkauf = findEinkaufById(Long
 					.valueOf(i));
-			bestellungliste.add(bestellung);
+			einkaufliste.add(einkauf);
 		}
-		return bestellungliste;
+		return einkaufliste;
 	}
 
-	public static Lieferantenbestellung createLieferantenbestellung
-		(Lieferantenbestellung bestellung, AbstractLieferant lieferant) {
+	public static Einkauf createEinkauf
+		(Einkauf einkauf, Lieferant lieferant) {
 		
-		bestellung.setLieferant(lieferant);
-		final BigDecimal gesamtpreis = bestellung.getGesamtpreis();
+		einkauf.setLieferant(lieferant);
+		final BigDecimal gesamtpreis = einkauf.getGesamtpreis();
 		gesamtpreis.setScale(BD_SCALE);
-		return bestellung;
+		return einkauf;
 	}
 
-	public static void updateLieferantenbestellung(
-			Lieferantenbestellung bestellung) {
-		System.out.println("Aktualisierter Bestellung: " + bestellung);
+	public static void updateEinkauf(
+			Einkauf einkauf) {
+		System.out.println("Aktualisierter Einkauf: " + einkauf);
 	}
 
-	public static void deleteLieferantenbestellung(Long bestellungId) {
-		System.out.println("Bestellung mit ID=" + bestellungId + " geloescht");
+	public static void deleteEinkauf(Long einkaufId) {
+		System.out.println("Einkauf mit ID=" + einkaufId + " geloescht");
 	}
 
-	public static AbstractLieferant createLieferant(AbstractLieferant lieferant) {
+	public static Lieferant createLieferant(Lieferant lieferant) {
 		// Neue IDs fuer Lieferant und zugehoerige Adresse
-		// Ein neuer Lieferant hat auch keine Bestellungen
+		// Ein neuer Lieferant hat auch keine Einkaeufe
 		final String firma = lieferant.getFirma();
 		lieferant.setId(Long.valueOf(firma.length()));
 		final Lieferantenadresse adresse = lieferant.getLieferantenadresse();
 		adresse.setId((Long.valueOf(firma.length())) + 1);
 		adresse.setLieferant(lieferant);
 		//FIXME:Verursachte fehler in Maven-Site
-//		lieferant.setBestellungen(null);
+//		lieferant.setEinkaeufe(null);
 		System.out.println("Neuer Lieferant: " + lieferant);
 		return lieferant;
 	}
 
-	public static void updateLieferant(AbstractLieferant lieferant) {
+	public static void updateLieferant(Lieferant lieferant) {
 		System.out.println("Aktualisierter Lieferant: " + lieferant);
 	}
 

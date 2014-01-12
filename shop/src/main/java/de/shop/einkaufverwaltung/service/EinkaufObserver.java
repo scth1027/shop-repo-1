@@ -1,4 +1,4 @@
-package de.shop.lieferantenbestellverwaltung.service;
+package de.shop.einkaufverwaltung.service;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -17,15 +17,15 @@ import javax.mail.internet.MimeMessage;
 
 import org.jboss.logging.Logger;
 
-import de.shop.lieferantenbestellverwaltung.domain.Lieferantenbestellung;
-import de.shop.lieferantenverwaltung.domain.AbstractLieferant;
+import de.shop.einkaufverwaltung.domain.Einkauf;
+import de.shop.lieferantenverwaltung.domain.Lieferant;
 import de.shop.util.interceptor.Log;
 import de.shop.util.mail.AbsenderMail;
 import de.shop.util.mail.AbsenderName;
 
 @Log
 @ApplicationScoped
-public class LieferantenbestellungObserver implements Serializable {
+public class EinkaufObserver implements Serializable {
 	private static final long serialVersionUID = 6676220131351311744L;
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles
 			.lookup().lookupClass());
@@ -44,14 +44,14 @@ public class LieferantenbestellungObserver implements Serializable {
 	@PostConstruct
 	private void postConstruct() {
 		if (absenderMail == null) {
-			LOGGER.warn("Der Absender fuer Bestellungs-Emails ist nicht gesetzt.");
+			LOGGER.warn("Der Absender fuer Einkaufs-Emails ist nicht gesetzt.");
 			return;
 		}
 	}
 
-	public void onCreateBestellung(
-			@Observes @NeueLieferantenbestellung Lieferantenbestellung bestellung) {
-		final AbstractLieferant lieferant = bestellung.getLieferant();
+	public void onCreateEinkauf(
+			@Observes @NeuerEinkauf Einkauf einkauf) {
+		final Lieferant lieferant = einkauf.getLieferant();
 		final String empfaengerMail = lieferant.getEmail();
 		if (absenderMail == null || empfaengerMail == null) {
 			return;
@@ -71,11 +71,11 @@ public class LieferantenbestellungObserver implements Serializable {
 																// TO, CC, BCC
 
 			// Subject setzen
-			message.setSubject("Neue Bestellung Nr. " + bestellung.getId());
+			message.setSubject("Neue Einkauf Nr. " + einkauf.getId());
 
 			// Text setzen mit MIME Type "text/plain"
-			final String text = "<h3>Neue Bestellung Nr. <b>"
-					+ bestellung.getId() + "</b></h3>";
+			final String text = "<h3>Neue Einkauf Nr. <b>"
+					+ einkauf.getId() + "</b></h3>";
 			LOGGER.trace(text);
 			message.setContent(text, "text/html;charset=iso-8859-1");
 

@@ -1,4 +1,4 @@
-package de.shop.lieferantenbestellverwaltung.service;
+package de.shop.einkaufverwaltung.service;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.PARAMETER;
@@ -14,5 +14,5 @@ import javax.inject.Qualifier;
 @Target({ FIELD, PARAMETER })
 @Retention(RUNTIME)
 @Documented
-public @interface NeueLieferantenbestellung {
+public @interface NeuerEinkauf {
 }
