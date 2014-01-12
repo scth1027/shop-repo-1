@@ -1,4 +1,6 @@
 package de.shop.lieferantenverwaltung.domain;
+//TODO:Ändern der Klasse zurück in Lieferant (Abstract macht keinen Sinn)
+//TODO: Überprüfen der Queries, ob diese auch Sinvoll sind
 
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
@@ -38,11 +40,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
-import javax.validation.groups.Default;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.ScriptAssert;
 import org.jboss.logging.Logger;
 
 import de.shop.lieferantenbestellverwaltung.domain.Lieferantenbestellung;
@@ -93,7 +93,7 @@ import de.shop.lieferantenbestellverwaltung.domain.Lieferantenbestellung;
 				+ " WHERE l.seit = :"
 				+ AbstractLieferant.PARAM_LIEFERANT_SEIT) })
 @NamedEntityGraphs({ @NamedEntityGraph(name = AbstractLieferant.GRAPH_LIEFERANTENBESTELLUNGEN, attributeNodes = @NamedAttributeNode("lieferantenbestellungen")) })
-public abstract class AbstractLieferant implements Serializable {
+public class AbstractLieferant implements Serializable {
 
 	private static final long serialVersionUID = 1430771599450877428L;
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles

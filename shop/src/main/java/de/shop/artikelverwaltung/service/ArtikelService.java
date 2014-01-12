@@ -78,7 +78,7 @@ public class ArtikelService implements Serializable {
 //	public Artikel createArtikel(Artikel artikel) {
 //		return Mock.createArtikel(artikel);
 //	}
-	
+	//TODO:Fehler bei Artikel erstellen, aktualisieren und loeschen
 	/**
 	 * Einen neuen Artikel in der DB anlegen.
 	 * @param artikel Der anzulegende Artikel.

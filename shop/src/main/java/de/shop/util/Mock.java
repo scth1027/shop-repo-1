@@ -18,7 +18,7 @@ import de.shop.kundenverwaltung.domain.Firmenkunde;
 import de.shop.kundenverwaltung.domain.HobbyType;
 import de.shop.kundenverwaltung.domain.AbstractKunde;
 import de.shop.kundenverwaltung.domain.Privatkunde;
-import de.shop.lieferantenverwaltung.domain.Lieferant;
+import de.shop.lieferantenverwaltung.domain.AbstractLieferant;
 import de.shop.lieferantenverwaltung.domain.Lieferantenadresse;
 
 /**
@@ -149,7 +149,7 @@ public final class Mock {
 		final Bestellung bestellung = new Bestellung();
 		bestellung.setId(id);
 		System.out.println("Bestellung erzeugt");
-		final Lieferant lieferant = new Lieferant();
+		final AbstractLieferant lieferant = new AbstractLieferant();
 		lieferant.setId(id);
 		System.out.println("Lieferant erzeugt");
 
@@ -269,12 +269,12 @@ public final class Mock {
 	}
 
 	// Lieferantenteil
-	public static Lieferant findLieferantById(Long id) {
+	public static AbstractLieferant findLieferantById(Long id) {
 		if (id > MAX_ID) {
 			return null;
 		}
 
-		final Lieferant lieferant = new Lieferant();
+		final AbstractLieferant lieferant = new AbstractLieferant();
 		lieferant.setId(id);
 		lieferant.setFirma("Firma" + id);
 		lieferant.setEmail("" + id + "@hska.de");
@@ -284,40 +284,40 @@ public final class Mock {
 		adresse.setPlz("12345");
 		adresse.setOrt("Testort");
 		adresse.setStrasse("Moltkestrasse");
-		adresse.setHausnummer(id.intValue() + 1);
+		adresse.setHausnummer(String.valueOf(id.intValue() + 1));
 		adresse.setLieferant(lieferant);
 		lieferant.setLieferantenadresse(adresse);
 
 		return lieferant;
 	}
 
-	public static List<Lieferant> findAllLieferanten() {
+	public static List<AbstractLieferant> findAllLieferanten() {
 		final int anzahl = MAX_KUNDEN;
-		final List<Lieferant> lieferanten = new ArrayList<>(anzahl);
+		final List<AbstractLieferant> lieferanten = new ArrayList<>(anzahl);
 		for (int i = 1; i <= anzahl; i++) {
-			final Lieferant lieferant = findLieferantById(Long.valueOf(i));
+			final AbstractLieferant lieferant = findLieferantById(Long.valueOf(i));
 			lieferanten.add(lieferant);
 		}
 		return lieferanten;
 	}
 
-	public static List<Lieferant> findLieferantenByFirma(String firma) {
+	public static List<AbstractLieferant> findLieferantenByFirma(String firma) {
 		final int anzahl = firma.length();
-		final List<Lieferant> lieferanten = new ArrayList<>(anzahl);
+		final List<AbstractLieferant> lieferanten = new ArrayList<>(anzahl);
 		for (int i = 1; i <= anzahl; i++) {
-			final Lieferant lieferant = findLieferantById(Long.valueOf(i));
+			final AbstractLieferant lieferant = findLieferantById(Long.valueOf(i));
 			lieferant.setFirma(firma);
 			lieferanten.add(lieferant);
 		}
 		return lieferanten;
 	}
 
-	public static Lieferant findLieferantByEmail(String email) {
+	public static AbstractLieferant findLieferantByEmail(String email) {
 		if (email.startsWith("x")) {
 			return null;
 		}
 
-		final Lieferant lieferant = new Lieferant();
+		final AbstractLieferant lieferant = new AbstractLieferant();
 		lieferant.setId(Long.valueOf(email.length()));
 		lieferant.setFirma("Firma");
 		lieferant.setEmail(email);
@@ -336,8 +336,9 @@ public final class Mock {
 		return lieferant;
 	}
 
+	//TODO:Warum ist eine solche Suche sinnvoll?
 	public static List<Lieferantenbestellung> findBestellungenByLieferant(
-			Lieferant lieferant) {
+			AbstractLieferant lieferant) {
 		// Beziehungsgeflecht zwischen Lieferant und Bestellungen aufbauen
 		final int anzahl = lieferant.getId().intValue() % MAX_BESTELLUNGEN + 1; // 1,
 																				// 2,
@@ -352,7 +353,8 @@ public final class Mock {
 			bestellung.setLieferant(lieferant);
 			bestellungen.add(bestellung);
 		}
-		lieferant.setBestellungen(bestellungen);
+		//FIXME:Verursachte fehler in Maven-Site
+//		lieferant.setBestellungen(bestellungen);
 
 		return bestellungen;
 	}
@@ -362,10 +364,10 @@ public final class Mock {
 			return null;
 		}
 
-		final Lieferant lieferant = findLieferantById(id + 1); // andere ID fuer
+		final AbstractLieferant lieferant = findLieferantById(id + 1); // andere ID fuer
 																// den
 																// Lieferanten
-		System.out.println("Lieferant erhalten");
+		System.out.println("AbstractLieferant erhalten");
 		final Lieferantenbestellung bestellung = new Lieferantenbestellung();
 		bestellung.setId(id);
 		System.out.println("Bestellung erzeugt");
@@ -399,7 +401,9 @@ public final class Mock {
 		return bestellungliste;
 	}
 
-	public static Lieferantenbestellung createLieferantenbestellung(Lieferantenbestellung bestellung, Lieferant lieferant) {
+	public static Lieferantenbestellung createLieferantenbestellung
+		(Lieferantenbestellung bestellung, AbstractLieferant lieferant) {
+		
 		bestellung.setLieferant(lieferant);
 		final BigDecimal gesamtpreis = bestellung.getGesamtpreis();
 		gesamtpreis.setScale(BD_SCALE);
@@ -415,7 +419,7 @@ public final class Mock {
 		System.out.println("Bestellung mit ID=" + bestellungId + " geloescht");
 	}
 
-	public static Lieferant createLieferant(Lieferant lieferant) {
+	public static AbstractLieferant createLieferant(AbstractLieferant lieferant) {
 		// Neue IDs fuer Lieferant und zugehoerige Adresse
 		// Ein neuer Lieferant hat auch keine Bestellungen
 		final String firma = lieferant.getFirma();
@@ -423,12 +427,13 @@ public final class Mock {
 		final Lieferantenadresse adresse = lieferant.getLieferantenadresse();
 		adresse.setId((Long.valueOf(firma.length())) + 1);
 		adresse.setLieferant(lieferant);
-		lieferant.setBestellungen(null);
+		//FIXME:Verursachte fehler in Maven-Site
+//		lieferant.setBestellungen(null);
 		System.out.println("Neuer Lieferant: " + lieferant);
 		return lieferant;
 	}
 
-	public static void updateLieferant(Lieferant lieferant) {
+	public static void updateLieferant(AbstractLieferant lieferant) {
 		System.out.println("Aktualisierter Lieferant: " + lieferant);
 	}
 
