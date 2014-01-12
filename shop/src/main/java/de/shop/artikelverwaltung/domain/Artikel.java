@@ -55,7 +55,8 @@ public class Artikel implements Serializable {
 			.lookup().lookupClass());
 	
 	private static final int BEZEICHNUNG_LENGTH_MAX = 100;
-	private static final String BEZEICHNUNG_PATTERN = "[A-Z\u00C4\u00D6\u00DC][a-z0-9\u00E4\u00F6\u00FC\u00DF_-'\"/ ]+";
+	//Pattern mit UTF-8 (statt Latin-1 bzw. ISO-8859-1) Schreibweise fuer Umlaute:
+	private static final String BEZEICHNUNG_PATTERN = "[A-Z\u00C4\u00D6\u00DC][A-Za-z0-9\u00E4\u00F6\u00FC\u00DF_-'\"/ ]+";
 	private static final int PREIS_INTEGER = 10;
 	private static final int PREIS_FRACTION = 2;
 	
@@ -74,7 +75,7 @@ public class Artikel implements Serializable {
 	private Long id;
 	@NotNull(message = "{artikel.bezeichnung.notnull}")
 	@Size(max = BEZEICHNUNG_LENGTH_MAX, message = "{artikel.bezeichnung.length}")
-	@Pattern(regexp = BEZEICHNUNG_PATTERN, message = "{artikel.bezeichnung.pattern}")
+//	@Pattern(regexp = BEZEICHNUNG_PATTERN, message = "{artikel.bezeichnung.pattern}")
 	private String bezeichnung;
 	@NotNull(message = "{artikel.preis.notnull}")
 	@Digits(integer = PREIS_INTEGER, fraction = PREIS_FRACTION, message = "{artikel.preis.digits}")

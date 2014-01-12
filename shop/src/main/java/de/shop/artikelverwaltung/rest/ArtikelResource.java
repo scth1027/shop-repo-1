@@ -11,6 +11,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 import static javax.ws.rs.core.MediaType.TEXT_XML;
 
+import java.lang.invoke.MethodHandles;
 import java.net.URI;
 import java.util.List;
 
@@ -33,6 +34,8 @@ import javax.ws.rs.core.Link;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import org.jboss.logging.Logger;
+
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.artikelverwaltung.service.ArtikelService;
 import de.shop.util.interceptor.Log;
@@ -51,6 +54,8 @@ import de.shop.util.rest.UriHelper;
 @RequestScoped
 @Log
 public class ArtikelResource {
+	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass());
+	
 	public static final String ARTIKEL_ID_PATH_PARAM = "artikelId";
 	public static final String ARTIKEL_BEZEICHNUNG_QUERY_PARAM = "bezeichnung";
 
@@ -127,6 +132,8 @@ public class ArtikelResource {
 		artikel.setId(null);
 		
 		artikel = as.createArtikel(artikel);
+		LOGGER.tracef("Artikel: %s", artikel);
+		
 		return Response.created(getUriArtikel(artikel, uriInfo)).build();
 	}
 
@@ -135,6 +142,11 @@ public class ArtikelResource {
 	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces
 	public void updateArtikel(@Valid Artikel artikel) {
+		final Artikel orgArtikel = as.findArtikelById(artikel.getId());
+		LOGGER.tracef("Artikel vorher: %s", orgArtikel);
+		
+		LOGGER.tracef("Artikel nachher: %s", artikel);
+		
 		as.updateArtikel(artikel);
 	}
 
