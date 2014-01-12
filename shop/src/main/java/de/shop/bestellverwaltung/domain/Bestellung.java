@@ -6,9 +6,11 @@ import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.EAGER;
 
 import java.lang.invoke.MethodHandles;
-import java.math.BigDecimal;
 import java.net.URI;
-import java.util.List;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Basic;
 import javax.persistence.Cacheable;
@@ -17,15 +19,20 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedEntityGraphs;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.PostPersist;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.Valid;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -38,43 +45,33 @@ import de.shop.util.persistence.AbstractAuditable;
 @XmlRootElement
 @Entity
 // TODO MySQL 5.7 kann einen Index nicht 2x anlegen
-@Table(indexes = { @Index(columnList = "kunde_fk"),
-		@Index(columnList = "erzeugt") })
+@Table(indexes = {
+	@Index(columnList = "kunde_fk"),
+	@Index(columnList = "erzeugt")
+})
 @NamedQueries({
-		@NamedQuery(name = Bestellung.FIND_BESTELLUNGEN_BY_KUNDE, query = "SELECT b"
-				+ " FROM   Bestellung b"
-				+ " WHERE  b.kunde = :"
-				+ Bestellung.PARAM_KUNDE),
-		@NamedQuery(name = Bestellung.FIND_KUNDE_BY_ID, query = "SELECT b.kunde"
-				+ " FROM   Bestellung b"
-				+ " WHERE  b.id = :"
-				+ Bestellung.PARAM_ID) })
-/*
- * @NamedEntityGraphs({
- * 
- * @NamedEntityGraph(name = Bestellung.GRAPH_LIEFERUNGEN, attributeNodes =
- * 
- * @NamedAttributeNode("lieferungen"))
- * 
- * })
- */
+	@NamedQuery(name  = Bestellung.FIND_BESTELLUNGEN_BY_KUNDE,
+                query = "SELECT b"
+			            + " FROM   Bestellung b"
+						+ " WHERE  b.kunde = :" + Bestellung.PARAM_KUNDE),
+	@NamedQuery(name  = Bestellung.FIND_KUNDE_BY_ID,
+ 			    query = "SELECT b.kunde"
+                        + " FROM   Bestellung b"
+  			            + " WHERE  b.id = :" + Bestellung.PARAM_ID)
+})
 @Cacheable
 public class Bestellung extends AbstractAuditable {
+	private static final long serialVersionUID = 275266329757419299L;
 
-	private static final long serialVersionUID = -9110571232439282099L;
-
-	private static final Logger LOGGER = Logger.getLogger(MethodHandles
-			.lookup().lookupClass());
-
+	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass());
+	
 	private static final String PREFIX = "Bestellung.";
-	public static final String FIND_BESTELLUNGEN_BY_KUNDE = PREFIX
-			+ "findBestellungenByKunde";
-	public static final String FIND_KUNDE_BY_ID = PREFIX
-			+ "findBestellungKundeById";
-
+	public static final String FIND_BESTELLUNGEN_BY_KUNDE = PREFIX + "findBestellungenByKunde";
+	public static final String FIND_KUNDE_BY_ID = PREFIX + "findBestellungKundeById";
+	
 	public static final String PARAM_KUNDE = "kunde";
 	public static final String PARAM_ID = "id";
-
+	
 	public static final String GRAPH_LIEFERUNGEN = PREFIX + "lieferungen";
 
 	@Id
@@ -86,126 +83,142 @@ public class Bestellung extends AbstractAuditable {
 	@JoinColumn(name = "kunde_fk", nullable = false, insertable = false, updatable = false)
 	@XmlTransient
 	private AbstractKunde kunde;
-
-	@Digits(integer = 10, fraction = 2, message = "{bestellung.preis.digits}")
-	private BigDecimal gesamtpreis;
-
-	@NotNull(message = "{bestellung.bestellstatus.NotNull}")
-	private Bestellstatus bestellstatus;
+	
+	@Transient
+	private URI kundeUri;
 
 	@OneToMany(fetch = EAGER, cascade = { PERSIST, REMOVE })
 	@JoinColumn(name = "bestellung_fk", nullable = false)
-	@NotEmpty(message = "{bestellung.bestellpositionen.notEmpty}")
+	@NotEmpty(message = "{bestellung.Postenen.notEmpty}")
 	@Valid
-	private List<Posten> posten;
+	private Set<Posten> Postenen;
+	
+	@ManyToMany
+	@JoinTable(name = "bestellung_lieferung",
+			   joinColumns = @JoinColumn(name = "bestellung_fk"),
+			                 inverseJoinColumns = @JoinColumn(name = "lieferung_fk"))
 
-	@Transient
-	private URI kundeURI;
-
-	public URI getKundeURI() {
-		return kundeURI;
+	@XmlElement
+	public Date getDatum() {
+		return getErzeugt();
+	}
+	
+	public void setDatum(Date datum) {
+		setErzeugt(datum);
 	}
 
-	public void setKundeURI(URI kundeURI) {
-		this.kundeURI = kundeURI;
+	public Bestellung() {
+		super();
 	}
-
+	
+	public Bestellung(Set<Posten> Postenen) {
+		super();
+		this.Postenen = Postenen;
+	}
+	
+	@PostPersist
+	private void postPersist() {
+		LOGGER.debugf("Neue Bestellung mit ID=%d", id);
+	}
+	
 	public Long getId() {
 		return id;
 	}
-
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Set<Posten> getPostenen() {
+		if (Postenen == null) {
+			return null;
+		}
+		
+		return Collections.unmodifiableSet(Postenen);
+	}
+	
+	public void setPostenen(Set<Posten> Postenen) {
+		if (this.Postenen == null) {
+			this.Postenen = Postenen;
+			return;
+		}
+		
+		// Wiederverwendung der vorhandenen Collection
+		this.Postenen.clear();
+		if (Postenen != null) {
+			this.Postenen.addAll(Postenen);
+		}
+	}
+	
+	public Bestellung addPosten(Posten Posten) {
+		if (Postenen == null) {
+			Postenen = new HashSet<>();
+		}
+		Postenen.add(Posten);
+		return this;
 	}
 
 	public AbstractKunde getKunde() {
 		return kunde;
 	}
-
 	public void setKunde(AbstractKunde kunde) {
 		this.kunde = kunde;
 	}
 
-	public Bestellstatus getBestellstatus() {
-		return bestellstatus;
+	public URI getKundeUri() {
+		return kundeUri;
 	}
 
-	public void setBestellstatus(Bestellstatus bestellstatus) {
-		this.bestellstatus = bestellstatus;
+	public void setKundeUri(URI kundeUri) {
+		this.kundeUri = kundeUri;
 	}
-
-	public List<Posten> getPosten() {
-		return posten;
-	}
-
-	public void setPosten(List<Posten> posten) {
-		this.posten = posten;
-	}
-
-	public BigDecimal getGesamtpreis() {
-		return gesamtpreis;
-	}
-
-	public void setGesamtpreis(BigDecimal gesamtpreis) {
-		this.gesamtpreis = gesamtpreis.setScale(2);
+	
+	@Override
+	public String toString() {
+		final Long kundeId = kunde == null ? null : kunde.getId();
+		return "Bestellung [id=" + id + ", kundeId=" + kundeId + ", kundeUri=" + kundeUri
+				+ ", " + super.toString() + ']';
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((bestellstatus == null) ? 0 : bestellstatus.hashCode());
-		result = prime * result
-				+ ((gesamtpreis == null) ? 0 : gesamtpreis.hashCode());
-		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((kunde == null) ? 0 : kunde.hashCode());
-		result = prime * result
-				+ ((kundeURI == null) ? 0 : kundeURI.hashCode());
-		result = prime * result + ((posten == null) ? 0 : posten.hashCode());
+		result = prime * result + ((getErzeugt() == null) ? 0 : getErzeugt().hashCode());
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		final Bestellung other = (Bestellung) obj;
-		if (bestellstatus != other.bestellstatus)
-			return false;
-		if (gesamtpreis == null) {
-			if (other.gesamtpreis != null)
-				return false;
-		} else if (!gesamtpreis.equals(other.gesamtpreis))
-			return false;
-		if (id != other.id)
-			return false;
+		
 		if (kunde == null) {
-			if (other.kunde != null)
+			if (other.kunde != null) {
 				return false;
-		} else if (!kunde.equals(other.kunde))
+			}
+		}
+		else if (!kunde.equals(other.kunde)) {
 			return false;
-		if (kundeURI == null) {
-			if (other.kundeURI != null)
+		}
+		
+		if (getErzeugt() == null) {
+			if (other.getErzeugt() != null) {
 				return false;
-		} else if (!kundeURI.equals(other.kundeURI))
+			}
+		}
+		else if (!getErzeugt().equals(other.getErzeugt())) {
 			return false;
-		if (posten == null) {
-			if (other.posten != null)
-				return false;
-		} else if (!posten.equals(other.posten))
-			return false;
+		}
+		
 		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "Bestellung [id=" + id + ", kunde=" + kunde + ", gesamtpreis="
-				+ gesamtpreis + ", bestellstatus=" + bestellstatus
-				+ ", posten=" + posten + ", kundeURI=" + kundeURI + "]";
 	}
 }

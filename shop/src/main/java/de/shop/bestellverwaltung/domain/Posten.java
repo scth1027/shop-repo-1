@@ -12,8 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.NamedQueries;
 import javax.persistence.PostPersist;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -23,22 +23,25 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.jboss.logging.Logger;
 
 import de.shop.artikelverwaltung.domain.Artikel;
+import de.shop.util.persistence.AbstractAuditable;
 
 @Entity
-// TODO MySQL 5.7 kann einen Index nicht 2x anlegen --> War der Fehler das Komma vergessen?
 @Table(indexes = { @Index(columnList = "bestellung_fk"),
 				   @Index(columnList = "artikel_fk") })
-/*
-@NamedQueries({ @NamedQuery(name = Posten.FIND_LADENHUETER, query = "SELECT a"
-		+ " FROM   Artikel a"
-		+ " WHERE  a NOT IN (SELECT bp.artikel FROM Bestellposition bp)") })
-		*/
-public class Posten {
+@NamedQueries({
+    @NamedQuery(name  = Posten.FIND_LADENHUETER,
+   	            query = "SELECT a"
+   	            	    + " FROM   Artikel a"
+   	            	    + " WHERE  a NOT IN (SELECT bp.artikel FROM Posten bp)")
+})
+public class Posten extends AbstractAuditable {
+
+	private static final long serialVersionUID = 1L;
 
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles
 			.lookup().lookupClass());
 
-	private static final String PREFIX = "Bestellposition.";
+	private static final String PREFIX = "Posten.";
 	public static final String FIND_LADENHUETER = PREFIX + "findLadenhueter";
 	private static final int ANZAHL_MIN = 1;
 	
@@ -59,12 +62,49 @@ public class Posten {
 	@Basic(optional = false)
 	private int anzahl;
 
+	public Posten() {
+		super();
+	}
+	
+	public Posten(Artikel artikel) {
+		super();
+		this.artikel = artikel;
+		this.anzahl = 1;
+	}
+	
+	public Posten(Artikel artikel, short anzahl) {
+		super();
+		this.artikel = artikel;
+		this.anzahl = anzahl;
+	}
+	
+	@PostPersist
+	private void postPersist() {
+		LOGGER.debugf("Neuer Posten mit ID=%d", id);
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
 	public Artikel getArtikel() {
 		return artikel;
 	}
 
 	public void setArtikel(Artikel artikel) {
 		this.artikel = artikel;
+	}
+	
+	public URI getArtikelUri() {
+		return artikelUri;
+	}
+	
+	public void setArtikelUri(URI artikelUri) {
+		this.artikelUri = artikelUri;
 	}
 
 	public int getAnzahl() {
@@ -98,7 +138,8 @@ public class Posten {
 		if (artikel == null) {
 			if (other.artikel != null)
 				return false;
-		} else if (!artikel.equals(other.artikel))
+		}
+		else if (!artikel.equals(other.artikel))
 			return false;
 		return true;
 	}

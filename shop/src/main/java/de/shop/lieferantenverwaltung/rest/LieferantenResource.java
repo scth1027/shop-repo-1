@@ -52,7 +52,6 @@ import de.shop.lieferantenverwaltung.domain.Lieferant;
 import de.shop.lieferantenverwaltung.service.LieferantService;
 import de.shop.lieferantenverwaltung.service.LieferantService.FetchType;
 import de.shop.lieferantenverwaltung.service.LieferantService.OrderType;
-import de.shop.util.Mock;
 import de.shop.util.interceptor.Log;
 import de.shop.util.rest.UriHelper;
 
@@ -123,7 +122,6 @@ public class LieferantenResource {
 	@GET
 	@Path("{" + LIEFERANTEN_ID_PATH_PARAM + ":[1-9][0-9]*}")
 	public Response findLieferantById(@PathParam(LIEFERANTEN_ID_PATH_PARAM) Long id) {
-		// TODO Anwendungskern statt Mock
 		final Lieferant lieferant = ls.findLieferantById(id, FetchType.NUR_LIEFERANT);
 		if (lieferant == null) {
 			throw new NotFoundException("Kein Lieferant mit der ID " + id
@@ -144,7 +142,6 @@ public class LieferantenResource {
 					String email) {
 		List<? extends Lieferant> lieferanten = null;
 		Lieferant lieferant = null;
-		// TODO Mehrere Query-Parameter koennen angegeben sein
 		if (!Strings.isNullOrEmpty(firma)) {
 			lieferanten = ls.findLieferantenByFirma(firma, FetchType.NUR_LIEFERANT);
 		} 
@@ -215,7 +212,6 @@ public class LieferantenResource {
 			@QueryParam(LIEFERANTEN_FIRMA_QUERY_PARAM) String firma) {
 		List<? extends Lieferant> lieferanten = null;
 		if (firma != null) {
-			// TODO Anwendungskern statt Mock
 			lieferanten = ls.findLieferantenByFirma(firma, FetchType.NUR_LIEFERANT);
 			if (lieferanten.isEmpty()) {
 				throw new NotFoundException("Kein Lieferant mit Firma "
@@ -223,8 +219,7 @@ public class LieferantenResource {
 			}
 		}
 		else {
-			// TODO Anwendungskern statt Mock
-			lieferanten = Mock.findAllLieferanten();
+			lieferanten = ls.findAllLieferanten(FetchType.NUR_LIEFERANT, OrderType.KEINE);
 			if (lieferanten.isEmpty()) {
 				throw new NotFoundException("Keine Lieferanten vorhanden.");
 			}
@@ -243,11 +238,9 @@ public class LieferantenResource {
 	@Path("{" + LIEFERANTEN_ID_PATH_PARAM + ":[1-9][0-9]*}/einkaeufe")
 	public Response findEinkaeufeByLieferantId(
 			@PathParam(LIEFERANTEN_ID_PATH_PARAM) Long lieferantId) {
-		// TODO Anwendungskern statt Mock
 		final Lieferant lieferant = ls.findLieferantById(lieferantId,
 				FetchType.NUR_LIEFERANT);
-		final List<Einkauf> einkaeufe = Mock
-				.findEinkaeufeByLieferant(lieferant);
+		final List<Einkauf> einkaeufe = es.findEinkaeufeByLieferant(lieferant);
 		if (einkaeufe.isEmpty()) {
 			throw new NotFoundException("Zur ID " + lieferantId
 					+ " wurden keine Einkaeufe gefunden");
@@ -281,8 +274,7 @@ public class LieferantenResource {
 		final Lieferant lieferant = ls.findLieferantById(lieferantId,
 				FetchType.MIT_EINKAEUFEN);
 
-		final Collection<Einkauf> einkaeufe = es
-				.findEinkaeufeByLieferant(lieferant);
+		final Collection<Einkauf> einkaeufe = es.findEinkaeufeByLieferant(lieferant);
 		final int anzahl = einkaeufe.size();
 		final Collection<Long> bestellungenIds = new ArrayList<>(anzahl);
 		for (Einkauf einkauf : einkaeufe) {

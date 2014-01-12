@@ -52,7 +52,6 @@ import de.shop.kundenverwaltung.domain.AbstractKunde;
 import de.shop.kundenverwaltung.service.KundeService;
 import de.shop.kundenverwaltung.service.KundeService.FetchType;
 import de.shop.kundenverwaltung.service.KundeService.OrderType;
-import de.shop.util.Mock;
 import de.shop.util.interceptor.Log;
 import de.shop.util.rest.UriHelper;
 
@@ -144,13 +143,14 @@ public class KundenResource {
 		// TODO Mehrere Query-Parameter koennen angegeben sein
 		if (!Strings.isNullOrEmpty(nachname)) {
 			kunden = ks.findKundenByNachname(nachname, FetchType.NUR_KUNDE);
-		} 
+		}
 		else if (!Strings.isNullOrEmpty(plz)) {
 			kunden = ks.findKundenByPLZ(plz);
 		}
 		else if (!Strings.isNullOrEmpty(email)) {
 			kunde = ks.findKundeByEmail(email);
-		} else {
+		}
+		else {
 			kunden = ks.findAllKunden(FetchType.NUR_KUNDE, OrderType.ID);
 		}
 
@@ -163,9 +163,11 @@ public class KundenResource {
 			// FIXME JDK 8 hat Lambda-Ausdruecke
 			// kunden.parallelStream()
 			// .forEach(k -> setStructuralLinks(k, uriInfo));
-			entity = new GenericEntity<List<? extends AbstractKunde>>(kunden) {};
+			entity = new GenericEntity<List<? extends AbstractKunde>>(kunden) {
+			};
 			links = getTransitionalLinksKunden(kunden, uriInfo);
-		} else if (kunde != null) {
+		}
+		else if (kunde != null) {
 			entity = kunde;
 			links = getTransitionalLinks(kunde, uriInfo);
 		}
@@ -216,9 +218,9 @@ public class KundenResource {
 				throw new NotFoundException("Kein Kunde mit Nachname "
 						+ nachname + " gefunden.");
 			}
-		} else {
-			// TODO Anwendungskern statt Mock
-			kunden = Mock.findAllKunden();
+		}
+		else {
+			kunden = ks.findAllKunden(FetchType.NUR_KUNDE, OrderType.ID);
 			if (kunden.isEmpty()) {
 				throw new NotFoundException("Keine Kunden vorhanden.");
 			}
@@ -240,8 +242,7 @@ public class KundenResource {
 		// TODO Anwendungskern statt Mock
 		final AbstractKunde kunde = ks.findKundeById(kundeId,
 				FetchType.NUR_KUNDE);
-		final List<Bestellung> bestellungen = Mock
-				.findBestellungenByKunde(kunde);
+		final List<Bestellung> bestellungen = bs.findBestellungenByKunde(kunde);
 		if (bestellungen.isEmpty()) {
 			throw new NotFoundException("Zur ID " + kundeId
 					+ " wurden keine Bestellungen gefunden");
@@ -361,7 +362,7 @@ public class KundenResource {
 	}
 
 	// Bestellungslink setzen
-	private void setStructuralLinks(AbstractKunde kunde, UriInfo uriInfo) {
+	public void setStructuralLinks(AbstractKunde kunde, UriInfo uriInfo) {
 		// URI fuer Bestellungen setzen
 		final URI uri = getUriBestellungen(kunde, uriInfo);
 		kunde.setBestellungenURI(uri);
@@ -380,7 +381,7 @@ public class KundenResource {
 	}
 
 	// VerwaltungsURIs erzeugen
-	private Link[] getTransitionalLinks(AbstractKunde kunde, UriInfo uriInfo) {
+	public Link[] getTransitionalLinks(AbstractKunde kunde, UriInfo uriInfo) {
 		final Link self = Link.fromUri(getUriKunde(kunde, uriInfo))
 				.rel(SELF_LINK).build();
 		System.out.println("Self gesetzt");

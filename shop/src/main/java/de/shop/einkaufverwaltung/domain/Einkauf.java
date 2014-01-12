@@ -49,15 +49,6 @@ import de.shop.util.persistence.AbstractAuditable;
 				+ " FROM   Einkauf l"
 				+ " WHERE  l.id = :"
 				+ Einkauf.PARAM_ID) })
-/*
- * @NamedEntityGraphs({
- * 
- * @NamedEntityGraph(name = Einkauf.GRAPH_LIEFERUNGEN, attributeNodes =
- * 
- * @NamedAttributeNode("lieferungen"))
- * 
- * })
- */
 @Cacheable
 public class Einkauf extends AbstractAuditable {
 
@@ -180,24 +171,28 @@ public class Einkauf extends AbstractAuditable {
 		if (gesamtpreis == null) {
 			if (other.gesamtpreis != null)
 				return false;
-		} else if (!gesamtpreis.equals(other.gesamtpreis))
+		}
+		else if (!gesamtpreis.equals(other.gesamtpreis))
 			return false;
 		if (id != other.id)
 			return false;
 		if (lieferant == null) {
 			if (other.lieferant != null)
 				return false;
-		} else if (!lieferant.equals(other.lieferant))
+		}
+		else if (!lieferant.equals(other.lieferant))
 			return false;
 		if (lieferantURI == null) {
 			if (other.lieferantURI != null)
 				return false;
-		} else if (!lieferantURI.equals(other.lieferantURI))
+		}
+		else if (!lieferantURI.equals(other.lieferantURI))
 			return false;
 		if (einkaufposten == null) {
 			if (other.einkaufposten != null)
 				return false;
-		} else if (!einkaufposten.equals(other.einkaufposten))
+		}
+		else if (!einkaufposten.equals(other.einkaufposten))
 			return false;
 		return true;
 	}

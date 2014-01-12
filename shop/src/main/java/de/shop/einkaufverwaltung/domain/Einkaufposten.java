@@ -95,7 +95,8 @@ public class Einkaufposten {
 		if (artikel == null) {
 			if (other.artikel != null)
 				return false;
-		} else if (!artikel.equals(other.artikel))
+		}
+		else if (!artikel.equals(other.artikel))
 			return false;
 		return true;
 	}
@@ -103,5 +104,13 @@ public class Einkaufposten {
 	@Override
 	public String toString() {
 		return "Posten [artikel=" + artikel + ", anzahl=" + anzahl + "]";
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 }

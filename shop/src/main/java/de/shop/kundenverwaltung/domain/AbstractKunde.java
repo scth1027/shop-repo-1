@@ -1,24 +1,25 @@
 package de.shop.kundenverwaltung.domain;
 
-import java.io.Serializable;
-import java.lang.invoke.MethodHandles;
-import java.net.URI;
-import java.util.Date;
-import java.util.List;
-
 import static de.shop.util.Constants.KEINE_ID;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.TemporalType.DATE;
 
+import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Index;
+import javax.persistence.Inheritance;
 import javax.persistence.JoinColumn;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
@@ -35,20 +36,18 @@ import javax.persistence.Temporal;
 import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
-import javax.validation.groups.Default;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlTransient;
 
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.ScriptAssert;
-import org.jboss.logging.Logger;
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonSubTypes.Type;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
+import org.hibernate.validator.constraints.Email;
+import org.jboss.logging.Logger;
 
 import de.shop.bestellverwaltung.domain.Bestellung;
 
@@ -308,9 +307,17 @@ public abstract class AbstractKunde implements Serializable {
 		if (email == null) {
 			if (other.email != null)
 				return false;
-		} else if (!email.equals(other.email))
+		}
+		else if (!email.equals(other.email))
 			return false;
 		return true;
+	}
+
+	public void addBestellung(Bestellung bestellung) {
+		if (bestellungen == null) {
+			bestellungen = new ArrayList<>();
+		}
+		bestellungen.add(bestellung);
 	}
 
 }

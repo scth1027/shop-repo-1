@@ -2,19 +2,23 @@ package de.shop.bestellverwaltung.service;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
-import java.util.Locale;
 
-import javax.enterprise.context.Dependent;
 import javax.decorator.Decorator;
 import javax.decorator.Delegate;
+import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Any;
 import javax.inject.Inject;
 
 import org.jboss.logging.Logger;
 
+import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.kundenverwaltung.domain.AbstractKunde;
 
+/**
+ * @author <a href="mailto:Juergen.Zimmermann@HS-Karlsruhe.de">J&uuml;rgen
+ *         Zimmermann</a>
+ */
 @Decorator
 @Dependent
 public abstract class BestellungServiceMitGeschenkverpackung implements
@@ -27,11 +31,25 @@ public abstract class BestellungServiceMitGeschenkverpackung implements
 	@Any
 	private BestellungService bs;
 
+	/**
+	 * {inheritDoc}
+	 */
 	@Override
-	public Bestellung findBestellungById(Long id) {
-		return bs.findBestellungById(id);
+	public Bestellung findBestellungById(Long id, FetchType fetch) {
+		return bs.findBestellungById(id, fetch);
 	}
 
+	/**
+	 * {inheritDoc}
+	 */
+	@Override
+	public AbstractKunde findKundeById(Long id) {
+		return bs.findKundeById(id);
+	}
+
+	/**
+	 * {inheritDoc}
+	 */
 	@Override
 	public List<Bestellung> findBestellungenByKunde(AbstractKunde kunde) {
 		return bs.findBestellungenByKunde(kunde);
@@ -41,10 +59,35 @@ public abstract class BestellungServiceMitGeschenkverpackung implements
 	 * {inheritDoc}
 	 */
 	@Override
-	public Bestellung createBestellung(Bestellung bestellung, AbstractKunde kunde,
-			Locale locale) {
-		LOGGER.warn("Geschenkverpackung noch nicht implementiert");
+	public List<Bestellung> findBestellungenByIds(List<Long> ids,
+			FetchType fetch) {
+		return bs.findBestellungenByIds(ids, fetch);
+	}
 
-		return bs.createBestellung(bestellung, kunde, locale);
+	/**
+	 * {inheritDoc}
+	 */
+	@Override
+	public Bestellung createBestellung(Bestellung bestellung, Long kundeId) {
+		LOGGER.warn("Geschenkverpackung noch nicht implementiert");
+		return bs.createBestellung(bestellung, kundeId);
+	}
+
+	/**
+	 * {inheritDoc}
+	 */
+	@Override
+	public Bestellung createBestellung(Bestellung bestellung,
+			AbstractKunde kunde) {
+		LOGGER.warn("Geschenkverpackung noch nicht implementiert");
+		return bs.createBestellung(bestellung, kunde);
+	}
+
+	/**
+	 * {inheritDoc}
+	 */
+	@Override
+	public List<Artikel> ladenhueter(int anzahl) {
+		return bs.ladenhueter(anzahl);
 	}
 }

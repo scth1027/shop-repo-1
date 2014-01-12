@@ -19,16 +19,15 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.validation.ConstraintViolationException;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.google.common.collect.ImmutableMap;
 
-import de.shop.bestellverwaltung.domain.Posten;
-import de.shop.bestellverwaltung.domain.Posten_;
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.bestellverwaltung.domain.Bestellung_;
+import de.shop.bestellverwaltung.domain.Posten;
+import de.shop.bestellverwaltung.domain.Posten_;
 import de.shop.kundenverwaltung.domain.AbstractKunde;
 import de.shop.kundenverwaltung.domain.AbstractKunde_;
 import de.shop.kundenverwaltung.domain.Adresse_;
@@ -271,7 +270,7 @@ public class KundeService implements Serializable {
 
 		final Join<AbstractKunde, Bestellung> b = k
 				.join(AbstractKunde_.bestellungen);
-		final Join<Bestellung, Posten> bp = b.join(Bestellung_.posten);
+		final Join<Bestellung, Posten> bp = b.join(Bestellung_.Postenen);
 		criteriaQuery.where(
 				builder.gt(bp.<Integer> get(Posten_.anzahl), minMenge))
 				.distinct(true);
@@ -331,7 +330,7 @@ public class KundeService implements Serializable {
 		}
 		if (minBestMenge != null) {
 			final Path<Integer> anzahlPath = k
-					.join(AbstractKunde_.bestellungen).join(Bestellung_.posten)
+					.join(AbstractKunde_.bestellungen).join(Bestellung_.Postenen)
 					.get(Posten_.anzahl);
 			final Predicate tmpPred = builder.gt(anzahlPath, minBestMenge);
 			pred = pred == null ? tmpPred : builder.and(pred, tmpPred);

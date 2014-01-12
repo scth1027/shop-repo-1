@@ -3,6 +3,7 @@ package de.shop.lieferantenverwaltung.domain;
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -274,6 +275,13 @@ public class Lieferant implements Serializable {
 		else if (!email.equals(other.email))
 			return false;
 		return true;
+	}
+
+	public void addEinkauf(Einkauf einkauf) {
+		if (einkaeufe == null) {
+			einkaeufe = new ArrayList<>();
+		}
+		einkaeufe.add(einkauf);
 	}
 
 }

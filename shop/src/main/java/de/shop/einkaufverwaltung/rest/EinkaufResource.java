@@ -1,5 +1,6 @@
 package de.shop.einkaufverwaltung.rest;
 
+import static de.shop.einkaufverwaltung.service.EinkaufService.FetchType.NUR_EINKAUF;
 import static de.shop.util.Constants.FIRST_LINK;
 import static de.shop.util.Constants.LAST_LINK;
 import static de.shop.util.Constants.SELF_LINK;
@@ -43,6 +44,7 @@ import de.shop.util.rest.UriHelper;
 @Consumes
 @RequestScoped
 public class EinkaufResource {
+
 	@Context
 	private UriInfo uriInfo;
 
@@ -61,9 +63,7 @@ public class EinkaufResource {
 	@GET
 	@Path("{id:[1-9][0-9]*}")
 	public Response findEinkaufById(@PathParam("id") Long id) {
-		// TODO Anwendungskern statt Mock, Verwendung von Locale
-		System.out.println("IN Methode");
-		final Einkauf einkauf = es.findEinkaufById(id);
+		final Einkauf einkauf = es.findEinkaufById(id, NUR_EINKAUF);
 		if (einkauf == null) {
 			throw new NotFoundException("Keine Einkauf mit der ID " + id
 					+ " gefunden.");
@@ -76,22 +76,6 @@ public class EinkaufResource {
 				.links(getTransitionalLinks(einkauf, uriInfo)).build();
 
 		return response;
-	}
-
-	@GET
-	public Response findAllEinkaeufe() {
-		// Aufruf der Mock zur Erzeugung der Einkaeufe
-		final List<Einkauf> all = es.findAllEinkaeufe();
-		// Plausibilitäsprüfung
-		if (all.isEmpty())
-			throw new NotFoundException(
-					"Es konnten keine Lieferanten gefunden werden!");
-		// Erstellen der Links für die jeweilign Einkaeufe
-		for (Einkauf einkauf : all) {
-			setStructuralLinks(einkauf, uriInfo);
-		}
-		return Response.ok(new GenericEntity<List<Einkauf>>(all) {
-		}).links(setTransitionalLinksEinkaeufe(all, uriInfo)).build();
 	}
 
 	private Link[] setTransitionalLinksEinkaeufe(
@@ -148,25 +132,9 @@ public class EinkaufResource {
 		lieferantenId = lieferantenId.substring(lieferantenId.lastIndexOf("/") + 1);
 		final Lieferant l = ls.findLieferantById(Long.valueOf(lieferantenId).longValue(), FetchType.NUR_LIEFERANT);
 		System.out.println("Einkauf angekommen im Service");
-		einkauf = es.createEinkauf(einkauf, l, headers.getLanguage());
+		einkauf = es.createEinkauf(einkauf, l);
 		System.out.println("Einkauf ist aus der Mock zurück");
 		return Response.created(getUriEinkauf(einkauf, uriInfo)).build();
 	}
-
-	@DELETE
-	@Path("{id:[1-9][0-9]*}")
-	@Produces
-	public void deleteEinkauf(@PathParam("id") Long einkaufId) {
-		es.deleteEinkauf(einkaufId);
-	}
-
-	@PUT
-	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
-	@Produces
-	public void updateEinkauf(@Valid Einkauf einkauf) {
-		// TODO Anwendungskern statt Mock
-		es.updateEinkauf(einkauf);
-	}
-
 }
 

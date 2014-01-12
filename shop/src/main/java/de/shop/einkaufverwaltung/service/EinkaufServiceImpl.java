@@ -1,17 +1,28 @@
 package de.shop.einkaufverwaltung.service;
 
+import static de.shop.util.Constants.KEINE_ID;
+
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.validation.constraints.NotNull;
 
+import de.shop.bestellverwaltung.domain.Bestellung;
+import de.shop.bestellverwaltung.domain.Posten;
 import de.shop.einkaufverwaltung.domain.Einkauf;
+import de.shop.einkaufverwaltung.domain.Einkaufposten;
+import de.shop.kundenverwaltung.domain.AbstractKunde;
+import de.shop.kundenverwaltung.service.KundeService;
 import de.shop.lieferantenverwaltung.domain.Lieferant;
-import de.shop.util.Mock;
+import de.shop.lieferantenverwaltung.service.LieferantService;
+import de.shop.lieferantenverwaltung.service.LieferantService.FetchType;
 import de.shop.util.interceptor.Log;
 
 @Dependent
@@ -24,39 +35,67 @@ public class EinkaufServiceImpl implements EinkaufService, Serializable {
 	@NeuerEinkauf
 	private transient Event<Einkauf> event;
 
+	@Inject
+	private transient EntityManager em;
+
+	@Inject
+	private LieferantService ls;
+
 	@Override
-	public Einkauf createEinkauf(Einkauf einkauf, Lieferant lieferant, Locale locale) {
-		einkauf = Mock.createEinkauf(einkauf, lieferant);
-		event.fire(einkauf);
-		System.out.println("da");
+	public Einkauf createEinkauf(Einkauf einkauf, Lieferant lieferant) {
+		if (einkauf == null) {
+			return null;
+		}
+
+		// Den persistenten Kunden mit der transienten Bestellung verknuepfen
+		if (!em.contains(lieferant)) {
+			lieferant = ls.findLieferantById(lieferant.getId(),
+					LieferantService.FetchType.NUR_LIEFERANT);
+		}
+		lieferant.addEinkauf(einkauf);
+		einkauf.setLieferant(lieferant);
+		;
+
+		// Vor dem Abspeichern IDs zuruecksetzen:
+		// IDs koennten einen Wert != null haben, wenn sie durch einen Web
+		// Service uebertragen wurden
+		lieferant.setId(KEINE_ID);
+		for (Einkaufposten bp : einkauf.getEinkaufposten()) {
+			bp.setId(KEINE_ID);
+		}
 		return einkauf;
 	}
 
 	@Override
 	@NotNull(message = "einkauf.notFound.id")
-	public Einkauf findEinkaufById(Long id) {
-		return Mock.findEinkaufById(id);
+	public Einkauf findEinkaufById(Long id, FetchType fetch) {
+		if (id == null) {
+			return null;
+		}
+
+		Einkauf einkauf;
+		switch (fetch) {
+		case NUR_EINKAUF:
+			einkauf = em.find(Einkauf.class, id);
+			break;
+
+		default:
+			einkauf = em.find(Einkauf.class, id);
+			break;
+		}
+		return einkauf;
 	}
 
 	@Override
 	@NotNull(message = "einkauf.notFound.lieferant")
 	public List<Einkauf> findEinkaeufeByLieferant(Lieferant lieferant) {
-		return Mock.findEinkaeufeByLieferant(lieferant);
+		if (lieferant == null) {
+			return Collections.emptyList();
+		}
+		return em
+				.createNamedQuery(Einkauf.FIND_EINKAEUFE_BY_LIEFERANT,
+						Einkauf.class)
+				.setParameter(Einkauf.PARAM_LIEFERANT, lieferant)
+				.getResultList();
 	}
-
-	@Override
-	public List<Einkauf> findAllEinkaeufe() {
-		return Mock.findAllEinkaeufe();
-	}
-
-	@Override
-	public void deleteEinkauf(Long einkaufId) {
-		Mock.deleteEinkauf(einkaufId);
-	}
-
-	@Override
-	public void updateEinkauf(Einkauf einkauf) {
-		Mock.updateEinkauf(einkauf);
-	}
-
 }
