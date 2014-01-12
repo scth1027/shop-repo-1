@@ -26,8 +26,8 @@ import com.google.common.collect.ImmutableMap;
 
 import de.shop.einkaufverwaltung.domain.Einkauf;
 import de.shop.einkaufverwaltung.domain.Einkaufposten;
-import de.shop.lieferantenbestellverwaltung.domain.Einkaufposten_;
-import de.shop.lieferantenbestellverwaltung.domain.Einkauf_;
+import de.shop.einkaufverwaltung.domain.Einkaufposten_;
+import de.shop.einkaufverwaltung.domain.Einkauf_;
 import de.shop.lieferantenverwaltung.domain.Lieferant;
 import de.shop.lieferantenverwaltung.domain.Lieferant_;
 import de.shop.lieferantenverwaltung.domain.Lieferantenadresse_;
@@ -258,7 +258,7 @@ public class LieferantService implements Serializable {
 
 		final Join<Lieferant, Einkauf> b = k
 				.join(Lieferant_.einkaeufe);
-		final Join<Einkauf, Einkaufposten> bp = b.join(Einkauf_.postenLB);
+		final Join<Einkauf, Einkaufposten> bp = b.join(Einkauf_.einkaufposten);
 		criteriaQuery.where(
 				builder.gt(bp.<Integer> get(Einkaufposten_.anzahl), minMenge))
 				.distinct(true);
@@ -318,7 +318,7 @@ public class LieferantService implements Serializable {
 		}
 		if (minBestMenge != null) {
 			final Path<Integer> anzahlPath = k
-					.join(Lieferant_.einkaeufe).join(Einkauf_.postenLB)
+					.join(Lieferant_.einkaeufe).join(Einkauf_.einkaufposten)
 					.get(Einkaufposten_.anzahl);
 			final Predicate tmpPred = builder.gt(anzahlPath, minBestMenge);
 			pred = pred == null ? tmpPred : builder.and(pred, tmpPred);
