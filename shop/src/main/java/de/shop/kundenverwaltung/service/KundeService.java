@@ -270,7 +270,7 @@ public class KundeService implements Serializable {
 
 		final Join<AbstractKunde, Bestellung> b = k
 				.join(AbstractKunde_.bestellungen);
-		final Join<Bestellung, Posten> bp = b.join(Bestellung_.Postenen);
+		final Join<Bestellung, Posten> bp = b.join(Bestellung_.postenen);
 		criteriaQuery.where(
 				builder.gt(bp.<Integer> get(Posten_.anzahl), minMenge))
 				.distinct(true);
@@ -330,7 +330,7 @@ public class KundeService implements Serializable {
 		}
 		if (minBestMenge != null) {
 			final Path<Integer> anzahlPath = k
-					.join(AbstractKunde_.bestellungen).join(Bestellung_.Postenen)
+					.join(AbstractKunde_.bestellungen).join(Bestellung_.postenen)
 					.get(Posten_.anzahl);
 			final Predicate tmpPred = builder.gt(anzahlPath, minBestMenge);
 			pred = pred == null ? tmpPred : builder.and(pred, tmpPred);

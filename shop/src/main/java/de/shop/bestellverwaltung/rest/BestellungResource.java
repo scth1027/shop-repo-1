@@ -98,9 +98,9 @@ public class BestellungResource {
 		}
 		
 		// URIs fuer Artikel in den Postenen setzen
-		final Collection<Posten> Posten = bestellung.getPostenen();
-		if (Posten != null && !Posten.isEmpty()) {
-			for (Posten bp : Posten) {
+		final Collection<Posten> postenen = bestellung.getPostenen();
+		if (postenen != null && !postenen.isEmpty()) {
+			for (Posten bp : postenen) {
 				final URI artikelUri = artikelResource.getUriArtikel(bp.getArtikel(), uriInfo);
 				bp.setArtikelUri(artikelUri);
 			}
@@ -186,9 +186,9 @@ public class BestellungResource {
 		}
 		
 		// IDs der (persistenten) Artikel ermitteln
-		final Collection<Posten> Postenen = bestellung.getPostenen();
-		final List<Long> artikelIds = new ArrayList<>(Postenen.size());
-		for (Posten bp : Postenen) {
+		final Collection<Posten> postenen = bestellung.getPostenen();
+		final List<Long> artikelIds = new ArrayList<>(postenen.size());
+		for (Posten bp : postenen) {
 			final URI artikelUri = bp.getArtikelUri();
 			if (artikelUri == null) {
 				continue;
@@ -220,7 +220,7 @@ public class BestellungResource {
 		// Postenen mit nicht-gefundene Artikel werden eliminiert.
 		int i = 0;
 		final Set<Posten> neuePostenen = new HashSet<>();
-		for (Posten bp : Postenen) {
+		for (Posten bp : postenen) {
 			// Artikel-ID der aktuellen Posten (s.o.):
 			// artikelIds haben gleiche Reihenfolge wie Postenen
 			final long artikelId = artikelIds.get(i++);

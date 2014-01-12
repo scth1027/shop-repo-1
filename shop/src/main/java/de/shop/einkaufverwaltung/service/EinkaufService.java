@@ -1,7 +1,6 @@
 package de.shop.einkaufverwaltung.service;
 
 import java.util.List;
-import java.util.Locale;
 
 import javax.validation.constraints.NotNull;
 

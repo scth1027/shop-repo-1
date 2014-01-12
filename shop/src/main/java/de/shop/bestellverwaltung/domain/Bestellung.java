@@ -22,9 +22,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedAttributeNode;
-import javax.persistence.NamedEntityGraph;
-import javax.persistence.NamedEntityGraphs;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -91,7 +88,7 @@ public class Bestellung extends AbstractAuditable {
 	@JoinColumn(name = "bestellung_fk", nullable = false)
 	@NotEmpty(message = "{bestellung.Postenen.notEmpty}")
 	@Valid
-	private Set<Posten> Postenen;
+	private Set<Posten> postenen;
 	
 	@ManyToMany
 	@JoinTable(name = "bestellung_lieferung",
@@ -111,9 +108,9 @@ public class Bestellung extends AbstractAuditable {
 		super();
 	}
 	
-	public Bestellung(Set<Posten> Postenen) {
+	public Bestellung(Set<Posten> postenen) {
 		super();
-		this.Postenen = Postenen;
+		this.postenen = postenen;
 	}
 	
 	@PostPersist
@@ -129,31 +126,31 @@ public class Bestellung extends AbstractAuditable {
 	}
 
 	public Set<Posten> getPostenen() {
-		if (Postenen == null) {
+		if (postenen == null) {
 			return null;
 		}
 		
-		return Collections.unmodifiableSet(Postenen);
+		return Collections.unmodifiableSet(postenen);
 	}
 	
-	public void setPostenen(Set<Posten> Postenen) {
-		if (this.Postenen == null) {
-			this.Postenen = Postenen;
+	public void setPostenen(Set<Posten> postenen) {
+		if (this.postenen == null) {
+			this.postenen = postenen;
 			return;
 		}
 		
 		// Wiederverwendung der vorhandenen Collection
-		this.Postenen.clear();
-		if (Postenen != null) {
-			this.Postenen.addAll(Postenen);
+		this.postenen.clear();
+		if (postenen != null) {
+			this.postenen.addAll(postenen);
 		}
 	}
 	
 	public Bestellung addPosten(Posten Posten) {
-		if (Postenen == null) {
-			Postenen = new HashSet<>();
+		if (postenen == null) {
+			postenen = new HashSet<>();
 		}
-		Postenen.add(Posten);
+		postenen.add(Posten);
 		return this;
 	}
 

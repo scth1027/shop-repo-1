@@ -5,24 +5,17 @@ import static de.shop.util.Constants.KEINE_ID;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.validation.constraints.NotNull;
 
-import de.shop.bestellverwaltung.domain.Bestellung;
-import de.shop.bestellverwaltung.domain.Posten;
 import de.shop.einkaufverwaltung.domain.Einkauf;
 import de.shop.einkaufverwaltung.domain.Einkaufposten;
-import de.shop.kundenverwaltung.domain.AbstractKunde;
-import de.shop.kundenverwaltung.service.KundeService;
 import de.shop.lieferantenverwaltung.domain.Lieferant;
 import de.shop.lieferantenverwaltung.service.LieferantService;
-import de.shop.lieferantenverwaltung.service.LieferantService.FetchType;
 import de.shop.util.interceptor.Log;
 
 @Dependent
@@ -54,7 +47,6 @@ public class EinkaufServiceImpl implements EinkaufService, Serializable {
 		}
 		lieferant.addEinkauf(einkauf);
 		einkauf.setLieferant(lieferant);
-		;
 
 		// Vor dem Abspeichern IDs zuruecksetzen:
 		// IDs koennten einen Wert != null haben, wenn sie durch einen Web
