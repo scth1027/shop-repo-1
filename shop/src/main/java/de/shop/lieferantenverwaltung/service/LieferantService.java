@@ -19,7 +19,6 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.validation.ConstraintViolationException;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -27,7 +26,7 @@ import com.google.common.collect.ImmutableMap;
 
 import de.shop.einkaufverwaltung.domain.Einkauf;
 import de.shop.einkaufverwaltung.domain.Einkaufposten;
-import de.shop.lieferantenbestellverwaltung.domain.PostenLB_;
+import de.shop.lieferantenbestellverwaltung.domain.Einkaufposten_;
 import de.shop.lieferantenbestellverwaltung.domain.Einkauf_;
 import de.shop.lieferantenverwaltung.domain.Lieferant;
 import de.shop.lieferantenverwaltung.domain.Lieferant_;
@@ -261,7 +260,7 @@ public class LieferantService implements Serializable {
 				.join(Lieferant_.einkaeufe);
 		final Join<Einkauf, Einkaufposten> bp = b.join(Einkauf_.postenLB);
 		criteriaQuery.where(
-				builder.gt(bp.<Integer> get(PostenLB_.anzahl), minMenge))
+				builder.gt(bp.<Integer> get(Einkaufposten_.anzahl), minMenge))
 				.distinct(true);
 
 		return em.createQuery(criteriaQuery).getResultList();
@@ -284,7 +283,7 @@ public class LieferantService implements Serializable {
 	 *                zu @Size, falls die Liste leer ist
 	 */
 	@NotNull(message = "{lieferant.notFound.criteria}")
-	public List<Lieferant> findLieferantenByCriteria(String email,
+	public List<Lieferant>findLieferantenByCriteria(String email,
 			String firma, String plz, Date seit, Short minBestMenge) {
 		// SELECT DISTINCT k
 		// FROM Lieferant k
@@ -320,7 +319,7 @@ public class LieferantService implements Serializable {
 		if (minBestMenge != null) {
 			final Path<Integer> anzahlPath = k
 					.join(Lieferant_.einkaeufe).join(Einkauf_.postenLB)
-					.get(PostenLB_.anzahl);
+					.get(Einkaufposten_.anzahl);
 			final Predicate tmpPred = builder.gt(anzahlPath, minBestMenge);
 			pred = pred == null ? tmpPred : builder.and(pred, tmpPred);
 		}

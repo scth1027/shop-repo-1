@@ -10,7 +10,7 @@ import de.shop.lieferantenverwaltung.domain.Lieferant;
 
 public interface EinkaufService {
 
-	Einkauf createEinkauf(Einkauf einkauf, Lieferant lieferant,Locale locale);
+	Einkauf createEinkauf(Einkauf einkauf, Lieferant lieferant, Locale locale);
 
 	@NotNull(message = "einkauf.notFound.id")
 	Einkauf findEinkaufById(Long id);

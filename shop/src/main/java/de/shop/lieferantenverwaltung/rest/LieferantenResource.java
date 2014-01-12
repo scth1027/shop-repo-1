@@ -136,9 +136,12 @@ public class LieferantenResource {
 
 	@GET
 	public Response findLieferanten(
-			@QueryParam(LIEFERANTEN_FIRMA_QUERY_PARAM) @Pattern(regexp = Lieferant.FIRMA_PATTERN_PUB, message = "{lieferant.firma.pattern}") String firma,
-			@QueryParam(LIEFERANTEN_PLZ_QUERY_PARAM) @Pattern(regexp = "\\d{5}", message = "{lieferantenadresse.plz}") String plz,
-			@QueryParam(LIEFERANTEN_EMAIL_QUERY_PARAM) @Email(message = "{lieferant.email}") String email) {
+			@QueryParam(LIEFERANTEN_FIRMA_QUERY_PARAM) @Pattern(regexp = Lieferant.
+					FIRMA_PATTERN_PUB, message = "{lieferant.firma.pattern}") String firma,
+			@QueryParam(LIEFERANTEN_PLZ_QUERY_PARAM) @Pattern(regexp = "\\d{5}",
+					message = "{lieferantenadresse.plz}") String plz,
+			@QueryParam(LIEFERANTEN_EMAIL_QUERY_PARAM) @Email(message = "{lieferant.email}")
+					String email) {
 		List<? extends Lieferant> lieferanten = null;
 		Lieferant lieferant = null;
 		// TODO Mehrere Query-Parameter koennen angegeben sein
@@ -150,7 +153,8 @@ public class LieferantenResource {
 		}
 		else if (!Strings.isNullOrEmpty(email)) {
 			lieferant = ls.findLieferantByEmail(email);
-		} else {
+		}
+		else {
 			lieferanten = ls.findAllLieferanten(FetchType.NUR_LIEFERANT, OrderType.ID);
 		}
 
@@ -163,9 +167,10 @@ public class LieferantenResource {
 			// FIXME JDK 8 hat Lambda-Ausdruecke
 			// lieferanten.parallelStream()
 			// .forEach(k -> setStructuralLinks(k, uriInfo));
-			entity = new GenericEntity<List<? extends Lieferant>>(lieferanten) {};
+			entity = new GenericEntity<List<? extends Lieferant>>(lieferanten) { };
 			links = getTransitionalLinksLieferanten(lieferanten, uriInfo);
-		} else if (lieferant != null) {
+		}
+		else if (lieferant != null) {
 			entity = lieferant;
 			links = getTransitionalLinks(lieferant, uriInfo);
 		}
@@ -216,7 +221,8 @@ public class LieferantenResource {
 				throw new NotFoundException("Kein Lieferant mit Firma "
 						+ firma + " gefunden.");
 			}
-		} else {
+		}
+		else {
 			// TODO Anwendungskern statt Mock
 			lieferanten = Mock.findAllLieferanten();
 			if (lieferanten.isEmpty()) {
@@ -357,7 +363,7 @@ public class LieferantenResource {
 								einkaeufe.get(lastPos), uriInfo))
 				.rel(LAST_LINK).build();
 
-		return new Link[] { self, first, last };
+		return new Link[] {self, first, last };
 	}
 
 	// Einkaufslink setzen
@@ -399,7 +405,7 @@ public class LieferantenResource {
 								lieferant.getId(), uriInfo)).rel(REMOVE_LINK)
 				.build();
 		System.out.println("Delete gesetzt");
-		return new Link[] { self, add, update, remove };
+		return new Link[] {self, add, update, remove };
 	}
 
 	private Link[] getTransitionalLinksLieferanten(
@@ -415,7 +421,7 @@ public class LieferantenResource {
 				.fromUri(getUriLieferant(lieferanten.get(lastPos), uriInfo))
 				.rel(LAST_LINK).build();
 
-		return new Link[] { first, last };
+		return new Link[] {first, last };
 	}
 
 }

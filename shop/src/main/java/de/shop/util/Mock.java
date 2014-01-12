@@ -401,8 +401,7 @@ public final class Mock {
 		return einkaufliste;
 	}
 
-	public static Einkauf createEinkauf
-		(Einkauf einkauf, Lieferant lieferant) {
+	public static Einkauf createEinkauf(Einkauf einkauf, Lieferant lieferant) {
 		
 		einkauf.setLieferant(lieferant);
 		final BigDecimal gesamtpreis = einkauf.getGesamtpreis();

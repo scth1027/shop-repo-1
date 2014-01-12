@@ -9,7 +9,7 @@ import de.shop.lieferantenverwaltung.domain.Lieferant;
  */
 @ApplicationException(rollback = true)
 public class LieferantDeleteEinkaufException extends
-		LieferantServiceException {
+		AbstractLieferantServiceException {
 	private static final long serialVersionUID = 2237194289969083093L;
 
 	private static final String MESSAGE_KEY = "lieferant.deleteMitEinkauf";

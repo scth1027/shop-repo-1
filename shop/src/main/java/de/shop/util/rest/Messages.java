@@ -54,7 +54,8 @@ public class Messages {
 		List<Locale> localesList;
 		if (locales == null) {
 			localesList = LOCALES_DEFAULT;
-		} else {
+		}
+		else {
 			localesList = new ArrayList<>();
 			final Iterable<String> localesIter = Splitter.on(',').trimResults()
 					.omitEmptyStrings().split(locales);

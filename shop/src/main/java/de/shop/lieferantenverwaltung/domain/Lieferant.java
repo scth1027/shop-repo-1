@@ -1,6 +1,4 @@
 package de.shop.lieferantenverwaltung.domain;
-//TODO:Ändern der Klasse zurück in Lieferant (Abstract macht keinen Sinn)
-//TODO: Überprüfen der Queries, ob diese auch Sinvoll sind
 
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
@@ -92,7 +90,8 @@ import de.shop.einkaufverwaltung.domain.Einkauf;
 				+ " FROM  Lieferant l"
 				+ " WHERE l.seit = :"
 				+ Lieferant.PARAM_LIEFERANT_SEIT) })
-@NamedEntityGraphs({ @NamedEntityGraph(name = Lieferant.GRAPH_EINKAEUFE, attributeNodes = @NamedAttributeNode("einkaeufe")) })
+@NamedEntityGraphs({ @NamedEntityGraph(name = Lieferant.GRAPH_EINKAEUFE,
+				attributeNodes = @NamedAttributeNode("einkaeufe")) })
 public class Lieferant implements Serializable {
 
 	private static final long serialVersionUID = 1430771599450877428L;
@@ -271,7 +270,8 @@ public class Lieferant implements Serializable {
 		if (email == null) {
 			if (other.email != null)
 				return false;
-		} else if (!email.equals(other.email))
+		}
+		else if (!email.equals(other.email))
 			return false;
 		return true;
 	}
