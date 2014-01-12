@@ -5,7 +5,6 @@ import static de.shop.util.Constants.FIRST_LINK;
 import static de.shop.util.Constants.LAST_LINK;
 import static de.shop.util.Constants.REMOVE_LINK;
 import static de.shop.util.Constants.SELF_LINK;
-//import static de.shop.util.Constants.LIST_LINK;
 import static de.shop.util.Constants.UPDATE_LINK;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
@@ -125,6 +124,8 @@ public class ArtikelResource {
 	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces
 	public Response createArtikel(@Valid Artikel artikel) {
+		artikel.setId(null);
+		
 		artikel = as.createArtikel(artikel);
 		return Response.created(getUriArtikel(artikel, uriInfo)).build();
 	}
@@ -151,17 +152,10 @@ public class ArtikelResource {
 				artikel.getId(), uriInfo);
 	}
 
-	// TODO Hinzufügen des LIST_LINKS
 	// Verwaltungs URIs erzeugen
 	public Link[] getTransitionalLinks(Artikel artikel, UriInfo uriInfo) {
 		final Link self = Link.fromUri(getUriArtikel(artikel, uriInfo))
 				.rel(SELF_LINK).build();
-		/*
-		 * final Link list =
-		 * Link.fromUri(uriHelper.getUri(ArtikelResource.class,
-		 * "findAllArtikel", artikel.getId(), uriInfo)) .rel(LIST_LINK)
-		 * .build();
-		 */
 		final Link add = Link
 				.fromUri(uriHelper.getUri(ArtikelResource.class, uriInfo))
 				.rel(ADD_LINK).build();
@@ -173,7 +167,7 @@ public class ArtikelResource {
 						uriHelper.getUri(ArtikelResource.class,
 								"deleteArtikel", artikel.getId(), uriInfo))
 				.rel(REMOVE_LINK).build();
-		return new Link[] {self/* , list */, add, update, remove};
+		return new Link[] {self, add, update, remove};
 	}
 
 	public Link[] getTransitionalLinksArtikelListe(List<Artikel> artikelliste,
