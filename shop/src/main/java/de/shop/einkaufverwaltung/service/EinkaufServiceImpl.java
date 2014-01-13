@@ -1,6 +1,7 @@
 package de.shop.einkaufverwaltung.service;
 
 import static de.shop.util.Constants.KEINE_ID;
+import static de.shop.util.Constants.LOADGRAPH;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -9,19 +10,23 @@ import java.util.List;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import javax.validation.constraints.NotNull;
 
 import de.shop.einkaufverwaltung.domain.Einkauf;
 import de.shop.einkaufverwaltung.domain.Einkaufposten;
 import de.shop.lieferantenverwaltung.domain.Lieferant;
 import de.shop.lieferantenverwaltung.service.LieferantService;
+import de.shop.lieferantenverwaltung.service.LieferantService.FetchType;
+import de.shop.lieferantenverwaltung.service.LieferantService.OrderType;
 import de.shop.util.interceptor.Log;
 
 @Dependent
 @Log
 public class EinkaufServiceImpl implements EinkaufService, Serializable {
-
+	
 	private static final long serialVersionUID = 3222788597519982182L;
 
 	@Inject
@@ -58,6 +63,17 @@ public class EinkaufServiceImpl implements EinkaufService, Serializable {
 		return einkauf;
 	}
 
+	@Override
+	@NotNull(message = "einkauf.notFound.all")
+	public List<Einkauf> findAllEinkaeufe(OrderType order) {
+		final TypedQuery<Einkauf> query = OrderType.ID.equals(order) ? em
+				.createNamedQuery(Einkauf.FIND_EINKAEUFE_ORDER_BY_ID,
+					Einkauf.class) : em.createNamedQuery(
+				Einkauf.FIND_EINKAEUFE, Einkauf.class);
+		
+		return query.getResultList();
+	}
+	
 	@Override
 	@NotNull(message = "einkauf.notFound.id")
 	public Einkauf findEinkaufById(Long id, FetchType fetch) {

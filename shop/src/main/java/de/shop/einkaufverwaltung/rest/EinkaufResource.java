@@ -22,6 +22,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.Response;
@@ -33,6 +34,7 @@ import de.shop.lieferantenverwaltung.domain.Lieferant;
 import de.shop.lieferantenverwaltung.rest.LieferantenResource;
 import de.shop.lieferantenverwaltung.service.LieferantService;
 import de.shop.lieferantenverwaltung.service.LieferantService.FetchType;
+import de.shop.lieferantenverwaltung.service.LieferantService.OrderType;
 import de.shop.util.rest.UriHelper;
 
 @Path("/einkaeufe")
@@ -56,7 +58,24 @@ public class EinkaufResource {
 
 	@Inject
 	private EinkaufService es;
-
+	
+	// Alle Einkaeufe ausgeben
+	@GET
+	public Response findAllEinkaeufe() {
+		// Aufruf des Service zur Lieferantenerzeugung
+		final List<Einkauf> all = es.findAllEinkaeufe(OrderType.KEINE);
+		// Plausibilitäsprüfung
+		if (all.isEmpty())
+			throw new NotFoundException(
+					"Es konnten keine Einkaeufe gefunden werden!");
+		// Erstellen der Links für die jeweilign Lieferanten
+		for (Einkauf einkauf : all) {
+			setStructuralLinks(einkauf, uriInfo);
+		}
+		return Response.ok(new GenericEntity<List<Einkauf>>(all) {
+		}).links(getTransitionalLinksEinkaeufe(all, uriInfo)).build();
+	}
+	
 	@GET
 	@Path("{id:[1-9][0-9]*}")
 	public Response findEinkaufById(@PathParam("id") Long id) {
@@ -75,7 +94,7 @@ public class EinkaufResource {
 		return response;
 	}
 
-	private Link[] setTransitionalLinksEinkaeufe(
+	/*private Link[] setTransitionalLinksEinkaeufe(
 			List<Einkauf> einkaeufe, UriInfo uriInfo) {
 		if (einkaeufe == null || einkaeufe.isEmpty()) {
 			return null;
@@ -90,7 +109,7 @@ public class EinkaufResource {
 				.rel(LAST_LINK).build();
 
 		return new Link[] {first, last};
-	}
+	}*/
 
 	private URI getEinkaeufeURI(Einkauf einkauf, UriInfo uriInfo2) {
 		return uriHelper.getUri(EinkaufResource.class, "findEinkaufById",
@@ -118,6 +137,23 @@ public class EinkaufResource {
 		return uriHelper.getUri(EinkaufResource.class, "findEinkaufById",
 				einkauf.getId(), uriInfo);
 	}
+	
+	private Link[] getTransitionalLinksEinkaeufe(
+			List<? extends Einkauf> einkaeufe, UriInfo uriInfo) {
+		if (einkaeufe == null || einkaeufe.isEmpty()) {
+			return null;
+		}
+
+		final Link first = Link.fromUri(getUriEinkauf(einkaeufe.get(0), uriInfo))
+				.rel(FIRST_LINK).build();
+		final int lastPos = einkaeufe.size() - 1;
+		final Link last = Link
+				.fromUri(getUriEinkauf(einkaeufe.get(lastPos), uriInfo))
+				.rel(LAST_LINK).build();
+
+		return new Link[] {first, last };
+	}
+	
 
 	@POST
 	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })

@@ -41,13 +41,17 @@ import de.shop.util.persistence.AbstractAuditable;
 @Table(indexes = { @Index(columnList = "lieferant_fk"),
 		@Index(columnList = "erzeugt") })
 @NamedQueries({
-		@NamedQuery(name = Einkauf.FIND_EINKAEUFE_BY_LIEFERANT, query = "SELECT l"
-				+ " FROM   Einkauf l"
-				+ " WHERE  l.lieferant = :"
+		@NamedQuery(name = Einkauf.FIND_EINKAEUFE, query = "SELECT e"
+				+ " FROM   Einkauf e"),
+		@NamedQuery(name = Einkauf.FIND_EINKAEUFE_ORDER_BY_ID, query = "SELECT   e"
+				+ " FROM  Einkauf e" + " ORDER BY e.id"),
+		@NamedQuery(name = Einkauf.FIND_EINKAEUFE_BY_LIEFERANT, query = "SELECT e"
+				+ " FROM   Einkauf e"
+				+ " WHERE  e.lieferant = :"
 				+ Einkauf.PARAM_LIEFERANT),
-		@NamedQuery(name = Einkauf.FIND_LIEFERANT_BY_ID, query = "SELECT l.lieferant"
-				+ " FROM   Einkauf l"
-				+ " WHERE  l.id = :"
+		@NamedQuery(name = Einkauf.FIND_LIEFERANT_BY_ID, query = "SELECT e.lieferant"
+				+ " FROM   Einkauf e"
+				+ " WHERE  e.id = :"
 				+ Einkauf.PARAM_ID) })
 @Cacheable
 public class Einkauf extends AbstractAuditable {
@@ -58,10 +62,14 @@ public class Einkauf extends AbstractAuditable {
 			.lookup().lookupClass());
 
 	private static final String PREFIX = "Einkauf.";
+	public static final String FIND_EINKAEUFE = PREFIX
+			+ "findEinkaeufe";
+	public static final String FIND_EINKAEUFE_ORDER_BY_ID = PREFIX
+			+ "findEinkaeufeOrderById";
 	public static final String FIND_EINKAEUFE_BY_LIEFERANT = PREFIX
-			+ "findEinkaufenByLieferant";
+			+ "findEinkaeufeByLieferant";
 	public static final String FIND_LIEFERANT_BY_ID = PREFIX
-			+ "findEinkaufLieferantById";
+			+ "findLieferantById";
 
 	public static final String PARAM_LIEFERANT = "lieferant";
 	public static final String PARAM_ID = "id";

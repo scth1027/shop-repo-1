@@ -62,7 +62,6 @@ import de.shop.einkaufverwaltung.domain.Einkauf;
 // Zu email wird unten ein UNIQUE Index definiert
 @Table(name = "lieferant", indexes = @Index(columnList = "firma"))
 @Inheritance
-@DiscriminatorColumn(name = "art", length = 1)
 @NamedQueries({
 		@NamedQuery(name = Lieferant.FIND_LIEFERANTEN, query = "SELECT l"
 				+ " FROM   Lieferant l"),
