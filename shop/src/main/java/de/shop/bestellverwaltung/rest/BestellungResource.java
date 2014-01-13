@@ -43,9 +43,15 @@ import de.shop.kundenverwaltung.rest.KundenResource;
 import de.shop.util.interceptor.Log;
 import de.shop.util.rest.UriHelper;
 
+/*
+ * BestellungResource Klasse
+ * enthaelt die RestServices fuer die Bestellverwaltung/Domain
+ * Zugriff auf Anwendungslogik
+ */
 
 @Path("/bestellungen")
-@Produces({APPLICATION_JSON, APPLICATION_XML + ";qs=0.75", TEXT_XML + ";qs=0.5" })
+@Produces({APPLICATION_JSON, APPLICATION_XML + ";qs=0.75",
+		TEXT_XML + ";qs=0.5" })
 @Consumes
 @RequestScoped
 @Transactional
@@ -70,9 +76,11 @@ public class BestellungResource {
 	private UriHelper uriHelper;
 	
 	/**
-	 * Mit der URL /bestellungen/{id} eine Bestellung ermitteln
-	 * @param id ID der Bestellung
-	 * @return Objekt mit Bestelldaten, falls die ID vorhanden ist
+	 * Suche die Bestellung zu gegebener ID.
+	 * 
+	 * @param id
+	 *            ID der gesuchten Bestellung.
+	 * @return Die gefundene Bestellung, sonst null.
 	 */
 	@GET
 	@Path("{id:[1-9][0-9]*}")
@@ -89,43 +97,13 @@ public class BestellungResource {
 		return response;
 	}
 	
-	public void setStructuralLinks(Bestellung bestellung, UriInfo uriInfo) {
-		// URI fuer Kunde setzen
-		final AbstractKunde kunde = bestellung.getKunde();
-		if (kunde != null) {
-			final URI kundeUri = kundeResource.getUriKunde(bestellung.getKunde(), uriInfo);
-			bestellung.setKundeUri(kundeUri);
-		}
-		
-		// URIs fuer Artikel in den Postenen setzen
-		final Collection<Posten> postenen = bestellung.getPostenen();
-		if (postenen != null && !postenen.isEmpty()) {
-			for (Posten bp : postenen) {
-				final URI artikelUri = artikelResource.getUriArtikel(bp.getArtikel(), uriInfo);
-				bp.setArtikelUri(artikelUri);
-			}
-		}
-	}
-	
-	public Link[] getTransitionalLinks(Bestellung bestellung, UriInfo uriInfo) {
-		final Link self = Link.fromUri(getUriBestellung(bestellung, uriInfo))
-                              .rel(SELF_LINK)
-                              .build();
-		final Link add = Link.fromUri(uriHelper.getUri(BestellungResource.class, uriInfo))
-                             .rel(ADD_LINK)
-                             .build();
-		return new Link[] { self, add };
-	}
-
-	public URI getUriBestellung(Bestellung bestellung, UriInfo uriInfo) {
-		return uriHelper.getUri(BestellungResource.class, "findBestellungById", bestellung.getId(), uriInfo);
-	}
-	
+	//FIXME:Muss das nicht in die LieferantenResource?
 	/**
-	 * Mit der URL /bestellungen/{id}/lieferungen die Lieferung ermitteln
-	 * zu einer bestimmten Bestellung ermitteln
-	 * @param id ID der Bestellung
-	 * @return Objekt mit Lieferdaten, falls die ID vorhanden ist
+	 * Suche nach Lieferung zu Bestellungs ID.
+	 * 
+	 * @param id
+	 *            ID der Bestellung.
+	 * @return Die gefundenen Lieferungen, sonst null.
 	 */
 	@GET
 	@Path("{id:[1-9][0-9]*}/lieferungen")
@@ -144,11 +122,13 @@ public class BestellungResource {
 			       .build();
 	}
 
-	
+	//FIXME:Muss das nicht in KundeService
 	/**
-	 * Mit der URL /bestellungen/{id}/kunde den Kunden einer Bestellung ermitteln
-	 * @param id ID der Bestellung
-	 * @return Objekt mit Kundendaten, falls die ID vorhanden ist
+	 * Suche nach Kunde zu Bestellungs ID.
+	 * 
+	 * @param id
+	 *            ID der Bestellung.
+	 * @return Den gefundenen Kunden, sonst null.
 	 */
 	@GET
 	@Path("{id:[1-9][0-9]*}/kunde")
@@ -165,9 +145,11 @@ public class BestellungResource {
 
 	
 	/**
-	 * Mit der URL /bestellungen eine neue Bestellung anlegen
-	 * @param bestellung die neue Bestellung
-	 * @return Objekt mit Bestelldaten, falls die ID vorhanden ist
+	 * Eine neue Bestellung in der DB anlegen.
+	 * 
+	 * @param bestellung
+	 *            Die anzulegende Bestellung.
+	 * @return Die neue Bestellung einschliesslich generierter ID.
 	 */
 	@POST
 	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
@@ -252,6 +234,8 @@ public class BestellungResource {
 	}
 	
 	/**
+	 * Ausloesen der BeanValidation fuer eine Artikelliste von IDs die leer ist
+	 * 
 	 * @NotNull verletzen, um die entsprechende Meldung zu verursachen, weil keine einzige Artikel-ID
 	 *          eine gueltige Zahl war.
 	 * @return null
@@ -262,11 +246,63 @@ public class BestellungResource {
 	}
 	
 	/**
-	 * @NotNull verletzen, um die entsprechende Meldung zu verursachen, weil die Kunde-Id ungueltig ist.
+	 * Ausloesen der BeanValidation fuer eine Kundenliste von IDs die leer ist
+	 * 
+	 * @NotNull verletzen, um die entsprechende Meldung zu verursachen, weil keine einzige Kudnden-ID
+	 *          eine gueltige Zahl war.
 	 * @return null
 	 */
 	@NotNull(message = "{bestellung.kunde.id.invalid}")
 	public Long kundeIdInvalid() {
 		return null;
+	}
+	
+	/**
+	 * Bestellungs URI erzeugen.
+	 * 
+	 * @param bestellung
+	 *            Die Bestellungl zu dem eine URI erstellt wird.
+	 * @param uriInfo
+	 *            Die dazugehoerige UriInfo.     
+	 */
+	public URI getUriBestellung(Bestellung bestellung, UriInfo uriInfo) {
+		return uriHelper.getUri(BestellungResource.class, "findBestellungById", bestellung.getId(), uriInfo);
+	}
+	
+	/**
+	 * Verwatungs URIs erzeugen.
+	 * 
+	 * @param bestellung
+	 *            Die Bestellung zu dem die Verwaltungs URIs erzeugt werden sollen.
+	 * @param uriInfo
+	 *            Die dazugehoerige UriInfo.     
+	 */
+	public Link[] getTransitionalLinks(Bestellung bestellung, UriInfo uriInfo) {
+		final Link self = Link.fromUri(getUriBestellung(bestellung, uriInfo))
+                              .rel(SELF_LINK)
+                              .build();
+		final Link add = Link.fromUri(uriHelper.getUri(BestellungResource.class, uriInfo))
+                             .rel(ADD_LINK)
+                             .build();
+		return new Link[] { self, add };
+	}
+	
+	//TODO:Kommentar --> Ich weiﬂ nicht was hier genau erzeugt wird
+	public void setStructuralLinks(Bestellung bestellung, UriInfo uriInfo) {
+		// URI fuer Kunde setzen
+		final AbstractKunde kunde = bestellung.getKunde();
+		if (kunde != null) {
+			final URI kundeUri = kundeResource.getUriKunde(bestellung.getKunde(), uriInfo);
+			bestellung.setKundeUri(kundeUri);
+		}
+		
+		// URIs fuer Artikel in den Postenen setzen
+		final Collection<Posten> postenen = bestellung.getPostenen();
+		if (postenen != null && !postenen.isEmpty()) {
+			for (Posten bp : postenen) {
+				final URI artikelUri = artikelResource.getUriArtikel(bp.getArtikel(), uriInfo);
+				bp.setArtikelUri(artikelUri);
+			}
+		}
 	}
 }

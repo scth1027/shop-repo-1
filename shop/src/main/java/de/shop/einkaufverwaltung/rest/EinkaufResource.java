@@ -59,23 +59,13 @@ public class EinkaufResource {
 	@Inject
 	private EinkaufService es;
 	
-	// Alle Einkaeufe ausgeben
-	@GET
-	public Response findAllEinkaeufe() {
-		// Aufruf des Service zur Lieferantenerzeugung
-		final List<Einkauf> all = es.findAllEinkaeufe(OrderType.KEINE);
-		// Plausibilitäsprüfung
-		if (all.isEmpty())
-			throw new NotFoundException(
-					"Es konnten keine Einkaeufe gefunden werden!");
-		// Erstellen der Links für die jeweilign Lieferanten
-		for (Einkauf einkauf : all) {
-			setStructuralLinks(einkauf, uriInfo);
-		}
-		return Response.ok(new GenericEntity<List<Einkauf>>(all) {
-		}).links(getTransitionalLinksEinkaeufe(all, uriInfo)).build();
-	}
-	
+	/**
+	 * Suche den Einkauf zu gegebener ID.
+	 * 
+	 * @param id
+	 *            ID des gesuchten Einkauf.
+	 * @return Der gefundene Einkauf, sonst null.
+	 */
 	@GET
 	@Path("{id:[1-9][0-9]*}")
 	public Response findEinkaufById(@PathParam("id") Long id) {
@@ -94,6 +84,114 @@ public class EinkaufResource {
 		return response;
 	}
 
+	/**
+	 * Suche nach allen Einkkaeufen.
+	 * 
+	 * @return Liste aller Einkaeufe.
+	 */
+	@GET
+	public Response findAllEinkaeufe() {
+		// Aufruf des Service zur Lieferantenerzeugung
+		final List<Einkauf> all = es.findAllEinkaeufe(OrderType.KEINE);
+		// Plausibilitäsprüfung
+		if (all.isEmpty())
+			throw new NotFoundException(
+					"Es konnten keine Einkaeufe gefunden werden!");
+		// Erstellen der Links für die jeweilign Lieferanten
+		for (Einkauf einkauf : all) {
+			setStructuralLinks(einkauf, uriInfo);
+		}
+		return Response.ok(new GenericEntity<List<Einkauf>>(all) {
+		}).links(getTransitionalLinksEinkaeufe(all, uriInfo)).build();
+	}
+	
+	/**
+	 * Einen neuen Einkauf in der DB anlegen.
+	 * 
+	 * @param einkauf
+	 *            Der anzulegende Einkauf.
+	 * @return Der neue Einkauf einschliesslich generierter ID.
+	 */
+	@POST
+	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
+	@Produces
+	public Response createEinkauf(@Valid Einkauf einkauf,
+			@Context HttpHeaders headers) {
+		String lieferantenId = einkauf.getLieferantURI().toString();
+		lieferantenId = lieferantenId.substring(lieferantenId.lastIndexOf("/") + 1);
+		final Lieferant l = ls.findLieferantById(Long.valueOf(lieferantenId).longValue(), FetchType.NUR_LIEFERANT);
+		einkauf = es.createEinkauf(einkauf, l);
+		return Response.created(getUriEinkauf(einkauf, uriInfo)).build();
+	}
+
+	/**
+	 * Einkauf URI erzeugen.
+	 * 
+	 * @param einkauf
+	 *            Der Einkauf zu dem eine URI erstellt wird.
+	 * @param uriInfo
+	 *            Die dazugehoerige UriInfo.     
+	 */
+	public URI getUriEinkauf(Einkauf einkauf, UriInfo uriInfo) {
+		return uriHelper.getUri(EinkaufResource.class, "findEinkaufById",
+				einkauf.getId(), uriInfo);
+	}
+	//FIXME:Löschbar?
+	private URI getEinkaeufeURI(Einkauf einkauf, UriInfo uriInfo2) {
+		return uriHelper.getUri(EinkaufResource.class, "findEinkaufById",
+				einkauf.getId(), uriInfo);
+
+	}
+	
+	/**
+	 * Verwatungs URIs erzeugen.
+	 * 
+	 * @param einkauf
+	 *            Der Einkauf zu dem die Verwaltungs URIs erzeugt werden sollen.
+	 * @param uriInfo
+	 *            Die dazugehoerige UriInfo.     
+	 */
+	private Link[] getTransitionalLinks(Einkauf einkauf, UriInfo uriInfo) {
+		final Link self = Link.fromUri(getUriEinkauf(einkauf, uriInfo))
+				.rel(SELF_LINK).build();
+		return new Link[] {self};
+	}
+	
+	/**
+	 * Verwaltungs URIs fuer Liste von Einkaeufen erzeugen.
+	 * 
+	 * @param einkaeufe
+	 *            Die Einkaeufe zu denen die Verwaltungs URIs erzeugt werden sollen.
+	 * @param uriInfo
+	 *            Die dazugehoerige UriInfo.     
+	 */
+	private Link[] getTransitionalLinksEinkaeufe(
+			List<? extends Einkauf> einkaeufe, UriInfo uriInfo) {
+		if (einkaeufe == null || einkaeufe.isEmpty()) {
+			return null;
+		}
+
+		final Link first = Link.fromUri(getUriEinkauf(einkaeufe.get(0), uriInfo))
+				.rel(FIRST_LINK).build();
+		final int lastPos = einkaeufe.size() - 1;
+		final Link last = Link
+				.fromUri(getUriEinkauf(einkaeufe.get(lastPos), uriInfo))
+				.rel(LAST_LINK).build();
+
+		return new Link[] {first, last };
+	}	
+	
+	//TODO:Kommentar --> Ich weiß nicht was erstellt wird
+	public void setStructuralLinks(Einkauf einkauf, UriInfo uriInfo) {
+		// URI fuer Lieferant setzen
+		final Lieferant lieferant = einkauf.getLieferant();
+		if (lieferant != null) {
+			final URI lieferantUri = lieferantResource.getUriLieferant(
+					einkauf.getLieferant(), uriInfo);
+			einkauf.setLieferantURI(lieferantUri);
+		}
+	}
+
 	/*private Link[] setTransitionalLinksEinkaeufe(
 			List<Einkauf> einkaeufe, UriInfo uriInfo) {
 		if (einkaeufe == null || einkaeufe.isEmpty()) {
@@ -110,64 +208,5 @@ public class EinkaufResource {
 
 		return new Link[] {first, last};
 	}*/
-
-	private URI getEinkaeufeURI(Einkauf einkauf, UriInfo uriInfo2) {
-		return uriHelper.getUri(EinkaufResource.class, "findEinkaufById",
-				einkauf.getId(), uriInfo);
-
-	}
-
-	public void setStructuralLinks(Einkauf einkauf, UriInfo uriInfo) {
-		// URI fuer Lieferant setzen
-		final Lieferant lieferant = einkauf.getLieferant();
-		if (lieferant != null) {
-			final URI lieferantUri = lieferantResource.getUriLieferant(
-					einkauf.getLieferant(), uriInfo);
-			einkauf.setLieferantURI(lieferantUri);
-		}
-	}
-
-	private Link[] getTransitionalLinks(Einkauf einkauf, UriInfo uriInfo) {
-		final Link self = Link.fromUri(getUriEinkauf(einkauf, uriInfo))
-				.rel(SELF_LINK).build();
-		return new Link[] {self};
-	}
-
-	public URI getUriEinkauf(Einkauf einkauf, UriInfo uriInfo) {
-		return uriHelper.getUri(EinkaufResource.class, "findEinkaufById",
-				einkauf.getId(), uriInfo);
-	}
-	
-	private Link[] getTransitionalLinksEinkaeufe(
-			List<? extends Einkauf> einkaeufe, UriInfo uriInfo) {
-		if (einkaeufe == null || einkaeufe.isEmpty()) {
-			return null;
-		}
-
-		final Link first = Link.fromUri(getUriEinkauf(einkaeufe.get(0), uriInfo))
-				.rel(FIRST_LINK).build();
-		final int lastPos = einkaeufe.size() - 1;
-		final Link last = Link
-				.fromUri(getUriEinkauf(einkaeufe.get(lastPos), uriInfo))
-				.rel(LAST_LINK).build();
-
-		return new Link[] {first, last };
-	}
-	
-
-	@POST
-	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
-	@Produces
-	public Response createEinkauf(@Valid Einkauf einkauf,
-			@Context HttpHeaders headers) {
-		// TODO Anwendungskern statt Mock
-		String lieferantenId = einkauf.getLieferantURI().toString();
-		lieferantenId = lieferantenId.substring(lieferantenId.lastIndexOf("/") + 1);
-		final Lieferant l = ls.findLieferantById(Long.valueOf(lieferantenId).longValue(), FetchType.NUR_LIEFERANT);
-		System.out.println("Einkauf angekommen im Service");
-		einkauf = es.createEinkauf(einkauf, l);
-		System.out.println("Einkauf ist aus der Mock zurück");
-		return Response.created(getUriEinkauf(einkauf, uriInfo)).build();
-	}
 }
 

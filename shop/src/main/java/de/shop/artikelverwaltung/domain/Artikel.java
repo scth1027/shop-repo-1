@@ -15,6 +15,7 @@ import javax.persistence.PostPersist;
 import javax.persistence.Table;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
+//import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -55,7 +56,7 @@ public class Artikel implements Serializable {
 	
 	private static final int BEZEICHNUNG_LENGTH_MAX = 100;
 	//Pattern mit UTF-8 (statt Latin-1 bzw. ISO-8859-1) Schreibweise fuer Umlaute:
-	private static final String BEZEICHNUNG_PATTERN = "[A-Z\u00C4\u00D6\u00DC][A-Za-z0-9\u00E4\u00F6\u00FC\u00DF_-'\"/ ]+";
+//	private static final String BEZEICHNUNG_PATTERN = "[A-Z\u00C4\u00D6\u00DC][A-Za-z0-9\u00E4\u00F6\u00FC\u00DF_-'\"/ ]+";
 	private static final int PREIS_INTEGER = 10;
 	private static final int PREIS_FRACTION = 2;
 	

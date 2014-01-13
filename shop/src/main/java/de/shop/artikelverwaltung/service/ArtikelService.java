@@ -46,6 +46,13 @@ public class ArtikelService implements Serializable {
 		return em.find(Artikel.class, id);
 	}
 	
+	/**
+	 * Suche Artikel zu den gegebenen IDs.
+	 * 
+	 * @param ids
+	 *            IDs den gesuchten Artikel.
+	 * @return Die gefundenen Artikel, sonst null.
+	 */
 	@Size(min = 1, message = "{artikel.notFound.ids}")
 	public List<Artikel> findArtikelByIds(List<Long> ids) {
 		if (ids == null || ids.isEmpty()) {
@@ -130,6 +137,7 @@ public class ArtikelService implements Serializable {
 	// public Artikel createArtikel(Artikel artikel) {
 	// return Mock.createArtikel(artikel);
 	// }
+	
 	/**
 	 * Einen neuen Artikel in der DB anlegen.
 	 * 

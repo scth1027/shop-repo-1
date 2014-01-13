@@ -50,6 +50,13 @@ public class KundeService implements Serializable {
 
 	private static final long serialVersionUID = 4360325837484294309L;
 
+	/**
+	 * Suche den Kunden zu gegebener ID.
+	 * 
+	 * @param id
+	 *            ID des gesuchten Kunden.
+	 * @return Der gefundene Kunde, sonst null.
+	 */
 	@NotNull(message = "kunde.notFound.id")
 	public AbstractKunde findKundeById(Long id, FetchType fetch) {
 		if (id == null)
@@ -75,6 +82,35 @@ public class KundeService implements Serializable {
 		}
 
 		return kunde;
+	}
+	
+	//TODO:Kommentar zu den zwei Parameter
+	/**
+	 * Suche nach allen Kunden.
+	 * 
+	 * @return Liste aller Kunden.
+	 */
+	public List<AbstractKunde> findAllKunden(FetchType fetch, OrderType order) {
+		final TypedQuery<AbstractKunde> query = OrderType.ID.equals(order) ? em
+				.createNamedQuery(AbstractKunde.FIND_KUNDEN_ORDER_BY_ID,
+						AbstractKunde.class) : em.createNamedQuery(
+				AbstractKunde.FIND_KUNDEN, AbstractKunde.class);
+
+		EntityGraph<?> entityGraph;
+		switch (fetch) {
+		case NUR_KUNDE:
+			break;
+
+		case MIT_BESTELLUNGEN:
+			entityGraph = em.getEntityGraph(AbstractKunde.GRAPH_BESTELLUNGEN);
+			query.setHint(LOADGRAPH, entityGraph);
+			break;
+
+		default:
+			break;
+		}
+
+		return query.getResultList();
 	}
 
 	/**
@@ -113,35 +149,19 @@ public class KundeService implements Serializable {
 		}
 	}
 
+	/**
+	 * Suche Kunde nach Nachname
+	 * 
+	 * @param nachname
+	 *            Nachname des gesuchten Kunden
+	 * @return Liste der gefundenen Kunden
+	 */
 	@Size(min = 1, message = "kunde.notFound.nachname")
 	public List<AbstractKunde> findKundenByNachname(String nachname,
 			FetchType fetch) {
 		final TypedQuery<AbstractKunde> query = em.createNamedQuery(
 				AbstractKunde.FIND_KUNDEN_BY_NACHNAME, AbstractKunde.class)
 				.setParameter(AbstractKunde.PARAM_KUNDE_NACHNAME, nachname);
-
-		EntityGraph<?> entityGraph;
-		switch (fetch) {
-		case NUR_KUNDE:
-			break;
-
-		case MIT_BESTELLUNGEN:
-			entityGraph = em.getEntityGraph(AbstractKunde.GRAPH_BESTELLUNGEN);
-			query.setHint(LOADGRAPH, entityGraph);
-			break;
-
-		default:
-			break;
-		}
-
-		return query.getResultList();
-	}
-
-	public List<AbstractKunde> findAllKunden(FetchType fetch, OrderType order) {
-		final TypedQuery<AbstractKunde> query = OrderType.ID.equals(order) ? em
-				.createNamedQuery(AbstractKunde.FIND_KUNDEN_ORDER_BY_ID,
-						AbstractKunde.class) : em.createNamedQuery(
-				AbstractKunde.FIND_KUNDEN, AbstractKunde.class);
 
 		EntityGraph<?> entityGraph;
 		switch (fetch) {
@@ -270,7 +290,7 @@ public class KundeService implements Serializable {
 
 		final Join<AbstractKunde, Bestellung> b = k
 				.join(AbstractKunde_.bestellungen);
-		final Join<Bestellung, Posten> bp = b.join(Bestellung_.postenen);
+		final Join<Bestellung, Posten> bp = b.join(Bestellung_.posten);
 		criteriaQuery.where(
 				builder.gt(bp.<Integer> get(Posten_.anzahl), minMenge))
 				.distinct(true);
@@ -330,7 +350,7 @@ public class KundeService implements Serializable {
 		}
 		if (minBestMenge != null) {
 			final Path<Integer> anzahlPath = k
-					.join(AbstractKunde_.bestellungen).join(Bestellung_.postenen)
+					.join(AbstractKunde_.bestellungen).join(Bestellung_.posten)
 					.get(Posten_.anzahl);
 			final Predicate tmpPred = builder.gt(anzahlPath, minBestMenge);
 			pred = pred == null ? tmpPred : builder.and(pred, tmpPred);
@@ -340,6 +360,13 @@ public class KundeService implements Serializable {
 		return em.createQuery(criteriaQuery).getResultList();
 	}
 
+	/**
+	 * Einen neuen Kunden in der DB anlegen.
+	 * 
+	 * @param kunde
+	 *            Der anzulegende Kunde.
+	 * @return Der neue Kunde einschliesslich generierter ID.
+	 */
 	public <T extends AbstractKunde> T createKunde(T kunde) {
 		if (kunde == null) {
 			return kunde;
@@ -358,6 +385,13 @@ public class KundeService implements Serializable {
 		return kunde;
 	}
 
+	/**
+	 * Einen vorhandenen Kunden aktualisieren
+	 * 
+	 * @param kunde
+	 *            Der Kunde mit aktualisierten Attributwerten
+	 * @return Der aktualisierte Kunde
+	 */
 	public <T extends AbstractKunde> T updateKunde(T kunde) {
 		if (kunde == null) {
 			return null;

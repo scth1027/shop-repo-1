@@ -68,7 +68,11 @@ public class ArtikelResource {
 	@Inject
 	private UriHelper uriHelper;
 
-	// Aktuelle Version ausgeben
+	/**
+	 * Suche nach aktueller Version.
+	 * 
+	 * @return Aktuelle Version.
+	 */
 	@GET
 	@Produces({ TEXT_PLAIN, APPLICATION_JSON })
 	@Path("version")
@@ -76,7 +80,13 @@ public class ArtikelResource {
 		return "1.0";
 	}
 
-	// Artikel mit ID finden
+	/**
+	 * Suche den Artikel zu gegebener ID.
+	 * 
+	 * @param id
+	 *            ID des gesuchten Artikel.
+	 * @return Der gefundene Artikel, sonst null.
+	 */
 	@GET
 	@Path("{" + ARTIKEL_ID_PATH_PARAM + ":[1-9][0-9]*}")
 	public Response findArtikelById(@PathParam(ARTIKEL_ID_PATH_PARAM) Long id) {
@@ -86,7 +96,13 @@ public class ArtikelResource {
 				.links(getTransitionalLinks(artikel, uriInfo)).build();
 	}
 
-	// Artikel mit Bezeichnung finden
+	/**
+	 * Suche die Artikel zu gegebener Bezeichnung
+	 * 
+	 * @param bezeichnung
+	 *            Bezeichnung der gesuchten Artikel
+	 * @return Liste der gefundenen Artikel
+	 */
 	@GET
 	public Response findArtikelByBezeichnung(
 			@QueryParam(ARTIKEL_BEZEICHNUNG_QUERY_PARAM) String bezeichnung) {
@@ -110,7 +126,11 @@ public class ArtikelResource {
 				.build();
 	}
 
-	// Alle Artikel auflisten
+	/**
+	 * Suche nach allen Artikeln.
+	 * 
+	 * @return Liste aller Artikel.
+	 */
 	@GET
 	public Response findAllArtikel() {
 		final List<Artikel> artikelliste = as.findAllArtikel();
@@ -124,7 +144,13 @@ public class ArtikelResource {
 				.build();
 	}
 
-	// Artikel erstellen
+	/**
+	 * Einen neuen Artikel in der DB anlegen.
+	 * 
+	 * @param artikel
+	 *            Der anzulegende Artikel.
+	 * @return Der neue Artikel einschliesslich generierter ID.
+	 */
 	@POST
 	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces
@@ -137,7 +163,13 @@ public class ArtikelResource {
 		return Response.created(getUriArtikel(artikel, uriInfo)).build();
 	}
 
-	// Artikel aendern
+	/**
+	 * Einen vorhandenen Artikel aktualisieren
+	 * 
+	 * @param artikel
+	 *            Der Artikel mit aktualisierten Attributwerten
+	 * @return Der aktualisierte Artikel
+	 */
 	@PUT
 	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces
@@ -150,7 +182,12 @@ public class ArtikelResource {
 		as.updateArtikel(artikel);
 	}
 
-	// Artikel loeschen bzw. als nicht mehr aktiv makieren
+	/**
+	 * Einen Artikel aus der DB loeschen, falls er existiert.
+	 * 
+	 * @param artikel
+	 *            Der zu loeschende Artikel.
+	 */
 	@DELETE
 	@Path("{id:[1-9][0-9]*}")
 	@Produces
@@ -158,13 +195,27 @@ public class ArtikelResource {
 		as.deleteArtikel(artikelId);
 	}
 
-	// Artikel URI erzeugen
+	/**
+	 * Artikel URI erzeugen.
+	 * 
+	 * @param artikel
+	 *            Der Artikel zu dem eine URI erstellt wird.
+	 * @param uriInfo
+	 *            Die dazugehoerige UriInfo.     
+	 */
 	public URI getUriArtikel(Artikel artikel, UriInfo uriInfo) {
 		return uriHelper.getUri(ArtikelResource.class, "findArtikelById",
 				artikel.getId(), uriInfo);
 	}
 
-	// Verwaltungs URIs erzeugen
+	/**
+	 * Verwatungs URIs erzeugen.
+	 * 
+	 * @param artikel
+	 *            Der Artikel zu dem die Verwaltungs URIs erzeugt werden sollen.
+	 * @param uriInfo
+	 *            Die dazugehoerige UriInfo.     
+	 */
 	public Link[] getTransitionalLinks(Artikel artikel, UriInfo uriInfo) {
 		final Link self = Link.fromUri(getUriArtikel(artikel, uriInfo))
 				.rel(SELF_LINK).build();
@@ -182,6 +233,14 @@ public class ArtikelResource {
 		return new Link[] {self, add, update, remove};
 	}
 
+	/**
+	 * Verwaltungs URIs fuer Liste von Artikel erzeugen.
+	 * 
+	 * @param artikelliste
+	 *            Die Artikel zu denen die Verwaltungs URIs erzeugt werden sollen.
+	 * @param uriInfo
+	 *            Die dazugehoerige UriInfo.     
+	 */
 	public Link[] getTransitionalLinksArtikelListe(List<Artikel> artikelliste,
 			UriInfo uriInfo) {
 		if (artikelliste == null || artikelliste.isEmpty()) {

@@ -100,25 +100,13 @@ public class KundenResource {
 		return VERSION;
 	}
 
-	// Alle Kunden ausgeben
-	@GET
-	public Response findAllKunden() {
-		// Aufruf der Mock zur Erzeugung der Kunden
-		final List<AbstractKunde> all = ks.findAllKunden(FetchType.NUR_KUNDE,
-				OrderType.KEINE);
-		// Plausibilitäsprüfung
-		if (all.isEmpty())
-			throw new NotFoundException(
-					"Es konnten keine Kunden gefunden werden!");
-		// Erstellen der Links für die jeweilign Kunden
-		for (AbstractKunde kunde : all) {
-			setStructuralLinks(kunde, uriInfo);
-		}
-		return Response.ok(new GenericEntity<List<AbstractKunde>>(all) {
-		}).links(getTransitionalLinksKunden(all, uriInfo)).build();
-	}
-
-	// Kunde mit ID finden
+	/**
+	 * Suche den Kunden zu gegebener ID.
+	 * 
+	 * @param id
+	 *            ID des gesuchten Kunden.
+	 * @return Der gefundene Kunde, sonst null.
+	 */
 	@GET
 	@Path("{" + KUNDEN_ID_PATH_PARAM + ":[1-9][0-9]*}")
 	public Response findKundeById(@PathParam(KUNDEN_ID_PATH_PARAM) Long id) {
@@ -132,7 +120,30 @@ public class KundenResource {
 		return Response.ok(kunde).links(getTransitionalLinks(kunde, uriInfo))
 				.build();
 	}
-
+	
+	/**
+	 * Suche nach allen Kunden.
+	 * 
+	 * @return Liste aller Kunden.
+	 */
+	@GET
+	public Response findAllKunden() {
+		// Aufruf der AWK zur Erzeugung der Kunden
+		final List<AbstractKunde> all = ks.findAllKunden(FetchType.NUR_KUNDE,
+				OrderType.KEINE);
+		// Plausibilitäsprüfung
+		if (all.isEmpty())
+			throw new NotFoundException(
+					"Es konnten keine Kunden gefunden werden!");
+		// Erstellen der Links für die jeweilign Kunden
+		for (AbstractKunde kunde : all) {
+			setStructuralLinks(kunde, uriInfo);
+		}
+		return Response.ok(new GenericEntity<List<AbstractKunde>>(all) {
+		}).links(getTransitionalLinksKunden(all, uriInfo)).build();
+	}
+	
+	//TODO:Kommentar --> weiß nicht genau was gemacht wird
 	@GET
 	public Response findKunden(
 			@QueryParam(KUNDEN_NACHNAME_QUERY_PARAM) @Pattern(regexp = AbstractKunde.NACHNAME_PATTERN, message = "{kunde.nachname.pattern}") String nachname,
@@ -206,13 +217,18 @@ public class KundenResource {
 		return nachnamen;
 	}
 
-	// Kunden bei Nachname finden
+	/**
+	 * Suche Kunde nach Nachname
+	 * 
+	 * @param nachname
+	 *            Nachname des gesuchten Kunden
+	 * @return Liste der gefundenen Kunden
+	 */
 	@GET
 	public Response findKundenByNachname(
 			@QueryParam(KUNDEN_NACHNAME_QUERY_PARAM) String nachname) {
 		List<? extends AbstractKunde> kunden = null;
 		if (nachname != null) {
-			// TODO Anwendungskern statt Mock
 			kunden = ks.findKundenByNachname(nachname, FetchType.NUR_KUNDE);
 			if (kunden.isEmpty()) {
 				throw new NotFoundException("Kein Kunde mit Nachname "
@@ -235,6 +251,14 @@ public class KundenResource {
 				}).links(getTransitionalLinksKunden(kunden, uriInfo)).build();
 	}
 
+	//FIXME:Muss das nicht in die Bestellungsresource?
+	/**
+	 * Suche den Bestellungen zu gegebener Kunden-ID.
+	 * 
+	 * @param id
+	 *            ID des Kunden zu dem die Bestellungen gesucht werden.
+	 * @return Die gefundenen Bestellungen, sonst null.
+	 */
 	@GET
 	@Path("{" + KUNDEN_ID_PATH_PARAM + ":[1-9][0-9]*}/bestellungen")
 	public Response findBestellungenByKundeId(
@@ -293,6 +317,13 @@ public class KundenResource {
 				}).build();
 	}
 
+	/**
+	 * Einen neuen Kunden in der DB anlegen.
+	 * 
+	 * @param kunde
+	 *            Der anzulegende Kunde.
+	 * @return Der neue Kunde einschliesslich generierter ID.
+	 */
 	@POST
 	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces
@@ -310,6 +341,13 @@ public class KundenResource {
 		return Response.created(getUriKunde(kunde, uriInfo)).build();
 	}
 
+	/**
+	 * Einen vorhandenen Kunden aktualisieren
+	 * 
+	 * @param kunde
+	 *            Der Kunde mit aktualisierten Attributwerten
+	 * @return Der aktualisierte Kunde
+	 */
 	@PUT
 	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces
@@ -327,6 +365,12 @@ public class KundenResource {
 		ks.updateKunde(origKunde);
 	}
 
+	/**
+	 * Einen Kunden aus der DB loeschen, falls er existiert.
+	 * 
+	 * @param kunde
+	 *            Der zu loeschende Kunde.
+	 */
 	@Path("{id:[0-9]+}")
 	@DELETE
 	@Produces
@@ -335,7 +379,44 @@ public class KundenResource {
 				FetchType.NUR_KUNDE);
 		ks.deleteKunde(kunde);
 	}
+	
+	/**
+	 * Bestellungs-URI erzeugen.
+	 * 
+	 * @param kunde
+	 *            Der Kunde zu dem eine Bestellungs-URI erstellt wird.
+	 * @param uriInfo
+	 *            Die dazugehoerige UriInfo.     
+	 */
+	private URI getUriBestellungen(AbstractKunde kunde, UriInfo uriInfo) {
+		// return URI.create("http://localhost:8080/shop/rest/");
+		return uriHelper.getUri(KundenResource.class,
+				"findBestellungenByKundeId", kunde.getId(), uriInfo);
+	}
 
+	/**
+	 * Kunden URI erzeugen.
+	 * 
+	 * @param kunde
+	 *            Der Kunde zu dem eine URI erstellt wird.
+	 * @param uriInfo
+	 *            Die dazugehoerige UriInfo.     
+	 */
+	public URI getUriKunde(AbstractKunde kunde, UriInfo uriInfo) {
+		return uriHelper.getUri(KundenResource.class, "findKundeById",
+				kunde.getId(), uriInfo);
+	}
+
+	/**
+	 * Verwaltungs URIs fuer Liste von Bestellungen erzeugen.
+	 * 
+	 * @param bestellungen
+	 *            Die Bestellungen zu denen die Verwaltungs URIs erzeugt werden sollen.
+	 * @param kunde
+//TODO:Wiso braucht man hier einen Kunden?
+	 * @param uriInfo
+	 *            Die dazugehoerige UriInfo.     
+	 */
 	private Link[] getTransitionalLinksBestellungen(
 			List<Bestellung> bestellungen, AbstractKunde kunde, UriInfo uriInfo) {
 		if (bestellungen == null || bestellungen.isEmpty()) {
@@ -361,26 +442,14 @@ public class KundenResource {
 		return new Link[] { self, first, last };
 	}
 
-	// Bestellungslink setzen
-	public void setStructuralLinks(AbstractKunde kunde, UriInfo uriInfo) {
-		// URI fuer Bestellungen setzen
-		final URI uri = getUriBestellungen(kunde, uriInfo);
-		kunde.setBestellungenURI(uri);
-	}
-
-	// BestellungURI erzeugen
-	private URI getUriBestellungen(AbstractKunde kunde, UriInfo uriInfo) {
-		// return URI.create("http://localhost:8080/shop/rest/");
-		return uriHelper.getUri(KundenResource.class,
-				"findBestellungenByKundeId", kunde.getId(), uriInfo);
-	}
-
-	public URI getUriKunde(AbstractKunde kunde, UriInfo uriInfo) {
-		return uriHelper.getUri(KundenResource.class, "findKundeById",
-				kunde.getId(), uriInfo);
-	}
-
-	// VerwaltungsURIs erzeugen
+	/**
+	 * Verwatungs URIs erzeugen.
+	 * 
+	 * @param kunde
+	 *            Der Kunde zu dem die Verwaltungs URIs erzeugt werden sollen.
+	 * @param uriInfo
+	 *            Die dazugehoerige UriInfo.     
+	 */
 	public Link[] getTransitionalLinks(AbstractKunde kunde, UriInfo uriInfo) {
 		final Link self = Link.fromUri(getUriKunde(kunde, uriInfo))
 				.rel(SELF_LINK).build();
@@ -403,6 +472,14 @@ public class KundenResource {
 		return new Link[] { self, add, update, remove };
 	}
 
+	/**
+	 * Verwaltungs URIs fuer Liste von Kunden erzeugen.
+	 * 
+	 * @param kunden
+	 *            Die Kunden zu denen die Verwaltungs URIs erzeugt werden sollen.
+	 * @param uriInfo
+	 *            Die dazugehoerige UriInfo.     
+	 */
 	private Link[] getTransitionalLinksKunden(
 			List<? extends AbstractKunde> kunden, UriInfo uriInfo) {
 		if (kunden == null || kunden.isEmpty()) {
@@ -418,5 +495,12 @@ public class KundenResource {
 
 		return new Link[] { first, last };
 	}
-
+	
+	//TODO:Kommentar fehlt --> ich weiß nicht was erzeugt wird
+	// Bestellungslink setzen
+	public void setStructuralLinks(AbstractKunde kunde, UriInfo uriInfo) {
+		// URI fuer Bestellungen setzen
+		final URI uri = getUriBestellungen(kunde, uriInfo);
+		kunde.setBestellungenURI(uri);
+	}
 }

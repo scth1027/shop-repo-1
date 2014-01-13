@@ -47,8 +47,13 @@ public class BestellungServiceImpl implements Serializable, BestellungService {
 	private transient Event<Bestellung> event;
 
 	/**
+	 * Suche die Bestellung zu gegebener ID.
+	 * 
+	 * @param id
+	 *            ID der gesuchten Bestellung.
 	 * @exception ConstraintViolationException
 	 *                zu @NotNull, falls keine Bestellung gefunden wurde
+	 * @return Die gefundene Bestellung, sonst null.
 	 */
 	@Override
 	@NotNull(message = "{bestellung.notFound.id}")
@@ -69,47 +74,16 @@ public class BestellungServiceImpl implements Serializable, BestellungService {
 		}
 		return bestellung;
 	}
-
+	
 	/**
 	 * {inheritDoc}
+	 *
+	 * Suche Bestellungen zu den gegebenen IDs.
 	 * 
-	 * @exception ConstraintViolationException
-	 *                zu @NotNull, falls kein Kunde gefunden wurde
-	 */
-	@Override
-	@NotNull(message = "{bestellung.kunde.notFound.id}")
-	public AbstractKunde findKundeById(Long id) {
-		try {
-			return em
-					.createNamedQuery(Bestellung.FIND_KUNDE_BY_ID,
-							AbstractKunde.class)
-					.setParameter(Bestellung.PARAM_ID, id).getSingleResult();
-		} catch (NoResultException e) {
-			return null;
-		}
-	}
-
-	/**
-	 * {inheritDoc}
-	 * 
-	 * @exception ConstraintViolationException
-	 *                zu @Size, falls die Liste leer ist
-	 */
-	@Override
-	@Size(min = 1, message = "{bestellung.notFound.kunde}")
-	public List<Bestellung> findBestellungenByKunde(AbstractKunde kunde) {
-		if (kunde == null) {
-			return Collections.emptyList();
-		}
-		return em
-				.createNamedQuery(Bestellung.FIND_BESTELLUNGEN_BY_KUNDE,
-						Bestellung.class)
-				.setParameter(Bestellung.PARAM_KUNDE, kunde).getResultList();
-	}
-
-	/**
-	 * {inheritDoc}
-	 * 
+	 * @param ids
+	 *            IDs den gesuchten Bestellungen.
+	 * @return Die gefundenen Bestellungen, sonst null.
+	 *
 	 * @exception ConstraintViolationException
 	 *                zu @Size, falls die Liste leer ist
 	 */
@@ -150,6 +124,59 @@ public class BestellungServiceImpl implements Serializable, BestellungService {
 		}
 
 		return query.getResultList();
+	}
+
+	//TODO:findLieferungenByBestellungId
+	
+	//FIXME:Muss das nicht in KundeService
+	/**
+	 * {inheritDoc}
+	 *
+	 * Suche nach Kunde zu Bestellungs ID.
+	 * 
+	 * @param id
+	 *            ID des Kunden.
+	 * @return Den gefundenen Kunden, sonst null.
+	 *
+	 * @exception ConstraintViolationException
+	 *                zu @NotNull, falls kein Kunde gefunden wurde
+	 */
+	@Override
+	@NotNull(message = "{bestellung.kunde.notFound.id}")
+	public AbstractKunde findKundeById(Long id) {
+		try {
+			return em
+					.createNamedQuery(Bestellung.FIND_KUNDE_BY_ID,
+							AbstractKunde.class)
+					.setParameter(Bestellung.PARAM_ID, id).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+
+	//FIXME:Nicht in der Resource vorhanden
+	/**
+	 * {inheritDoc}
+	 *
+	 * Suche Bestellungen zu den gegebenen Kunden.
+	 * 
+	 * @param kunde
+	 *            AbstractKunde zu dem Bestellungen gesucht werden sollen.
+	 * @return Die gefundenen Bestellungen, sonst null.
+	 *
+	 * @exception ConstraintViolationException
+	 *                zu @Size, falls die Liste leer ist
+	 */
+	@Override
+	@Size(min = 1, message = "{bestellung.notFound.kunde}")
+	public List<Bestellung> findBestellungenByKunde(AbstractKunde kunde) {
+		if (kunde == null) {
+			return Collections.emptyList();
+		}
+		return em
+				.createNamedQuery(Bestellung.FIND_BESTELLUNGEN_BY_KUNDE,
+						Bestellung.class)
+				.setParameter(Bestellung.PARAM_KUNDE, kunde).getResultList();
 	}
 
 	/**
@@ -208,6 +235,14 @@ public class BestellungServiceImpl implements Serializable, BestellungService {
 		return bestellung;
 	}
 
+	//FIXME:Muss das nicht in din ArtikelService
+	/**
+	 * Suche Artikel die in keinen Posten vorkommen.
+	 * 
+	 * @param anzahl
+	 *            Anzahl der maximal moeglichen Resultate.
+	 * @return Die gefundenen Artikel, sonst null.
+	 */
 	@Override
 	public List<Artikel> ladenhueter(int anzahl) {
 		return em.createNamedQuery(Posten.FIND_LADENHUETER, Artikel.class)
